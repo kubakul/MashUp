@@ -44,13 +44,15 @@ def LISTSP5(murl):
         loadedLinks = 0
         remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
+        id = totalLinks;
         for year,url,name in match:
                 name=name.replace(':','')
                 name=main.unescapes(name)
                 if(year=='0'):
                         year='0000'  
                 url=nrDomain+url
-                main.addDown3(name+' [COLOR red]('+year+')[/COLOR]',url,58,'','')
+                main.addDown3(name+' [COLOR red]('+year+')[/COLOR]',url,58,'','',id)
+                id -= 1
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks
                 remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
