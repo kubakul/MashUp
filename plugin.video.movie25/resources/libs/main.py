@@ -1922,9 +1922,9 @@ def addDown3(name,url,mode,iconimage,fanart):#starplay only
                     watched_mark = 'Mark as Watched'
                 else:
                     watched_mark = 'Mark as Unwatched'
-                xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_UNSORTED )
-                xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_LABEL )
-                xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_DATE )
+                xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_PLAYLIST_ORDER )
+                xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_YEAR )
+                xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_TITLE )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_RATING )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_GENRE )
                 
@@ -1937,7 +1937,7 @@ def addDown3(name,url,mode,iconimage,fanart):#starplay only
             xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_LABEL )
 
             plot='Sorry description not available'
-            plot=plot.replace(",",'.')
+        	plot=plot.replace(",",'.')
         name=name.replace(",",'')
         sysurl = urllib.quote_plus(url)
         sysname= urllib.quote_plus(name)
@@ -1959,6 +1959,8 @@ def addDown3(name,url,mode,iconimage,fanart):#starplay only
                 Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
         liz=xbmcgui.ListItem(name, iconImage=art+'/vidicon.png', thumbnailImage=infoLabels['cover_url'])
         liz.addContextMenuItems( Commands, replaceItems=True )
+        if(id != False):
+        	infoLabels["count"] = id
         liz.setInfo( type="Video", infoLabels = infoLabels)
         liz.setProperty('fanart_image', infoLabels['backdrop_url'])
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz)
