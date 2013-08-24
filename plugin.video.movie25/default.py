@@ -749,7 +749,7 @@ def ListglobalFavIWO():
         tvfav=os.path.join(favpath,'Movies')
         FavFile=os.path.join(tvfav,'IWOFav')
         if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.+?)",plot="(.+?)",type="(.+?)"').findall(open(FavFile,'r').read())
+                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
                 for url,name,mode,thumb,plot,type in Favs:
                         if type=='PLAY':
                                 main.addPlayM(name,url,int(mode),thumb,plot,'','','','')
@@ -767,7 +767,7 @@ def ListglobalFavT():
         tvfav=os.path.join(favpath,'TV')
         FavFile=os.path.join(tvfav,'TVFav')
         if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.+?)",plot="(.+?)",type="(.+?)"').findall(open(FavFile,'r').read())
+                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
                 for url,name,mode,thumb,plot,type in Favs:
                         if type=='PLAY':
                                 main.addPlayT(name,url,int(mode),thumb,plot,'','','','')
@@ -784,7 +784,7 @@ def ListglobalFavTE():
         tvfav=os.path.join(favpath,'TV')
         FavFile=os.path.join(tvfav,'TVEpiFav')
         if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.+?)",plot="(.+?)",type="(.+?)"').findall(open(FavFile,'r').read())
+                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
                 for url,name,mode,thumb,plot,type in Favs:
                         if type=='PLAY':
                                 main.addPlayTE(name,url,int(mode),thumb,plot,'','','','')
@@ -801,7 +801,7 @@ def ListglobalFavM():
         tvfav=os.path.join(favpath,'Movies')
         FavFile=os.path.join(tvfav,'OtherFav')
         if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.+?)",plot="(.+?)",type="(.+?)"').findall(open(FavFile,'r').read())
+                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
                 for url,name,mode,thumb,plot,type in Favs:
                         if type=='PLAY':
                                 main.addPlayM(name,url,int(mode),thumb,plot,'','','','')
@@ -818,7 +818,7 @@ def ListglobalFavMs():
         tvfav=os.path.join(favpath,'Misc')
         FavFile=os.path.join(tvfav,'MiscFav')
         if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.+?)",plot="(.+?)",type="(.+?)"').findall(open(FavFile,'r').read())
+                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
                 for url,name,mode,thumb,plot,type in Favs:
                         if type=='PLAY':
                                 main.addPlayMs(name,url,int(mode),thumb,plot,'','','','')
@@ -835,7 +835,7 @@ def ListglobalFavL():
         tvfav=os.path.join(favpath,'Live')
         FavFile=os.path.join(tvfav,'LiveFav')
         if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.+?)",plot="(.+?)",type="(.+?)"').findall(open(FavFile,'r').read())
+                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
                 for url,name,mode,thumb,plot,type in Favs:
                         if type=='PLAY':
                                 main.addPlayL(name,url,int(mode),thumb,plot,'','','','')
