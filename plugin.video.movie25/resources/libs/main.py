@@ -318,6 +318,8 @@ def GETMETAT(mname,genre,fan,thumb):
                 if infoLabels['cover_url']=='':
                     thumb=art+'vidicon.png'
                     infoLabels['cover_url']=thumb
+            	if(int(year+'0')):                      
+                    infoLabels['year']=year 
                 infoLabels['metaName']=infoLabels['title']
                 infoLabels['title']=originalName
 
