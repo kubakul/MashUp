@@ -1,4 +1,3 @@
-
 import urllib,urllib2,re,cookielib,string, urlparse,sys,os
 import xbmc, xbmcgui, xbmcaddon, xbmcplugin
 import urlresolver
@@ -294,6 +293,9 @@ def GETMETAT(mname,genre,fan,thumb):
                     year=''
                 name = name.decode("ascii", "ignore")
                 meta = grab.get_meta('movie',name,None,None,year='')# first is Type/movie or tvshow, name of show,tvdb id,imdb id,string of year,unwatched = 6/watched  = 7
+                if not meta['year']:
+                      name  = re.sub(':.*','',name)
+                      meta = grab.get_meta('movie',name,None,None,'')
                 print "Movie mode: %s"%name
                 infoLabels = {'rating': meta['rating'],'duration': meta['duration'],'genre': meta['genre'],'mpaa':"rated %s"%meta['mpaa'],
                   'plot': meta['plot'],'title': meta['title'],'writer': meta['writer'],'cover_url': meta['cover_url'],'overlay':meta['overlay'],
