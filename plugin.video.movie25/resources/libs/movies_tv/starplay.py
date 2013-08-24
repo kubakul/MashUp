@@ -46,7 +46,6 @@ def LISTSP5(murl):
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
         id = totalLinks;
         for year,url,name in match:
-                name=name.replace(':','')
                 name=main.unescapes(name)
                 if(year=='0'):
                         year='0000'  
