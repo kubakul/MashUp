@@ -1022,7 +1022,7 @@ def Download_SourceB(name,url):#starplay/noobroom
 
     stream_url= Noobroom(url)
     name=name.split(' [')[0]
-    name=name.replace('/','').replace('.','')
+    name=name.replace('/','').replace('.','').replace(':','')
 
     if stream_url:
             xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,2000)")
