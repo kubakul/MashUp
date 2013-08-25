@@ -1937,7 +1937,7 @@ def addDown3(name,url,mode,iconimage,fanart):#starplay only
             xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_LABEL )
 
             plot='Sorry description not available'
-        	plot=plot.replace(",",'.')
+            plot=plot.replace(",",'.')
         name=name.replace(",",'')
         sysurl = urllib.quote_plus(url)
         sysname= urllib.quote_plus(name)
