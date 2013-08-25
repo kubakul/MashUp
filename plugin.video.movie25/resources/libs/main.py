@@ -277,7 +277,7 @@ def formatCast(cast):
 def GETMETAT(mname,genre,fan,thumb):
         originalName=mname
         if selfAddon.getSetting("meta-view") == "true":
-                mname  = mname.replace(' EXTENDED and UNRATED','').replace('[COLOR purple]','').replace('MaxPowers','').replace('720p','').replace('1080p','').replace('TS','').replace('HD','').replace('R6','').replace('H.M.','').replace('HackerMil','').replace('[COLOR green]','').replace('[COLOR yellow]','').replace('[COLOR aqua]','').replace('[COLOR blue]','').replace('[COLOR red]','').replace('[/COLOR]','').replace('(','').replace(')','').replace('[','').replace(']','')
+                mname  = mname.replace(' EXTENDED and UNRATED','').replace('Webrip','').replace('[COLOR purple]','').replace('MaxPowers','').replace('720p','').replace('1080p','').replace('TS','').replace('HD','').replace('R6','').replace('H.M.','').replace('HackerMil','').replace('[COLOR green]','').replace('[COLOR yellow]','').replace('[COLOR aqua]','').replace('[COLOR blue]','').replace('[COLOR red]','').replace('[/COLOR]','').replace('(','').replace(')','').replace('[','').replace(']','')
                 mname  = re.sub('Cam(?![A-Za-z])','',mname)
                 if re.findall('\s\d{4}',mname):
                     r = re.split('\s\d{4}',mname,re.DOTALL)
