@@ -1908,7 +1908,7 @@ def addDown2(name,url,mode,iconimage,fan):
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz)
         return ok
 
-def addDown3(name,url,mode,iconimage,fanart):#starplay only
+def addDown3(name,url,mode,iconimage,fanart,id=False):#starplay only
         contextMenuItems = []
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
         ok=True
