@@ -599,6 +599,41 @@ def SearchGoogle(search, site):
         return None
     return results
 ############################################################################### Resolvers ############################################################################################
+def grab_cloudflare(url):
+
+    class NoRedirection(urllib2.HTTPErrorProcessor):
+        # Stop Urllib2 from bypassing the 503 page.    
+        def http_response(self, request, response):
+            code, msg, hdrs = response.code, response.msg, response.info()
+
+            return response
+        https_response = http_response
+
+    cj = cookielib.CookieJar()
+    
+    opener = urllib2.build_opener(NoRedirection, urllib2.HTTPCookieProcessor(cj))
+    opener.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
+    response = opener.open(url).read()
+        
+    jschl=re.compile('name="jschl_vc" value="(.+?)"/>').findall(response)
+    if jschl:
+        jschl = jschl[0]    
+    
+        maths=re.compile('value = (.+?);').findall(response)[0].replace('(','').replace(')','')
+
+        domain_url = re.compile('(https?://.+?/)').findall(url)[0]
+        domain = re.compile('https?://(.+?)/').findall(domain_url)[0]
+        
+        time.sleep(5)
+        
+        normal = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        normal.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
+        final= normal.open(domain_url+'cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s'%(jschl,eval(maths)+len(domain))).read()
+        
+        response = normal.open(url).read()
+
+    return response
+
 def resolve_veehd(url):
         name = "veeHD"
         cookie_file = os.path.join(datapath, '%s.cookies' % name)
@@ -654,7 +689,41 @@ def resolve_billionuploads(url):
             dialog.update(0)
         
             print 'Mash Up BillionUploads - Requesting GET URL: %s' % url
-            html = net().http_GET(url).content
+            
+            ########################################################
+            ######## CLOUD FLARE STUFF
+            #######################################################
+            class NoRedirection(urllib2.HTTPErrorProcessor):
+                # Stop Urllib2 from bypassing the 503 page.    
+                def http_response(self, request, response):
+                    code, msg, hdrs = response.code, response.msg, response.info()
+
+                    return response
+                https_response = http_response
+
+            cj = cookielib.CookieJar()
+            
+            opener = urllib2.build_opener(NoRedirection, urllib2.HTTPCookieProcessor(cj))
+            opener.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
+            response = opener.open(url).read()
+                
+            jschl=re.compile('name="jschl_vc" value="(.+?)"/>').findall(response)
+            if jschl:
+                jschl = jschl[0]    
+            
+                maths=re.compile('value = (.+?);').findall(response)[0].replace('(','').replace(')','')
+
+                domain_url = re.compile('(https?://.+?/)').findall(url)[0]
+                domain = re.compile('https?://(.+?)/').findall(domain_url)[0]
+                
+                time.sleep(5)
+                
+                normal = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+                normal.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
+                final= normal.open(domain_url+'cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s'%(jschl,eval(maths)+len(domain))).read()
+                
+                html = normal.open(url).read()
+            ################################################################################
                
             #Check page for any error msgs
             if re.search('This server is in maintenance mode', html):
@@ -714,7 +783,9 @@ def resolve_billionuploads(url):
             dialog.update(50)
         
             print 'Mash Up BillionUploads - Requesting POST URL: %s DATA: %s' % (url, data)
-            html = net().http_POST(url, data).content
+            
+            html = normal.open(url, urllib.urlencode(data)).read()
+            print html
             dialog.update(100)
             link = re.search('&product_download_url=(.+?)"', html).group(1)
             link = link + "|referer=" + url
