@@ -170,7 +170,6 @@ def MLink(mname,murl,thumb):
                                     return
             elif re.findall('epicshare',murl,re.I):
                     try:
-                            print "yooyoo"
                             stream_url =main.resolve_epicshare(murl)
                     except:
                         if hosted_media:
@@ -181,7 +180,18 @@ def MLink(mname,murl,thumb):
                                 else:
                                     stream_url = False
                                     return
-                                
+            elif re.findall('lemuploads',murl,re.I):
+                    try:
+                            stream_url =main.resolve_lemupload(murl)
+                    except:
+                        if hosted_media:
+                                source = hosted_media
+                                if source:
+                                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,5000)")
+                                    stream_url = source.resolve()
+                                else:
+                                    stream_url = False
+                                    return                    
             else:
                     if hosted_media:
                         source = hosted_media
@@ -203,7 +213,7 @@ def MLink(mname,murl,thumb):
             player.KeepAlive()
             return ok
         except Exception, e:
-                #if stream_url != False:
-                main.ErrorReport(e)
+                if stream_url != False:
+                        main.ErrorReport(e)
                 return ok
 

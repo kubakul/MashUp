@@ -852,10 +852,10 @@ def resolve_epicshare(url):
         
         #Show dialog box so user knows something is happening
         dialog = xbmcgui.DialogProgress()
-        dialog.create('Resolving', 'Resolving EpicShare Link...')
+        dialog.create('Resolving', 'Resolving MashUp EpicShare Link...')
         dialog.update(0)
         
-        print 'EpicShare - Requesting GET URL: %s' % url
+        print 'EpicShare - MashUp Requesting GET URL: %s' % url
         html = net().http_GET(url).content
 
         dialog.update(50)
@@ -909,27 +909,117 @@ def resolve_epicshare(url):
                return False
                
            wdlg.close()
-           dialog.create('Resolving', 'Resolving EpicShare Link...') 
+           dialog.create('Resolving', 'Resolving MashUp EpicShare Link...') 
            dialog.update(50)
            if solution:
                data.update({'adcopy_challenge': hugekey,'adcopy_response': solution})
 
-        print 'EpicShare - Requesting POST URL: %s' % url
+        print 'EpicShare - MashUp Requesting POST URL: %s' % url
         html = net().http_POST(url, data).content
         dialog.update(100)
         
         link = re.search('<a id="lnk_download"  href=".+?product_download_url=(.+?)">', html)
         if link:
-            print 'EpicShare Link Found: %s' % link.group(1)
+            print 'MashUp EpicShare Link Found: %s' % link.group(1)
             return link.group(1)
         else:
             print '***** EpicShare - Cannot find final link'
             raise Exception('Unable to resolve EpicShare Link')
         
     except Exception, e:
-        print '**** EpicShare Error occured: %s' % e
+        print '**** EpicShare MashUp Error occured: %s' % e
         raise
 
+    finally:
+        dialog.close()
+
+
+def resolve_lemupload(url):
+
+    try:
+
+        #Show dialog box so user knows something is happening
+        dialog = xbmcgui.DialogProgress()
+        dialog.create('Resolving', 'Resolving MashUp LemUpload Link...')       
+        dialog.update(0)
+        
+        print 'LemUpload - MashUp Requesting GET URL: %s' % url
+        html = net().http_GET(url).content
+        
+        dialog.update(50)
+        
+        #Check page for any error msgs
+        if re.search('<b>File Not Found</b>', html):
+            print '***** LemUpload - File Not Found'
+            raise Exception('File Not Found')
+
+        #Set POST data values
+        data = {}
+        r = re.findall('type="hidden" name="(.+?)" value="(.+?)">', html)
+        
+        for name, value in r:
+            data[name] = value
+
+        captchaimg = re.search('<script type="text/javascript" src="(http://www.google.com.+?)">', html)
+        
+        if captchaimg:
+            dialog.close()
+            html = net().http_GET(captchaimg.group(1)).content
+            part = re.search("challenge \: \\'(.+?)\\'", html)
+            captchaimg = 'http://www.google.com/recaptcha/api/image?c='+part.group(1)
+            img = xbmcgui.ControlImage(450,15,400,130,captchaimg)
+            wdlg = xbmcgui.WindowDialog()
+            wdlg.addControl(img)
+            wdlg.show()
+    
+            time.sleep(3)
+    
+            kb = xbmc.Keyboard('', 'Type the letters in the image', False)
+            kb.doModal()
+            capcode = kb.getText()
+    
+            if (kb.isConfirmed()):
+                userInput = kb.getText()
+                if userInput != '':
+                    solution = kb.getText()
+                elif userInput == '':
+                    Notify('big', 'No text entered', 'You must enter text in the image to access video', '')
+                    return False
+            else:
+                return False
+            wdlg.close()
+            dialog.close() 
+            dialog.create('Resolving', 'Resolving MashUp LemUpload Link...') 
+            dialog.update(50)
+            data.update({'recaptcha_challenge_field':part.group(1),'recaptcha_response_field':solution})
+        
+        else:
+            #Check for captcha
+            captcha = re.compile("left:(\d+)px;padding-top:\d+px;'>&#(.+?);<").findall(html)
+            if captcha:
+                result = sorted(captcha, key=lambda ltr: int(ltr[0]))
+                solution = ''.join(str(int(num[1])-48) for num in result)
+            data.update({'code':solution})
+                               
+        print 'LemUpload - MashUp Requesting POST URL: %s DATA: %s' % (url, data)
+        html = net().http_POST(url, data).content
+
+        #Get download link
+        dialog.update(100)
+
+        link = re.search('<a href="(.+?)">Download', html)
+        
+        if link:
+            print 'MashUp LemUpload Link Found: %s' % link.group(1)
+            link = link.group(1) + "|referer=" + url
+            return link
+        else:
+            print '***** LemUpload - Cannot find final link'
+            raise Exception('Unable to resolve LemUpload Link')
+
+    except Exception, e:
+        print '**** LemUpload Error occured: %s' % e
+        raise
     finally:
         dialog.close()
 ############################################################################### Download Code ###########################################################################################
@@ -989,7 +1079,7 @@ def Download_Source(name,url):
     name=name.split('/')[0]
     if re.findall('billionuploads',url):
         try:
-            stream_url =main.resolve_billionuploads(url)
+            stream_url =resolve_billionuploads(url)
             print "Using Built in BillionUpload Resolver"
             stream_url=stream_url.split('referer')[0]
             stream_url=stream_url.replace('|','')
@@ -1001,11 +1091,43 @@ def Download_Source(name,url):
             stream_url=stream_url.replace('|','')
     elif re.findall('180upload',url):
         try:
-            stream_url =main.resolve_180upload(url)
+            stream_url =resolve_180upload(url)
         except:
             media = urlresolver.HostedMediaFile(url)
             source = media
             stream_url = source.resolve()
+    elif re.findall('veehd',url):
+        try:
+            stream_url =resolve_veehd(url)
+        except:
+            media = urlresolver.HostedMediaFile(url)
+            source = media
+            stream_url = source.resolve()
+    elif re.findall('vidto',url):
+        try:
+            stream_url =resolve_videto(url)
+        except:
+            media = urlresolver.HostedMediaFile(url)
+            source = media
+            stream_url = source.resolve()
+    elif re.findall('epicshare',url):
+        try:
+            stream_url =resolve_epicshare(url)
+        except:
+            media = urlresolver.HostedMediaFile(url)
+            source = media
+            stream_url = source.resolve()
+    elif re.findall('lemuploads',url):
+        try:
+            stream_url =resolve_lemupload(url)
+            stream_url=stream_url.split('referer')[0]
+            stream_url=stream_url.replace('|','')
+        except:
+            media = urlresolver.HostedMediaFile(url)
+            source = media
+            stream_url = source.resolve()
+            stream_url=stream_url.split('referer')[0]
+            stream_url=stream_url.replace('|','')
     else:
         media = urlresolver.HostedMediaFile(url)
         source = media
