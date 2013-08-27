@@ -843,6 +843,95 @@ def resolve_videto(url):
         addon.show_small_popup('[B][COLOR green]Mash Up: Vidto Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',
                                5000, error_logo)
         return
+
+def resolve_epicshare(url):
+
+    try:
+        
+        puzzle_img = os.path.join(datapath, "epicshare_puzzle.png")
+        
+        #Show dialog box so user knows something is happening
+        dialog = xbmcgui.DialogProgress()
+        dialog.create('Resolving', 'Resolving EpicShare Link...')
+        dialog.update(0)
+        
+        print 'EpicShare - Requesting GET URL: %s' % url
+        html = net().http_GET(url).content
+
+        dialog.update(50)
+        
+        #Check page for any error msgs
+        if re.search('This server is in maintenance mode', html):
+            print '***** EpicShare - Site reported maintenance mode'
+            raise Exception('File is currently unavailable on the host')
+        if re.search('<b>File Not Found</b>', html):
+            print '***** EpicShare - File not found'
+            raise Exception('File has been deleted')
+
+
+        data = {}
+        r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
+
+        if r:
+            for name, value in r:
+                data[name] = value
+        else:
+            print '***** EpicShare - Cannot find data values'
+            raise Exception('Unable to resolve EpicShare Link')
+        
+        #Check for SolveMedia Captcha image
+        solvemedia = re.search('<iframe src="(http://api.solvemedia.com.+?)"', html)
+
+        if solvemedia:
+           dialog.close()
+           html = net().http_GET(solvemedia.group(1)).content
+           hugekey=re.search('id="adcopy_challenge" value="(.+?)">', html).group(1)
+           open(puzzle_img, 'wb').write(net().http_GET("http://api.solvemedia.com%s" % re.search('<img src="(.+?)"', html).group(1)).content)
+           img = xbmcgui.ControlImage(450,15,400,130, puzzle_img)
+           wdlg = xbmcgui.WindowDialog()
+           wdlg.addControl(img)
+           wdlg.show()
+        
+           xbmc.sleep(3000)
+
+           kb = xbmc.Keyboard('', 'Type the letters in the image', False)
+           kb.doModal()
+           capcode = kb.getText()
+   
+           if (kb.isConfirmed()):
+               userInput = kb.getText()
+               if userInput != '':
+                   solution = kb.getText()
+               elif userInput == '':
+                   Notify('big', 'No text entered', 'You must enter text in the image to access video', '')
+                   return False
+           else:
+               return False
+               
+           wdlg.close()
+           dialog.create('Resolving', 'Resolving EpicShare Link...') 
+           dialog.update(50)
+           if solution:
+               data.update({'adcopy_challenge': hugekey,'adcopy_response': solution})
+
+        print 'EpicShare - Requesting POST URL: %s' % url
+        html = net().http_POST(url, data).content
+        dialog.update(100)
+        
+        link = re.search('<a id="lnk_download"  href=".+?product_download_url=(.+?)">', html)
+        if link:
+            print 'EpicShare Link Found: %s' % link.group(1)
+            return link.group(1)
+        else:
+            print '***** EpicShare - Cannot find final link'
+            raise Exception('Unable to resolve EpicShare Link')
+        
+    except Exception, e:
+        print '**** EpicShare Error occured: %s' % e
+        raise
+
+    finally:
+        dialog.close()
 ############################################################################### Download Code ###########################################################################################
 downloadPath = selfAddon.getSetting('download-folder')
 DownloadLog=os.path.join(datapath,'Downloads')
