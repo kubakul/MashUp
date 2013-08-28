@@ -44,7 +44,7 @@ def LISTSP5(murl):
         loadedLinks = 0
         remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
-        id = 0;
+        id = 1;
         for year,url,name in match:
                 name=main.unescapes(name)
                 if(year=='0'):
