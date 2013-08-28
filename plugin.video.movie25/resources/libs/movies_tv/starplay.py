@@ -31,10 +31,10 @@ def LISTSP5(murl):
         nrDomain = GetNewUrl();
         murl=nrDomain+'/latest.php'
         lurl=nrDomain+'/login2.php'
-        log_in = net().http_POST(lurl,{'email':user,'password':passw}).content
-        link = net().http_GET(murl).content
-        r = re.findall('Membership by invitation only', link)
-        if r:
+        net().http_POST(lurl,{'email':user,'password':passw})
+        response = net().http_GET(murl)
+        link = response.content
+        if response.get_url() != murl:
                 xbmc.executebuiltin("XBMC.Notification(Sorry!,Email or Password Incorrect,10000,"+smalllogo+")")
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'',art+'/link.png')
         match=re.compile("<br>(.+?) - <a[^>]+?href='(.+?)'>(.+?)</a>").findall(link)
@@ -44,14 +44,14 @@ def LISTSP5(murl):
         loadedLinks = 0
         remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
-        id = totalLinks;
+        id = 0;
         for year,url,name in match:
                 name=main.unescapes(name)
                 if(year=='0'):
                         year='0000'  
                 url=nrDomain+url
                 main.addDown3(name+' [COLOR red]('+year+')[/COLOR]',url,58,'','',id)
-                id -= 1
+                id += 1
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks
                 remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
