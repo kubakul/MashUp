@@ -816,7 +816,11 @@ def resolve_billionuploads(url):
 
                     #print h
                     for l in range(0, len(h)):            
-                        f = t.get(h[l], 0)
+                        
+                        f = t.get(h[l], 'undefined')
+                        if f == 'undefined':
+                            continue
+                            
                         a= (a<<6) + f
                         c = c + 6
 
