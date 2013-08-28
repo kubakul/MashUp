@@ -1,6 +1,7 @@
 import urllib,urllib2,re,cookielib,string, urlparse,sys,os
 import xbmc, xbmcgui, xbmcaddon, xbmcplugin
 import urlresolver
+from urlresolver import common
 from t0mm0.common.addon import Addon
 from t0mm0.common.net import Net as net
 from metahandler import metahandlers
@@ -724,7 +725,7 @@ def resolve_billionuploads(url):
                 
                 html = normal.open(url).read()
             ################################################################################
-               
+            common.addon.show_countdown(3, title='BillionUploads', text='Loading Captcha...')   
             #Check page for any error msgs
             if re.search('This server is in maintenance mode', html):
                 print '***** BillionUploads - Site reported maintenance mode'

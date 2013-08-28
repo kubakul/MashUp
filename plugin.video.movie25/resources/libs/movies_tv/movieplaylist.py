@@ -213,7 +213,9 @@ def MLink(mname,murl,thumb):
             player.KeepAlive()
             return ok
         except Exception, e:
-                if stream_url != False:
+                try:
+                        if stream_url != False:
+                                main.ErrorReport(e)
+                except:
                         main.ErrorReport(e)
-                return ok
 
