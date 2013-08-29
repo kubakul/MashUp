@@ -730,6 +730,11 @@ def resolve_billionuploads(url):
             if re.search('This server is in maintenance mode', html):
                 print '***** BillionUploads - Site reported maintenance mode'
                 raise Exception('File is currently unavailable on the host')
+                
+            #Check for File Not Found
+            if re.search('File Not Found', html):
+                print '***** BillionUploads - File Not Found'
+                raise Exception('File Not Found')
 
             postid = re.search('<input type="hidden" name="id" value="(.+?)">', html).group(1)
             
