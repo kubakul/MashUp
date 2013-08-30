@@ -117,92 +117,10 @@ def MLink(mname,murl,thumb):
         fanart =infoLabels['backdrop_url']
         imdb_id=infoLabels['imdb_id']
         infolabels = { 'supports_meta' : 'true', 'video_type':video_type, 'name':str(infoLabels['title']), 'imdb_id':str(infoLabels['imdb_id']), 'season':str(season), 'episode':str(episode), 'year':str(infoLabels['year']) }
-        hosted_media = urlresolver.HostedMediaFile(url=murl)
         try:
-            if re.findall('billionuploads',murl,re.I):
-                try:
-                    stream_url =main.resolve_billionuploads(murl)
-                except:
-                        if hosted_media:
-                                source = hosted_media
-                                if source:
-                                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,5000)")
-                                    stream_url = source.resolve()
-                                else:
-                                    stream_url = False
-                                    return
-            elif re.findall('180upload',murl,re.I):
-                    try:
-                            stream_url =main.resolve_180upload(murl)
-                    except:
-                        if hosted_media:
-                                source = hosted_media
-                                if source:
-                                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,5000)")
-                                    stream_url = source.resolve()
-                                else:
-                                    stream_url = False
-                                    return
-                                
-            elif re.findall('veehd',murl,re.I):
-                    try:
-                            stream_url =main.resolve_veehd(murl)
-                    except:
-                        if hosted_media:
-                                source = hosted_media
-                                if source:
-                                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,5000)")
-                                    stream_url = source.resolve()
-                                else:
-                                    stream_url = False
-                                    return
-            elif re.findall('vidto',murl,re.I):
-                    try:
-                            stream_url =main.resolve_videto(murl)
-                    except:
-                        if hosted_media:
-                                source = hosted_media
-                                if source:
-                                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,5000)")
-                                    stream_url = source.resolve()
-                                else:
-                                    stream_url = False
-                                    return
-            elif re.findall('epicshare',murl,re.I):
-                    try:
-                            stream_url =main.resolve_epicshare(murl)
-                    except:
-                        if hosted_media:
-                                source = hosted_media
-                                if source:
-                                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,5000)")
-                                    stream_url = source.resolve()
-                                else:
-                                    stream_url = False
-                                    return
-            elif re.findall('lemuploads',murl,re.I):
-                    try:
-                            stream_url =main.resolve_lemupload(murl)
-                    except:
-                        if hosted_media:
-                                source = hosted_media
-                                if source:
-                                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,5000)")
-                                    stream_url = source.resolve()
-                                else:
-                                    stream_url = False
-                                    return                    
-            else:
-                    if hosted_media:
-                        source = hosted_media
-                        if source:
-                            xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,5000)")
-                            stream_url = source.resolve()
-                        else:
-                            stream_url = False
-                            return
-                    else:
-                        stream_url = murl
+            stream_url = main.resolve_url(murl)
+            if stream_url == False:
+                  return                                                            
             infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre'], 'originaltitle': infoLabels['metaName']}
             # play with bookmark
             stream_url=stream_url.replace(' ','%20')
@@ -213,9 +131,7 @@ def MLink(mname,murl,thumb):
             player.KeepAlive()
             return ok
         except Exception, e:
-                try:
-                        if stream_url != False:
-                                main.ErrorReport(e)
-                except:
+                if stream_url != False:
                         main.ErrorReport(e)
+                return ok
 
