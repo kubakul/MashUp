@@ -727,6 +727,7 @@ def resolve_billionuploads(url):
             if re.search('This server is in maintenance mode', html):
                 print '***** BillionUploads - Site reported maintenance mode'
                 xbmc.executebuiltin("XBMC.Notification(File is currently unavailable,BillionUploads in maintenance,2000)")                                
+                return False
                 
             #Check for File Not Found
             if re.search('File Not Found', html):
