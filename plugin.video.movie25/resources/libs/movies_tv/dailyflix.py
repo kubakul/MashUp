@@ -61,15 +61,14 @@ def LINKSP3(mname,url):
                         hname=hname.replace('www.','')
                         hosted_media = urlresolver.HostedMediaFile(url=murl, title=hname)
                         sources.append(hosted_media)
-        if (len(sources)==0):
+        if (sources == False):
                 xbmc.executebuiltin("XBMC.Notification(Sorry!,Movie doesn't have playable links,5000)")
-      
         else:
                 source = urlresolver.choose_source(sources)
         try:
                 if source:
                         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Actual HD Movie Requires Buffer Time,7000)")
-                        stream_url = source.resolve()
+                        stream_url = main.resolve_url(source.get_url())
                 else:
                         stream_url = False
                         return
