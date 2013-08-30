@@ -1169,7 +1169,7 @@ def geturl(murl):
                 return match[0]
 
 def resolve_url(url):                
-    if re.findall('billionuploads',url):
+    if re.findall('billionuploads',url,re.I):
         try: 
             stream_url =resolve_billionuploads(url)
             print "Using Built in BillionUpload Resolver"
@@ -1185,35 +1185,35 @@ def resolve_url(url):
                 stream_url=stream_url.replace('|','')              
             except Exception, e:
                 xbmc.executebuiltin("XBMC.Notification(Error in urlresolver,Problem with source,4000)")              
-    elif re.findall('180upload',url):
+    elif re.findall('180upload',url,re.I):
         try:
             stream_url =resolve_180upload(url)
         except:
             media = urlresolver.HostedMediaFile(url)
             source = media
             stream_url = source.resolve()
-    elif re.findall('veehd',url):
+    elif re.findall('veehd',url,re.I):
         try:
             stream_url =resolve_veehd(url)
         except:
             media = urlresolver.HostedMediaFile(url)
             source = media
             stream_url = source.resolve()
-    elif re.findall('vidto',url):
+    elif re.findall('vidto',url,re.I):
         try:
             stream_url =resolve_videto(url)
         except:
             media = urlresolver.HostedMediaFile(url)
             source = media
             stream_url = source.resolve()
-    elif re.findall('epicshare',url):
+    elif re.findall('epicshare',url,re.I):
         try:
             stream_url =resolve_epicshare(url)
         except:
             media = urlresolver.HostedMediaFile(url)
             source = media
             stream_url = source.resolve()
-    elif re.findall('lemuploads',url):
+    elif re.findall('lemuploads',url,re.I):
         try:
             stream_url =resolve_lemupload(url)
             stream_url=stream_url.split('referer')[0]
