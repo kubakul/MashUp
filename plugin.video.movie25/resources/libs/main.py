@@ -1167,42 +1167,23 @@ def geturl(murl):
         else:
                 return match[0]
 
-def Download_Source(name,url):
-    originalName=name
-    match=re.compile('watchseries.lt').findall(url)
-    if match:
-        name=name.replace('/','').replace('.','').replace(':','')
-        name=name.replace('[DVD]','').replace('[TS]','').replace('[TC]','').replace('[CAM]','').replace('[SCREENER]','').replace('[COLOR blue]','').replace('[COLOR red]','').replace('[/COLOR]','').replace('[COLOR]','')
-        name=name.replace(' : Gorillavid','').replace(' : Divxstage','').replace(' : Movshare','').replace(' : Sharesix','').replace(' : Movpod','').replace(' : Daclips','').replace(' : Videoweed','')
-        name=name.replace(' : Played','').replace(' : MovDivx','').replace(' : Movreel','').replace(' : BillionUploads','').replace(' : Putlocker','').replace(' : Sockshare','').replace(' : Nowvideo','').replace(' : 180upload','').replace(' : Filenuke','').replace(' : Flashx','').replace(' : Novamov','').replace(' : Uploadc','').replace(' : Xvidstage','').replace(' : Zooupload','').replace(' : Zalaa','').replace(' : Vidxden','').replace(' : Vidbux','')
-        name=name.replace(' 720p BRRip','').replace(' 720p HDRip','').replace(' 720p WEBRip','').replace(' 720p BluRay','')
-        name=name.replace('  Part:1','').replace('  Part:2','').replace('  Part:3','').replace('  Part:4','')
-        match=re.compile('(.+?)xocx(.+?)xocx').findall(url)
-        for hurl, durl in match:
-            url=geturl('http://watchseries.lt'+hurl)
-    match2=re.compile('iwatchonline').findall(url)
-    if match2:
-        name=name.split('[COLOR red]')[0]
-        name=name.replace('/','').replace('.','')
-        url=GetUrliW(url)
-    
-    
-    name=name.split(' [')[0]
-    name=name.split('[')[0]
-    name=name.split(' /')[0]
-    name=name.split('/')[0]
+def resolve_url(url):                
     if re.findall('billionuploads',url):
-        try:
+        try: 
             stream_url =resolve_billionuploads(url)
             print "Using Built in BillionUpload Resolver"
-            stream_url=stream_url.split('referer')[0]
-            stream_url=stream_url.replace('|','')
+            if stream_url != False:            
+              stream_url=stream_url.split('referer')[0]
+              stream_url=stream_url.replace('|','')
         except:
-            media = urlresolver.HostedMediaFile(url)
+            media = urlresolver.HostedMediaFile(url) 
             source = media
             stream_url = source.resolve()
-            stream_url=stream_url.split('referer')[0]
-            stream_url=stream_url.replace('|','')
+            try:                
+                stream_url=stream_url.split('referer')[0]
+                stream_url=stream_url.replace('|','')              
+            except Exception, e:
+                xbmc.executebuiltin("XBMC.Notification(Error in urlresolver,Problem with source,4000)")              
     elif re.findall('180upload',url):
         try:
             stream_url =resolve_180upload(url)
@@ -1256,6 +1237,35 @@ def Download_Source(name,url):
             source = media
             if source:
                     stream_url = source.resolve()
+                                                            
+    return stream_url
+                               
+def Download_Source(name,url):
+    originalName=name
+    match=re.compile('watchseries.lt').findall(url)
+    if match:
+        name=name.replace('/','').replace('.','').replace(':','')
+        name=name.replace('[DVD]','').replace('[TS]','').replace('[TC]','').replace('[CAM]','').replace('[SCREENER]','').replace('[COLOR blue]','').replace('[COLOR red]','').replace('[/COLOR]','').replace('[COLOR]','')
+        name=name.replace(' : Gorillavid','').replace(' : Divxstage','').replace(' : Movshare','').replace(' : Sharesix','').replace(' : Movpod','').replace(' : Daclips','').replace(' : Videoweed','')
+        name=name.replace(' : Played','').replace(' : MovDivx','').replace(' : Movreel','').replace(' : BillionUploads','').replace(' : Putlocker','').replace(' : Sockshare','').replace(' : Nowvideo','').replace(' : 180upload','').replace(' : Filenuke','').replace(' : Flashx','').replace(' : Novamov','').replace(' : Uploadc','').replace(' : Xvidstage','').replace(' : Zooupload','').replace(' : Zalaa','').replace(' : Vidxden','').replace(' : Vidbux','')
+        name=name.replace(' 720p BRRip','').replace(' 720p HDRip','').replace(' 720p WEBRip','').replace(' 720p BluRay','')
+        name=name.replace('  Part:1','').replace('  Part:2','').replace('  Part:3','').replace('  Part:4','')
+        match=re.compile('(.+?)xocx(.+?)xocx').findall(url)
+        for hurl, durl in match:
+            url=geturl('http://watchseries.lt'+hurl)
+    match2=re.compile('iwatchonline').findall(url)
+    if match2:
+        name=name.split('[COLOR red]')[0]
+        name=name.replace('/','').replace('.','')
+        url=GetUrliW(url)
+    
+    
+    name=name.split(' [')[0]
+    name=name.split('[')[0]
+    name=name.split(' /')[0]
+    name=name.split('/')[0]
+
+    stream_url = resolve_url(url)
         
     if stream_url:
             print stream_url
