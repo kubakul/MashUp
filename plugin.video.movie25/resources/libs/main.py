@@ -717,24 +717,22 @@ def resolve_billionuploads(url):
                 domain_url = re.compile('(https?://.+?/)').findall(url)[0]
                 domain = re.compile('https?://(.+?)/').findall(domain_url)[0]
                 
-                time.sleep(5)
-                
                 normal = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
                 normal.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
                 final= normal.open(domain_url+'cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s'%(jschl,eval(maths)+len(domain))).read()
                 
                 html = normal.open(url).read()
             ################################################################################
-            common.addon.show_countdown(3, title='BillionUploads', text='Loading Captcha...')   
             #Check page for any error msgs
             if re.search('This server is in maintenance mode', html):
                 print '***** BillionUploads - Site reported maintenance mode'
-                raise Exception('File is currently unavailable on the host')
+                xbmc.executebuiltin("XBMC.Notification(File is currently unavailable,BillionUploads in maintenance,2000)")                                
                 
             #Check for File Not Found
             if re.search('File Not Found', html):
                 print '***** BillionUploads - File Not Found'
-                raise Exception('File Not Found')
+                xbmc.executebuiltin("XBMC.Notification(File Not Found,BillionUploads,2000)")
+                return False                                
 
             postid = re.search('<input type="hidden" name="id" value="(.+?)">', html).group(1)
             
@@ -768,24 +766,21 @@ def resolve_billionuploads(url):
             wdlg.addControl(img)
             wdlg.show()
         
-            #Small wait to let user see image
-            time.sleep(3)
-        
             #Prompt keyboard for user input
             kb = xbmc.Keyboard('', 'Type the letters in the image', False)
             kb.doModal()
             capcode = kb.getText()
         
-            #Check input
+            #Check input                             
             if (kb.isConfirmed()):
                 userInput = kb.getText()
                 if userInput != '':
                     capcode = kb.getText()
                 elif userInput == '':
                     Notify('big', 'No text entered', 'You must enter text in the image to access video', '')
-                    return None
+                    return False
             else:
-                return None
+                return False 
             wdlg.close()
                 
             print 'Mash Up BillionUploads - Requesting POST URL: %s' % video_src_url
@@ -888,8 +883,6 @@ def resolve_180upload(url):
            wdlg.addControl(img)
            wdlg.show()
         
-           xbmc.sleep(3000)
-
            kb = xbmc.Keyboard('', 'Type the letters in the image', False)
            kb.doModal()
            capcode = kb.getText()
@@ -1017,8 +1010,6 @@ def resolve_epicshare(url):
            wdlg.addControl(img)
            wdlg.show()
         
-           xbmc.sleep(3000)
-
            kb = xbmc.Keyboard('', 'Type the letters in the image', False)
            kb.doModal()
            capcode = kb.getText()
@@ -1096,8 +1087,6 @@ def resolve_lemupload(url):
             wdlg = xbmcgui.WindowDialog()
             wdlg.addControl(img)
             wdlg.show()
-    
-            time.sleep(3)
     
             kb = xbmc.Keyboard('', 'Type the letters in the image', False)
             kb.doModal()
