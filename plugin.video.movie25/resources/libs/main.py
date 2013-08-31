@@ -600,6 +600,55 @@ def SearchGoogle(search, site):
         return None
     return results
 ############################################################################### Resolvers ############################################################################################
+class ResolverError(Exception):
+    def __init__(self, value, value2):
+        self.value = value
+        self.value2 = value2
+    def __str__(self):
+        return repr(self.value,self.value2)
+
+def resolve_url(url):
+    stream_url = False
+    try:
+        if re.findall('billionuploads',url,re.I):
+            stream_url=resolve_billionuploads(url)
+        elif re.findall('180upload',url,re.I):
+            stream_url=resolve_180upload(url)
+        elif re.findall('veehd',url,re.I):
+            stream_url=resolve_veehd(url)
+        elif re.findall('vidto',url,re.I):
+            stream_url=resolve_videto(url)
+        elif re.findall('epicshare',url,re.I):
+            stream_url=resolve_epicshare(url)
+        elif re.findall('lemuploads',url,re.I):
+            stream_url=resolve_lemupload(url)
+        else:
+            match = re.findall('xoxv(.+?)xoxe(.+?)xoxc',url)
+            if(match):
+                for hoster, hurl in match:
+                    source = urlresolver.HostedMediaFile(host=hoster, media_id=hurl)
+            else:
+                source = urlresolver.HostedMediaFile(url)
+            if source:
+                stream_url = source.resolve()
+        try:
+            stream_url=stream_url.split('referer')[0]
+            stream_url=stream_url.replace('|','')              
+        except:
+            pass                
+    except ResolverError as e:
+        #addon.show_small_popup('[B][COLOR red]'+e.value+'[/COLOR][/B]',e.value2,5000, elogo)
+        try:
+            source = urlresolver.HostedMediaFile(url)
+            if source:
+                stream_url = source.resolve()
+        except Exception as e:
+            addon.show_small_popup('[B][COLOR red]'+str(e)+'[/COLOR][/B]','urlResolver',5000, elogo)   
+    except Exception as e:
+        addon.show_small_popup('[B][COLOR red]'+str(e)+'[/COLOR][/B]','urlResolver',5000, elogo)
+        
+    return stream_url
+    
 def grab_cloudflare(url):
 
     class NoRedirection(urllib2.HTTPErrorProcessor):
@@ -652,7 +701,7 @@ def resolve_veehd(url):
             headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2'}
             net().set_cookies(cookie_file)
             print 'Mash Up VeeHD - Requesting GET URL: %s' % url
-            html = net().http_GET(url, headers).content
+            html = net().http_GET(url, headers).content 
             fragment = re.findall('playeriframe".+?attr.+?src : "(.+?)"', html)
             frag = 'http://%s%s'%('veehd.com',fragment[1])
             net().set_cookies(cookie_file)
@@ -669,16 +718,16 @@ def resolve_veehd(url):
                     if r:
                         stream_url = r
                     else:
-                        raise Exception ('File Not Found or removed')
+                        xbmc.executebuiltin("XBMC.Notification(File Not Found,VeeHD,2000)")
+                        return False
                 if not a:
                     a = re.findall('href="(.+?)">', html)
                     stream_url = a[1]
             return stream_url
         except Exception, e:
             print '**** Mash Up VeeHD Error occured: %s' % e
-            addon.show_small_popup('[B][COLOR green]Mash Up: VeeHD Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',
-                                   5000, error_logo)
-            return
+            #addon.show_small_popup('[B][COLOR green]Mash Up: VeeHD Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',5000, error_logo)
+            raise ResolverError(str(e),"VeeHD")
 
         
 def resolve_billionuploads(url):
@@ -688,7 +737,7 @@ def resolve_billionuploads(url):
             dialog = xbmcgui.DialogProgress()
             dialog.create('Resolving', 'Resolving Mash Up BillionUploads Link...')       
             dialog.update(0)
-        
+                                                                      
             print 'Mash Up BillionUploads - Requesting GET URL: %s' % url
             
             ########################################################
@@ -724,13 +773,13 @@ def resolve_billionuploads(url):
                 html = normal.open(url).read()
             ################################################################################
             #Check page for any error msgs
-            if re.search('This server is in maintenance mode', html):
+            if re.search('This server is in maintenance mode', html, re.I):
                 print '***** BillionUploads - Site reported maintenance mode'
                 xbmc.executebuiltin("XBMC.Notification(File is currently unavailable,BillionUploads in maintenance,2000)")                                
                 return False
                 
             #Check for File Not Found
-            if re.search('File Not Found', html):
+            if re.search('File Not Found', html, re.I):
                 print '***** BillionUploads - File Not Found'
                 xbmc.executebuiltin("XBMC.Notification(File Not Found,BillionUploads,2000)")
                 return False                                
@@ -843,7 +892,7 @@ def resolve_billionuploads(url):
 
     except Exception, e:
         print '**** Mash Up BillionUploads Error occured: %s' % e
-        raise
+        raise ResolverError(str(e),"BillionUploads")
     finally:
         dialog.close()
 
@@ -917,7 +966,7 @@ def resolve_180upload(url):
 
     except Exception, e:
         print '**** Mash Up 180Upload Error occured: %s' % e
-        raise
+        raise ResolverError(str(e),"180Upload") 
     finally:
         dialog.close()
         
@@ -931,9 +980,8 @@ def resolve_videto(url):
         r = re.findall(r'<font class="err">File was removed</font>',html,re.I)
         if r:
             addon.log_error('Mash Up: Resolve Vidto - File Was Removed')
-            addon.show_small_popup('[B][COLOR green]Mash Up: Vidto Resolver[/COLOR][/B]','No Such File Or The File Has Been Removed',
-                                   5000, error_logo)
-            return
+            xbmc.executebuiltin("XBMC.Notification(File Not Found,Vidto,2000)")
+            return False
         if not r:
             r = re.findall(r'(eval\(function\(p,a,c,k,e,d\)\{while.+?flvplayer.+?)</script>'
                            ,html,re.M|re.DOTALL)
@@ -959,9 +1007,8 @@ def resolve_videto(url):
         return r[0]
     except Exception, e:
         print 'Mash Up: Resolve Vidto Error - '+str(e)
-        addon.show_small_popup('[B][COLOR green]Mash Up: Vidto Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',
-                               5000, error_logo)
-        return
+        #addon.show_small_popup('[B][COLOR green]Mash Up: Vidto Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',5000, error_logo)
+        raise ResolverError(str(e),"Vidto") 
 
 def resolve_epicshare(url):
 
@@ -982,10 +1029,12 @@ def resolve_epicshare(url):
         #Check page for any error msgs
         if re.search('This server is in maintenance mode', html):
             print '***** EpicShare - Site reported maintenance mode'
-            raise Exception('File is currently unavailable on the host')
+            xbmc.executebuiltin("XBMC.Notification(File is currently unavailable,EpicShare in maintenance,2000)")  
+            return False
         if re.search('<b>File Not Found</b>', html):
             print '***** EpicShare - File not found'
-            raise Exception('File has been deleted')
+            xbmc.executebuiltin("XBMC.Notification(File Not Found,EpicShare,2000)")
+            return False
 
 
         data = {}
@@ -1045,7 +1094,7 @@ def resolve_epicshare(url):
         
     except Exception, e:
         print '**** EpicShare MashUp Error occured: %s' % e
-        raise
+        raise ResolverError(str(e),"EpicShare") 
 
     finally:
         dialog.close()
@@ -1068,7 +1117,8 @@ def resolve_lemupload(url):
         #Check page for any error msgs
         if re.search('<b>File Not Found</b>', html):
             print '***** LemUpload - File Not Found'
-            raise Exception('File Not Found')
+            xbmc.executebuiltin("XBMC.Notification(File Not Found,LemUpload,2000)")
+            return False
 
         #Set POST data values
         data = {}
@@ -1134,7 +1184,7 @@ def resolve_lemupload(url):
 
     except Exception, e:
         print '**** LemUpload Error occured: %s' % e
-        raise
+        raise ResolverError(str(e),"LemUpload") 
     finally:
         dialog.close()
 ############################################################################### Download Code ###########################################################################################
@@ -1168,79 +1218,6 @@ def geturl(murl):
         else:
                 return match[0]
 
-def resolve_url(url):                
-    if re.findall('billionuploads',url,re.I):
-        try: 
-            stream_url =resolve_billionuploads(url)
-            print "Using Built in BillionUpload Resolver"
-            if stream_url != False:            
-              stream_url=stream_url.split('referer')[0]
-              stream_url=stream_url.replace('|','')
-        except:
-            media = urlresolver.HostedMediaFile(url) 
-            source = media
-            stream_url = source.resolve()
-            try:                
-                stream_url=stream_url.split('referer')[0]
-                stream_url=stream_url.replace('|','')              
-            except Exception, e:
-                xbmc.executebuiltin("XBMC.Notification(Error in urlresolver,Problem with source,4000)")              
-    elif re.findall('180upload',url,re.I):
-        try:
-            stream_url =resolve_180upload(url)
-        except:
-            media = urlresolver.HostedMediaFile(url)
-            source = media
-            stream_url = source.resolve()
-    elif re.findall('veehd',url,re.I):
-        try:
-            stream_url =resolve_veehd(url)
-        except:
-            media = urlresolver.HostedMediaFile(url)
-            source = media
-            stream_url = source.resolve()
-    elif re.findall('vidto',url,re.I):
-        try:
-            stream_url =resolve_videto(url)
-        except:
-            media = urlresolver.HostedMediaFile(url)
-            source = media
-            stream_url = source.resolve()
-    elif re.findall('epicshare',url,re.I):
-        try:
-            stream_url =resolve_epicshare(url)
-        except:
-            media = urlresolver.HostedMediaFile(url)
-            source = media
-            stream_url = source.resolve()
-    elif re.findall('lemuploads',url,re.I):
-        try:
-            stream_url =resolve_lemupload(url)
-            stream_url=stream_url.split('referer')[0]
-            stream_url=stream_url.replace('|','')
-        except:
-            media = urlresolver.HostedMediaFile(url)
-            source = media
-            stream_url = source.resolve()
-            stream_url=stream_url.split('referer')[0]
-            stream_url=stream_url.replace('|','')
-    else:
-        media = urlresolver.HostedMediaFile(url)
-        source = media
-        if source:
-            stream_url = source.resolve()
-        else:
-            stream_url=url
-    match3=re.findall('xoxv(.+?)xoxe(.+?)xoxc',url)
-    if match3:
-        for hoster, hurl in match3:
-            media= urlresolver.HostedMediaFile(host=hoster, media_id=hurl)
-            source = media
-            if source:
-                    stream_url = source.resolve()
-                                                            
-    return stream_url
-                               
 def Download_Source(name,url):
     originalName=name
     match=re.compile('watchseries.lt').findall(url)
