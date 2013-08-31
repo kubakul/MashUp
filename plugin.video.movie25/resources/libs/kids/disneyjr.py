@@ -14,11 +14,9 @@ wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 def DISJR():
         main.GA("KidZone","DisneyJR")
+        main.addDir('All Videos','http://disneyjunior.com/_grill/json/video?r=1-1&l=31&o=0',109,art+'/disjr.png')
         main.addDir('By Character','charac',108,art+'/disjr.png')
-        main.addDir('Full Episodes','full',108,art+'/disjr.png')
-        main.addDir('Short Videos','short',108,art+'/disjr.png')
-        main.addDir('Music Videos','music',108,art+'/disjr.png')
-        
+
 def DISJRList(murl):
         main.GA("DisneyJR","Category")
         if murl=='music':
@@ -58,50 +56,59 @@ def DISJRList(murl):
                 main.addPlayMs(sname+'  [COLOR red]"'+name+'"[/COLOR]',url,110,thumb,'','','','','')
 
         elif murl=='charac':
-            url ='http://disney.go.com/disneyjunior/data/tilePack?id=1815104&maxAmount=240'
+            url ='http://disneyjunior.com/'
             link=main.OPENURL(url)
-            match = re.compile('<a href="(.+?)" target="_self" ping=".+?"></a>\n\t\t<img src="(.+?)" />\n\t\t<text class="title"><(.+?)]]>').findall(link)
-            for url,thumb, name in match:
-                name=name.replace('<font size="9">','').replace('<font size="10">','').replace('</font>','')
-                name=name.replace('![CDATA[',' ').replace(']]',' ')
+            match = re.compile('{"type":"show","id":".+?","slug":".+?","href":"(.+?)","title":"(.+?)","logo":".+?","thumb":"(.+?)","icon"').findall(link)
+            for url,name,thumb in match:
+                if 'http' in url:
+                        url=url
+                else:
+                        url='http://disneyjunior.com/_grill/json'+url+'/video?r=1-1&l=31&o=0'
                 main.addDir(name,url,109,thumb)
         
 def DISJRList2(murl):
             main.GA("DisneyJR","DisJR-list")
             link=main.OPENURL(murl)
-            match = re.compile('tileService: "http://disney.go.com/disneyjunior/data/tilePack.?id=(.+?)%26.+?" }').findall(link)
-            url='http://disney.go.com/disneyjunior/data/tilePack?id='+match[0]+'&maxAmount=240'
-            link2=main.OPENURL(url)
-            match2 = re.compile('<a href="(.+?)" ping=".+?"/>\n\t\t<img src="(.+?)" />\n\t\t<text class="title"><(.+?)>').findall(link2)
-            for url,thumb, name in match2:
-                sname = re.compile('http://disney.go.com/disneyjunior/(.+?)/.+?').findall(url)
-                sname = sname[0]
-                sname=sname.replace('-',' ')
-                name=name.replace('![CDATA[',' ').replace(']]',' ')
-                sname=sname.upper()
-                main.addPlayMs(sname+'  [COLOR red]"'+name+'"[/COLOR]',url,110,thumb,'','','','','')
+            match = re.compile('{"duration":".+?","duration_sec".+?"duration_iso":".+?"id":".+?","slug":".+?","href":"(.+?)","title":"(.+?)","thumb":"(.+?)","description":"(.+?)","vType":"(.+?)",.+?}').findall(link)
+            for url, name,thumb,desc,vtype in match:
+                main.addPlayMs('[COLOR red]'+name+'[/COLOR] [COLOR yellow]"'+vtype+'"[/COLOR]',url,110,thumb,desc,'','','','')
+            if len(match)==25 or len(match)==31:
+                paginate=re.compile('(.+?)/video.?r=1-1&l=31&o=([^\&]+)').findall(murl)
+                for url, page in paginate:
+                        i=int(page)+24
+                        url=url.replace('json','more')
+                        purl=url+'/video?r=1-1&l=31&o='+str(i)
+                        main.addDir('[COLOR blue]Next[/COLOR]',purl,109,art+'/next2.png')
 
 def DISJRLink(mname,murl,thumb):
         main.GA("DisJR-list","Watched")
-        link=main.OPENURL(murl)
         ok=True
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
-        vidID = re.compile('\'player-placeholder\', {entryId:\'(.+?)\',').findall(link)
-        vurl='http://cdnapi.kaltura.com/p/628012/sp/628012/playManifest/entryId/'+vidID[0]+'/format/rtmp/protocol/rtmp/'
-        link2=main.OPENURL(vurl)
-        video = re.compile('<media url="(.+?)" bitrate=".+?" width=".+?" height=".+?"/>').findall(link2)
+        link=main.OPENURL(murl)
         stream_url = 'rtmp://videodolimgfs.fplive.net/videodolimg'
-        if selfAddon.getSetting("disj-qua") == "0":
-            playpath = video[len(video)-1]
-        elif selfAddon.getSetting("disj-qua") == "1":
-            playpath = video[len(video)-5]
-        elif selfAddon.getSetting("disj-qua") == "2":
-            playpath = video[0]
-        playpath= playpath.replace('mp4:','/')
-        stream_url=stream_url+playpath
+        video = re.compile('{"bitrate":.+?,"format":"mp4","url":"mp4:(.+?)","id".+?}').findall(link)
+        if video:
+                if selfAddon.getSetting("disj-qua") == "0":
+                                        vid=video[len(video)-1]
+                elif selfAddon.getSetting("disj-qua") == "1":
+                                        vid=video[len(video)-5]
+                elif selfAddon.getSetting("disj-qua") == "2":
+                                        vid=video[0]
+                stream_url=stream_url+'/'+vid
+                
+        else:
+                video = re.compile('{"bitrate":.+?,"format":"applehttp","url":"(.+?)","id":.+?}').findall(link)
+                if selfAddon.getSetting("disj-qua") == "0":
+                                        vid=video[len(video)-1]
+                elif selfAddon.getSetting("disj-qua") == "1":
+                                        vid=video[len(video)-5]
+                elif selfAddon.getSetting("disj-qua") == "2":
+                                        vid=video[0]
+                stream_url=vid
+        
         listitem = xbmcgui.ListItem(mname,thumbnailImage=thumb)
-        #listitem.setProperty('PlayPath', playpath);
+
         # play with bookmark
         player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type='', title=mname,season='', episode='', year='',img=thumb,infolabels='', watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id='')
         #WatchHistory
