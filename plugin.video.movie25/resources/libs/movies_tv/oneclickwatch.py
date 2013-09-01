@@ -36,6 +36,7 @@ def LISTSP(murl):
                                 return False   
         dialogWait.close()
         del dialogWait
+        main.CloseAllDialogs()        
         main.GA("HD","Oneclickwatch")
 
 
@@ -90,21 +91,22 @@ def PLAYOCW(mname,murl):
                 thumbs=thumb[0]
         else:
                thumbs=''
+        main.CloseAllDialogs()               
         for url in match:
                 host=re.compile("http://(.+?).com/.+?").findall(url)
                 for hname in host:
                         host=hname.replace('www.','')
                 hosted_media = urlresolver.HostedMediaFile(url=url, title=host)
                 sources.append(hosted_media)
+                        
         if (len(sources)==0):
                 xbmc.executebuiltin("XBMC.Notification(Sorry!,Show doesn't have playable links,5000)")
-      
         else:
                 source = urlresolver.choose_source(sources)
         try:
                 if source:
                         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                        stream_url = source.resolve()
+                        stream_url = main.resolve_url(source.get_url())
                 else:
                         stream_url = False
                         return
@@ -138,7 +140,9 @@ def VIDEOLINKST3(mname,murl):
         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Hosts,5000)")
         link=main.OPENURL(murl)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        match=re.compile('<br /><a href="(.+?)">(.+?)</a><br />').findall(link)
+        match=re.compile('<p><a href="([^"]+?)".*?>().+?</a></p>').findall(link)
+        if len(match)==0:                
+            match=re.compile('<a href="(.+?)">(.+?)</a><br />').findall(link)
         desc=re.compile('<.+? />Plot:(.+?)<.+? />').findall(link)
         if len(desc)>0:
                 descs=desc[0]
@@ -149,20 +153,20 @@ def VIDEOLINKST3(mname,murl):
                 thumbs=thumb[0]
         else:
                thumbs=''
+        main.CloseAllDialogs()               
         for url,host in match:
                 print url
                 hosted_media = urlresolver.HostedMediaFile(url=url, title=host)
                 sources.append(hosted_media)
         if (len(sources)==0):
                 xbmc.executebuiltin("XBMC.Notification(Sorry!,Show doesn't have playable links,5000)")
-      
         else:
                 source = urlresolver.choose_source(sources)
         try:
                 if source:
                         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                        stream_url = source.resolve()
-                else:
+                        stream_url = main.resolve_url(source.get_url())
+                else:   
                         stream_url = False
                         return
                 print stream_url
