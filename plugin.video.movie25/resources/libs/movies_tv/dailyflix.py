@@ -61,7 +61,7 @@ def LINKSP3(mname,url):
                         hname=hname.replace('www.','')
                         hosted_media = urlresolver.HostedMediaFile(url=murl, title=hname)
                         sources.append(hosted_media)
-        if (sources == False):
+        if (len(sources)==0):
                 xbmc.executebuiltin("XBMC.Notification(Sorry!,Movie doesn't have playable links,5000)")
         else:
                 source = urlresolver.choose_source(sources)
