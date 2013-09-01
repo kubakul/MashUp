@@ -113,6 +113,10 @@ def ErrorReport(e):
         elogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/bigx.png')
         xbmc.executebuiltin("XBMC.Notification([COLOR=FF67cc33]Mash Up Error[/COLOR],"+str(e)+",10000,"+elogo+")")
         xbmc.log('***********Mash Up Error: '+str(e)+'**************')
+        
+        
+def CloseAllDialogs():
+        xbmc.executebuiltin("XBMC.Dialog.Close(all,true)")
 ################################################################################ Notifications #########################################################################################################
 
 def CheckVersion():
