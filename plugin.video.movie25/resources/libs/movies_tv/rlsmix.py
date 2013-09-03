@@ -15,68 +15,55 @@ art = main.art
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 
-def LISTTV4(murl):
-        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,10000)")
+def LISTTV4(durl):
+        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,1000)")
         main.addDir('Search Rlsmix','rlsmix',136,art+'/search.png')
-        urllist=main.OPENURL('http://www.rlsmix.net/category/tv-shows/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/2/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/3/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/4/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/5/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/6/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/7/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/8/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/9/')+main.OPENURL('http://www.rlsmix.net/category/tv-shows/page/10/')
-        
-        if urllist:
-                urllist=main.unescapes(urllist)
-                match=re.compile('<h1 class="titles"><a href="(.+?)" title="Permanent Link to (.+?)">.+?src="http://uppix.net/(.+?)"').findall(urllist)
-                dialogWait = xbmcgui.DialogProgress()
-                ret = dialogWait.create('Please wait until Show list is cached.')
-                totalLinks = len(match)
-                loadedLinks = 0
-                remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
-                dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
-                for url,name,thumb in match:
-                        match2=re.compile('TV Round Up').findall(name)
-                        name=name.replace('\xc2\xa0','').replace('" ','').replace(' "','').replace('"','').replace("&#039;","'").replace("&amp;","and").replace("&#8217;","'").replace("amp;","and").replace("#8211;","-")
-                        if len(match2)==0:
-                            main.addDirTE(name,url,62,'http://uppix.net/'+thumb,'','','','','')
+        if 'http://directdownload.tv/' in durl:
+                murl=durl
+        else:
+                murl='http://directdownload.tv/ajaxSearch.php?keyword=&dall&hdtv=false&pdtv=false&dsr=false&realhd=true&webdl=false&ms=false&tvshow=false&movie=false&dvdrip=false&myshows=false&offset=0'
+        link=main.OPENURL(murl)
+        link=main.unescapes(link)
+        match=re.compile('DirectDownload.tv">(.+?)</span>(.+?)</b> </strong>.+?<dd class="links">Download<br />(.+?)</dd>').findall(link)
+        dialogWait = xbmcgui.DialogProgress()
+        ret = dialogWait.create('Please wait until Show list is cached.')
+        totalLinks = len(match)
+        loadedLinks = 0
+        remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
+        dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
+        for name1,name2,url in match:
+                name=name1+' '+name2
+                name=name.replace('.',' ')
+                main.addDirTE(name,url,62,'','','','','','')
                 
-                        loadedLinks = loadedLinks + 1
-                        percent = (loadedLinks * 100)/totalLinks
-                        remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
-                        dialogWait.update(percent,'[B]Will load instantly from now on[/B]',remaining_display)
-                        if (dialogWait.iscanceled()):
-                            return False   
+                loadedLinks = loadedLinks + 1
+                percent = (loadedLinks * 100)/totalLinks
+                remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
+                dialogWait.update(percent,'[B]Will load instantly from now on[/B]',remaining_display)
+                if (dialogWait.iscanceled()):
+                        return False   
         dialogWait.close()
-        del dialogWait
+        del dialogWait   
+        paginate=re.compile('http://directdownload.tv/ajaxSearch.php.?keyword=&dall&hdtv=false&pdtv=false&dsr=false&realhd=true&webdl=false&ms=false&tvshow=false&movie=false&dvdrip=false&myshows=false&offset=([^\&]+)').findall(murl)
+        for page in paginate:
+                i=int(page)+20
+                purl='http://directdownload.tv/ajaxSearch.php?keyword=&dall&hdtv=false&pdtv=false&dsr=false&realhd=true&webdl=false&ms=false&tvshow=false&movie=false&dvdrip=false&myshows=false&offset='+str(i)
+                main.addDir('[COLOR blue]Next[/COLOR]',purl,61,art+'/next2.png')
         main.GA("TV","Rlsmix")
 
 def LINKTV4(mname,url):
         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Hosts,3000)")
-        link=main.OPENURL(url)
-        link= link.replace('TV Rage','').replace('Homepage','').replace('href="http://www.tvrage.com','').replace('href="http://www.cbs.com','').replace('Torrent Search','').replace('Season Download','').replace('href="http://uppix.net','').replace('href="http://www.torrentz.com','').replace('href="http://directdownload.tv','')
         ok=True
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        main.addLink('[COLOR red]The Last uploaded & turbobit Link could be HD[/COLOR]','',art+'/tvb.png')
-        match=re.compile('<a href="(.+?)" target="_blank">(.+?)</a>').findall(link)
+        match=re.compile('<a href="(.+?)" ><img title="Download on (.+?)" src=".+?">').findall(url)
         for url, host in match:
                 thumb=host.lower()
-                match5=re.compile('Part').findall(host)
-                if len(match5)>0:
-                        match6=re.compile('http://(.+?)/.+?').findall(url)
-                        for url2 in match6:
-                            host2 = url2.replace('www.','').replace('.in','').replace('.net','').replace('.com','').replace('.to','').replace('.org','').replace('.ch','')
-                        thumb=host2.lower()
-                match3=re.compile('720p').findall(url)
-                match4=re.compile('mp4').findall(url)
-                
-                
-                if len(match3)>0:
-                    host =host+' [COLOR red]HD[/COLOR]'
-                elif len(match4)>0:
-                    host =host+' [COLOR green]SD MP4[/COLOR]'
-                else:
-                    host =host+' [COLOR blue]SD[/COLOR]'
                 match2=re.compile('rar').findall(url)
                 if len(match2)==0:
                         hosted_media = urlresolver.HostedMediaFile(url=url, title=host)
                         match2=re.compile("{'url': '(.+?)', 'host': '(.+?)', 'media_id': '.+?'}").findall(str(hosted_media))
                         for murl,name in match2:
-                                main.addDown2(mname+' [COLOR blue]'+host+'[/COLOR]',murl,210,art+"/hosts/"+thumb+".png",art+"/hosts/"+thumb+".png")
+                                main.addDown2(mname+' [COLOR blue]'+host+'[/COLOR] [COLOR red]HD[/COLOR]',murl,210,art+"/hosts/"+thumb+".png",art+"/hosts/"+thumb+".png")
 
         
 def LINKTV4B(mname,murl):
@@ -90,9 +77,14 @@ def LINKTV4B(mname,murl):
         fanart =infoLabels['backdrop_url']
         imdb_id=infoLabels['imdb_id']
         infolabels = { 'supports_meta' : 'true', 'video_type':video_type, 'name':str(infoLabels['title']), 'imdb_id':str(infoLabels['imdb_id']), 'season':str(season), 'episode':str(episode), 'year':str(infoLabels['year']) }
+        hosted_media = urlresolver.HostedMediaFile(url=murl)
+        source = hosted_media
         try:
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                stream_url = main.resolve_url(murl)
+                if source:
+                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                        stream_url = source.resolve()
+                else:
+                      stream_url = False
                 
                 infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
                 # play with bookmark
@@ -142,8 +134,8 @@ def SEARCHRlsmix(murl):
                 if (keyb.isConfirmed()):
                         search = keyb.getText()
                         encode=urllib.quote(search)
-                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,3000)")
-                        urllist=main.OPENURL('http://www.rlsmix.net/?s='+encode)+main.OPENURL('http://www.rlsmix.net/page/2/?s='+encode)+main.OPENURL('http://www.rlsmix.net/page/3/?s='+encode)
+                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,1000)")
+                        urllist=main.OPENURL('http://directdownload.tv/ajaxSearch.php?keyword='+encode+'&hdtv=false&pdtv=false&dsr=false&realhd=true&webdl=false&ms=false&tvshow=false&movie=false&dvdrip=false&myshows=false&offset=0')
                         if not os.path.exists(SeaFile) and encode != '':
                             open(SeaFile,'w').write('search="%s",'%encode)
                         else:
@@ -165,31 +157,31 @@ def SEARCHRlsmix(murl):
                 
         
                 try:
-                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,3000)")
-                        urllist=main.OPENURL('http://www.rlsmix.net/?s='+encode)+main.OPENURL('http://www.rlsmix.net/page/2/?s='+encode)+main.OPENURL('http://www.rlsmix.net/page/3/?s='+encode)
+                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,1000)")
+                        urllist=main.OPENURL('http://directdownload.tv/ajaxSearch.php?keyword='+encode+'&hdtv=false&pdtv=false&dsr=false&realhd=true&webdl=false&ms=false&tvshow=false&movie=false&dvdrip=false&myshows=false&offset=0')
                 except:
-                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,3000)")
-                        urllist=main.OPENURL('http://www.rlsmix.net/?s='+encode)+main.OPENURL('http://www.rlsmix.net/page/2/?s='+encode)
-        if urllist:
-                urllist=main.unescapes(urllist)
-                match=re.compile('<h1 class="titles"><a href="(.+?)" title="Permanent Link to (.+?)">.+?src="http://uppix.net/(.+?)"').findall(urllist)
-                dialogWait = xbmcgui.DialogProgress()
-                ret = dialogWait.create('Please wait until Show list is cached.')
-                totalLinks = len(match)
-                loadedLinks = 0
+                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,1000)")
+                        urllist=main.OPENURL('http://directdownload.tv/ajaxSearch.php?keyword='+encode+'&hdtv=false&pdtv=false&dsr=false&realhd=true&webdl=false&ms=false&tvshow=false&movie=false&dvdrip=false&myshows=false&offset=0')
+        
+        urllist=main.unescapes(urllist)
+        match=re.compile('DirectDownload.tv">(.+?)</span>(.+?)</strong>.+?<dd class="links">Download<br />(.+?)</dd>').findall(urllist)
+        #DirectDownload.tv"> The.<b>Carrie</b>.Diaries</span>.S01E01.1080p.WEB.DL.DD5.1.H.264-KiNGS </strong>1689.6 MB - 2013-01-15 12:31 (7 months ago)</dd>                    <dd class="links">Download<br />(.+?)</dd>
+        dialogWait = xbmcgui.DialogProgress()
+        ret = dialogWait.create('Please wait until Show list is cached.')
+        totalLinks = len(match)
+        loadedLinks = 0
+        remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
+        dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
+        for name1,name2,url in match:
+                name=name1+' '+name2
+                name=name.replace('<b>.',' ').replace('</b>.',' ').replace('.<b>',' ').replace('.</b>',' ').replace('<b>',' ').replace('</b>',' ').replace('.',' ')
+                main.addDirTE(name,url,62,'','','','','','')
+                loadedLinks = loadedLinks + 1
+                percent = (loadedLinks * 100)/totalLinks
                 remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
-                dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
-                for url,name,thumb in match:
-                        match2=re.compile('TV Round Up').findall(name)
-                        name=name.replace('\xc2\xa0','').replace('" ','').replace(' "','').replace('"','').replace("&#039;","'").replace("&amp;","and").replace("&#8217;","'").replace("amp;","and").replace("#8211;","-")
-                        if len(match2)==0:
-                                main.addDirTE(name,url,62,'http://uppix.net/'+thumb,'','','','','')
-                        loadedLinks = loadedLinks + 1
-                        percent = (loadedLinks * 100)/totalLinks
-                        remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
-                        dialogWait.update(percent,'[B]Will load instantly from now on[/B]',remaining_display)
-                        if (dialogWait.iscanceled()):
-                            return False   
+                dialogWait.update(percent,'[B]Will load instantly from now on[/B]',remaining_display)
+                if (dialogWait.iscanceled()):
+                        return False   
         dialogWait.close()
         del dialogWait
         main.GA("Movie1k","Search")
