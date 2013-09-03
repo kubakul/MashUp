@@ -21,32 +21,32 @@ def resolve_url(url):
     stream_url = False
     if(url):
         try:
-            if re.findall('billionuploads',url,re.I):
+            match = re.search('xoxv(.+?)xoxe(.+?)xoxc',url)
+            if(match):
+                source = urlresolver.HostedMediaFile(host=match.group(1), media_id=match.group(2))
+                if source:
+                    stream_url = source.resolve()
+            elif re.search('billionuploads',url,re.I):
                 stream_url=resolve_billionuploads(url)
-            elif re.findall('180upload',url,re.I):
+            elif re.search('180upload',url,re.I):
                 stream_url=resolve_180upload(url)
-            elif re.findall('veehd',url,re.I):
+            elif re.search('veehd',url,re.I):
                 stream_url=resolve_veehd(url)
-            elif re.findall('vidto',url,re.I):
+            elif re.search('vidto',url,re.I):
                 stream_url=resolve_videto(url)
-            elif re.findall('epicshare',url,re.I):
+            elif re.search('epicshare',url,re.I):
                 stream_url=resolve_epicshare(url)
-            elif re.findall('lemuploads',url,re.I):
+            elif re.search('lemuploads',url,re.I):
                 stream_url=resolve_lemupload(url)
             else:
-                match = re.findall('xoxv(.+?)xoxe(.+?)xoxc',url)
-                if(match):
-                    for hoster, hurl in match:
-                        source = urlresolver.HostedMediaFile(host=hoster, media_id=hurl)
-                else:
-                    source = urlresolver.HostedMediaFile(url)
+                source = urlresolver.HostedMediaFile(url)
                 if source:
                     stream_url = source.resolve()
             try:
                 stream_url=stream_url.split('referer')[0]
-                stream_url=stream_url.replace('|','')              
+                stream_url=stream_url.replace('|','')
             except:
-                pass                
+                pass
         except ResolverError as e:
             #addon.show_small_popup('[B][COLOR red]'+e.value+'[/COLOR][/B]',e.value2,5000, elogo)
             try:
