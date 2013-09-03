@@ -234,7 +234,9 @@ def VIDEOLINKSSG(mname,murl,thumb):
                 source = urlresolver.choose_source(sources)
         try:
                 xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                stream_url = main.resolve_url(source.get_url())   
+                stream_url = main.resolve_url(source.get_url())
+                if(stream_url == False):
+                    return   
 
                 infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
                 # play with bookmark

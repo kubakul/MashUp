@@ -451,11 +451,9 @@ def iWatchLINKB(mname,url):
         link=main.OPENURL(url)
         link=main.unescapes(link)
         match=re.compile('<(?:iframe|pagespeed_iframe).+?src=\"(.+?)\"').findall(link)
-        hosted_media = urlresolver.HostedMediaFile(match[0])
-        source=hosted_media
         try :
             xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-            stream_url = main.resolve_url(source.get_url())
+            stream_url = main.resolve_url(match[0])
             if(stream_url == False):
                 return
                 
