@@ -69,13 +69,11 @@ def LINKINT3(name,murl,thumb):
         else:
                 source = urlresolver.choose_source(sources)
         try:
-                if source:
-                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                        stream_url = source.resolve()
-                        
-                else:
-                        stream_url = False
-                        return
+                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                stream_url = main.resolve_url(source.get_url())
+                if(stream_url == False):
+                    return
+                
                 listitem = xbmcgui.ListItem(thumbnailImage=thumb)
                 listitem.setInfo('video', {'Title': name, 'Year': ''} )         
                 

@@ -593,15 +593,10 @@ def VIDEOLINKS(mname,url):
         infolabels = { 'supports_meta' : 'true', 'video_type':video_type, 'name':str(infoLabels['title']), 'imdb_id':str(infoLabels['imdb_id']), 'season':str(season), 'episode':str(episode), 'year':str(infoLabels['year']) }
         r=re.findall('xoxv(.+?)xoxe(.+?)xoxc',url)
         for hoster, url in r:
-            hosted_media = urlresolver.HostedMediaFile(host=hoster, media_id=url)
-        source=hosted_media
+            source = urlresolver.HostedMediaFile(host=hoster, media_id=url)
         try :
-            if source:
-                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                    stream_url = source.resolve()
-            else:
-                    stream_url = False
-                    return
+            xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+            stream_url = main.resolve_url(source.get_url())
                 
             infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
             # play with bookmark

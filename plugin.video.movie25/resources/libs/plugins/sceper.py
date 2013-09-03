@@ -224,12 +224,11 @@ def VIDEOLINKSSCEPER(mname,murl,thumb):
         else:
                 source = urlresolver.choose_source(sources)
         try:
-                if source:
-                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Link is being Resolved,5000)")
-                        stream_url = source.resolve()
-                else:
-                      stream_url = False
-                      return
+                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                stream_url = main.resolve_url(source.get_url())
+                if(stream_url == False):
+                    return
+                
                 if re.findall('(.+?)\ss(\d+)e(\d+)\s',mname,re.I):
                     mname=mname.split('&')[0]
                     infoLabels =main.GETMETAEpiT(mname,thumb,'')

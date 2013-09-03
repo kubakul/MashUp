@@ -168,14 +168,8 @@ def NovaWeed(murl):
         link=main.unescapes(link)
         vw = re.compile('flashvars.advURL="(.+?)";').findall(link)
         vid_url=vw[0]
-        media = urlresolver.HostedMediaFile(vid_url)
-        source = media
-        if source:
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,4000)")
-                stream_url = source.resolve()
-        else:
-                stream_url = False
-        return stream_url
+        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+        return main.resolve_url(vid_url)
 
 def Upload2(murl):
         link=main.OPENURL(murl)

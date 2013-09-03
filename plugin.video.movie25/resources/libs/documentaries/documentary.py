@@ -168,18 +168,13 @@ def LINKDOC(mname,murl,thumb):
                         match2=re.compile('http://www.youtube.com/p/([^<]+).?hl=.+?').findall(link)
                     url='http://www.youtube.com/watch?v='+match2[0]
         
-        media = urlresolver.HostedMediaFile(str(url))
-        source = media
         listitem = xbmcgui.ListItem(mname)
         try:
-            if source:
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                stream_url = source.resolve()
-                if source.resolve()==False:
-                        xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
-                        return
-            else:
-              stream_url = False
+            xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+            stream_url = main.resolve_url(str(url))
+            if(stream_url == False):
+                xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
+                return
         
             # play with bookmark
             player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type='', title=mname,season='', episode='', year='',img=thumb,infolabels='', watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id='')
@@ -247,17 +242,12 @@ def LINKDOC(mname,murl,thumb):
                     else:
                         url=url.replace('?rel=0','')
         
-        media = urlresolver.HostedMediaFile(str(url))
-        source = media
         try:
-            if source:
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                stream_url = source.resolve()
-                if source.resolve()==False:
-                        xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
-                        return
-            else:
-              stream_url = False
+            xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+            stream_url = main.resolve_url(str(url))
+            if(stream_url == False):
+                xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
+                return
         
             # play with bookmark
             player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type='', title=mname,season='', episode='', year='',img=thumb,infolabels='', watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id='')
@@ -315,17 +305,12 @@ def LINKDOC(mname,murl,thumb):
                         url=url.replace('?rel=0','')
         
         print "vlink " +str(url)
-        media = urlresolver.HostedMediaFile(str(url))
-        source = media
         try:
-            if source:
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                stream_url = source.resolve()
-                if source.resolve()==False:
-                        xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
-                        return
-            else:
-              stream_url = False
+            xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+            stream_url = main.resolve_url(str(url))
+            if(stream_url == False):
+                xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
+                return
         
             # play with bookmark
             player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type='', title=mname,season='', episode='', year='',img=thumb,infolabels='', watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id='')

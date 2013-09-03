@@ -82,17 +82,11 @@ def LINK(mname,murl,thumb,desc):
                 stream_url = "plugin://plugin.video.youtube/?path=/root/video&action=play_video&videoid="+match[0]+"&hd=1"
             match2=re.compile('src="http://player.vimeo.com/video/(.+?)"').findall(link)
             if match2:
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Opening Link,3000)")
-                media = urlresolver.HostedMediaFile(str('http://vimeo.com/'+match2[0]))
-                source = media
-                if source:
-                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                    stream_url = source.resolve()
-                    if source.resolve()==False:
-                        xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
-                        return
-                else:
-                    stream_url = False
+                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                stream_url = main.resolve_url(str('http://vimeo.com/'+match2[0]))
+                if(stream_url == False):
+                    xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
+                    return
             infoL={'Title': mname, 'Plot': desc}
             # play with bookmark
             player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type='', title=mname,season='', episode='', year='',img=thumb,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id='')

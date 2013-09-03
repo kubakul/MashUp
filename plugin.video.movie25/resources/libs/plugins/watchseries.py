@@ -347,15 +347,9 @@ def LINKWATCHS(mname,murl):
         fanart =infoLabels['backdrop_url']
         imdb_id=infoLabels['imdb_id']
         infolabels = { 'supports_meta' : 'true', 'video_type':video_type, 'name':str(infoLabels['title']), 'imdb_id':str(infoLabels['imdb_id']), 'season':str(season), 'episode':str(episode), 'year':str(infoLabels['year']) }
-        media = urlresolver.HostedMediaFile(furl)
-        source = media
         try:
-                if source:
-                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,4000)")
-                        stream_url = source.resolve()
-                else:
-                        stream_url = False  
-                
+                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                stream_url = main.resolve_url(furl)
 
                 infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
                 # play with bookmark

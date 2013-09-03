@@ -119,16 +119,11 @@ def WATCHDOCLink(mname,murl,thumb):
                 Type=re.compile('youtube').findall(url)
                 if len(Type)>0:
                     url=url.replace('https','http')
-                    media = urlresolver.HostedMediaFile(str(url))
-                    source = media
-                    if source:
-                        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                        stream_url = source.resolve()
-                        if source.resolve()==False:
-                            xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
-                            return
-                    else:
-                        stream_url = False  
+                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                    stream_url = main.resolve_url(str(url))
+                    if(stream_url == False):
+                        xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")                    
+                        return
                     # play with bookmark
                     player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type='', title=mname,season='', episode='', year='',img=thumb,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id='')
                     #WatchHistory
@@ -151,16 +146,13 @@ def WATCHDOCLink(mname,murl,thumb):
                 for url in match2:
                     url=url.replace('http://www.dailymotion.com/embed/video','http://www.dailymotion.com/video')
                     print "gg "+url
-                    media = urlresolver.HostedMediaFile(str(url))
-                    source = media
-                if source:
-                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                    stream_url = source.resolve()
-                    if source.resolve()==False:
-                        xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
-                        return
-                else:
-                    stream_url = False  
+                    source = urlresolver.HostedMediaFile(str(url))
+                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                stream_url = main.resolve_url(source.get_url())
+                if(stream_url == False):
+                    xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
+                    return
+                                                        
                 # play with bookmark
                 player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type='', title=mname,season='', episode='', year='',img=thumb,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id='')
                 #WatchHistory
@@ -188,16 +180,11 @@ def WATCHDOCLink(mname,murl,thumb):
         if len(match4)>0:
                 for url in match4:
                     url=url.replace('http://player.vimeo.com/video','http://vimeo.com')
-                media = urlresolver.HostedMediaFile(str(url))
-                source = media
-                if source:
-                    xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                    stream_url = source.resolve()
-                    if source.resolve()==False:
-                        xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
-                        return
-                else:
-                    stream_url = False  
+                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                stream_url = main.resolve_url(str(url))
+                if(stream_url == False):
+                    xbmc.executebuiltin("XBMC.Notification(Sorry!,Link Cannot Be Resolved,5000)")
+                    return 
                 # play with bookmark
                 player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type='', title=mname,season='', episode='', year='',img=thumb,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id='')
                 #WatchHistory

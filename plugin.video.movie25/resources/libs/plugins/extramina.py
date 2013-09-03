@@ -284,11 +284,11 @@ def VIDEOLINKSEXTRA(mname,murl,thumb,desc):
         else:
                 source = urlresolver.choose_source(sources)
         try:
-                if source:
-                        stream_url = source.resolve()
-                else:
-                      stream_url = False
-                      return
+                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
+                stream_url = main.resolve_url(source.get_url())
+                if(stream_url == False):
+                    return
+                
                 infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
                 # play with bookmark
                 player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type=video_type, title=str(infoLabels['title']),season=str(season), episode=str(episode), year=str(infoLabels['year']),img=img,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id=imdb_id)
