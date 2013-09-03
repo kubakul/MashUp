@@ -114,7 +114,6 @@ def ErrorReport(e):
         xbmc.executebuiltin("XBMC.Notification([COLOR=FF67cc33]Mash Up Error[/COLOR],"+str(e)+",10000,"+elogo+")")
         xbmc.log('***********Mash Up Error: '+str(e)+'**************')
         
-        
 def CloseAllDialogs():
         xbmc.executebuiltin("XBMC.Dialog.Close(all,true)")
 ################################################################################ Notifications #########################################################################################################
@@ -724,17 +723,16 @@ def resolve_veehd(url):
                     if r:
                         stream_url = r
                     else:
-                        raise Exception ('File Not Found or removed')
+                        xbmc.executebuiltin("XBMC.Notification(File Not Found,VeeHD,2000)")
+                        return False
                 if not a:
                     a = re.findall('href="(.+?)">', html)
                     stream_url = a[1]
             return stream_url
         except Exception, e:
             print '**** Mash Up VeeHD Error occured: %s' % e
-            addon.show_small_popup('[B][COLOR green]Mash Up: VeeHD Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',
-                                   5000, error_logo)
-            return
-
+            #addon.show_small_popup('[B][COLOR green]Mash Up: VeeHD Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',5000, error_logo)
+            raise ResolverError(str(e),"VeeHD")
         
 def resolve_billionuploads(url):
 # UPDATED BY THE-ONE @ XBMCHUB - 08-27-2013
@@ -942,7 +940,7 @@ def resolve_180upload(url):
            kb = xbmc.Keyboard('', 'Type the letters in the image', False)
            kb.doModal()
            capcode = kb.getText()
-   
+
            if (kb.isConfirmed()):
                userInput = kb.getText()
                if userInput != '':
