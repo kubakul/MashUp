@@ -97,7 +97,7 @@ def iLiveLink(mname,murl,thumb):
                 if len(playpath)==0:
                         playpath=re.compile('http://snapshots.ilive.to/snapshots/(.+?)_snapshot.jpg').findall(thumb)      
                 for playPath in playpath:
-                    stream_url = 'rtmp://edge.isearch.to/edge playpath=' + playPath + " swfUrl=http://player.ilive.to/player_ilive_2.swf pageUrl="+pageUrl+" live=1 timeout=15"
+                    stream_url = 'rtmp://live.iguide.to/edge playpath=' + playPath + " swfUrl=http://player.ilive.to/player_ilive_2.swf pageUrl="+pageUrl+" live=1 timeout=15"
                 listitem = xbmcgui.ListItem(thumbnailImage=thumb)
                 listitem.setInfo('video', {'Title': mname, 'Genre': 'Live'} )
         
