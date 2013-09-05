@@ -802,7 +802,7 @@ def ListglobalFavM():
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
 
 def ListglobalFavMs():
-        fav = favorites.Favorites(addon_id, sys.argv)
+        getFavorites("Misc. Fav's")
         main.GA("None","Misc-Fav")
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
 
