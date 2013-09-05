@@ -780,7 +780,6 @@ def ListglobalFavALL():
         getFavorites()
         main.GA("None","Grouped Fav's")
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
-        main.VIEWS()
         
 def ListglobalFavIWO():
         getFavorites("iWatchOnline Fav's")
