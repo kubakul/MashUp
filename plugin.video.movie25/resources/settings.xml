@@ -4,6 +4,7 @@
    <setting id="meta-view" type="bool" label="[B]Metadata[/B]" default="true"/>
    <setting id="whistory" type="bool" label="[B]Watch History[/B]" default="true"/>
    <setting id="switchup" type="bool" label="[B]SwitchUp[/B]" default="false"/>
+   <setting id="groupfavs" type="bool" label="[B]Group Favorites[/B]" default="false"/>
    </category>
    <category label="Auto View">
     <setting id="auto-view" type="bool" label="[B]Auto View[/B]" default="true"/>
