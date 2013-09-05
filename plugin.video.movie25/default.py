@@ -291,10 +291,10 @@ def YEAR():
         main.VIEWSB()
 
 def GlobalFav():
-        main.addLink("[COLOR red]Mash Up Fav's can also be favorited under XBMC favorites[/COLOR]",'','')
         if selfAddon.getSetting("groupfavs") == "true":
             ListglobalFavALL()
         else:
+            main.addLink("[COLOR red]Mash Up Fav's can also be favorited under XBMC favorites[/COLOR]",'','')
             main.addDir("Downloaded Content",'Mash Up',241,art+'/downloadlog.png')
             main.addDir("Movie25 Fav's",'http://www.movie25.com/',10,art+'/fav2.png')
             main.addDir("iWatchOnline Fav's",'http://www.movie25.com/',655,art+'/fav2+.png')
@@ -760,17 +760,69 @@ def getFavorites(section_title = None):
 
             for fav_item in fav_items:
                 if (fav_item['isfolder'] == 'false'):
-                    main.addPlayM(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
-                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
-                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
-                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
-                        fav_item['infolabels'].get('year',''))
+                    if (fav_item['section_addon_title'] == "iWatchOnline Fav's" or 
+                        fav_item['section_addon_title'] == "Movie Fav's"):
+                        main.addPlayM(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "TV Show Fav's"):
+                        main.addPlayT(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "TV Episode Fav's"):
+                        main.addPlayTE(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "Misc. Fav's"):
+                        main.addPlayMs(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "Live Fav's"):
+                        main.addPlayL(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
                 else:
-                    main.addDirM(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
-                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
-                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
-                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
-                        fav_item['infolabels'].get('year',''))
+                    if (fav_item['section_addon_title'] == "iWatchOnline Fav's" or 
+                        fav_item['section_addon_title'] == "Movie Fav's"):
+                        main.addDirM(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "TV Show Fav's"):
+                        main.addDirT(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "TV Episode Fav's"):
+                        main.addDirTE(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "Misc. Fav's"):
+                        main.addDirMs(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "Live Fav's"):
+                        main.addDirL(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                            fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                            fav_item['infolabels'].get('year',''))
                 
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")
