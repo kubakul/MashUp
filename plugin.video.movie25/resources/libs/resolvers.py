@@ -48,17 +48,17 @@ def resolve_url(url):
             except:
                 pass
         except ResolverError as e:
-            #addon.show_small_popup('[B][COLOR red]'+e.value+'[/COLOR][/B]',e.value2,5000, elogo)
+            #addon.show_small_popup('[COLOR=FF67cc33]Mash Up URLresolver Error[/COLOR] ' + e.value2,'[B][COLOR red]'+e.value+'[/COLOR][/B]',5000, elogo)
             try:
                 source = urlresolver.HostedMediaFile(url)
                 if source:
                     stream_url = source.resolve()
             except Exception as e:
-                addon.show_small_popup('[B][COLOR red]'+str(e)+'[/COLOR][/B]','urlResolver',5000, elogo)   
+                addon.show_small_popup('[COLOR=FF67cc33]Mash Up URLresolver Error[/COLOR]','[B][COLOR red]'+str(e)+'[/COLOR][/B]',5000, elogo)   
         except Exception as e:
-            addon.show_small_popup('[B][COLOR red]'+str(e)+'[/COLOR][/B]','urlResolver',5000, elogo)
+            addon.show_small_popup('[COLOR=FF67cc33]Mash Up URLresolver Error[/COLOR]','[B][COLOR red]'+str(e)+'[/COLOR][/B]',5000, elogo)
     else:
-        addon.show_small_popup('[B][COLOR red]video url not valid[/COLOR][/B]','urlResolver',5000, elogo)
+        addon.show_small_popup('[COLOR=FF67cc33]Mash Up URLresolver Error[/COLOR]','[B][COLOR red]video url not valid[/COLOR][/B]',5000, elogo)
     return stream_url
     
 def grab_cloudflare(url):
