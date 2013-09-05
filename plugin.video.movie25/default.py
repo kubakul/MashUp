@@ -745,16 +745,26 @@ def popVIP(image):
     del popup
 ################################################################################ Favorites Function##############################################################################################################
 def ListglobalFavIWO():
-        favpath=os.path.join(main.datapath,'Favourites')
-        tvfav=os.path.join(favpath,'Movies')
-        FavFile=os.path.join(tvfav,'IWOFav')
-        if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
-                for url,name,mode,thumb,plot,type in Favs:
-                        if type=='PLAY':
-                                main.addPlayM(name,url,int(mode),thumb,plot,'','','','')
-                        if type=='DIR':
-                                main.addDirM(name,url,int(mode),thumb,plot,'','','','')
+        from universal import favorites
+        fav = favorites.Favorites(addon_id, sys.argv)
+ 
+        fav_items = fav.get_my_favorites(section_title="iWatchOnline Fav's", item_mode='addon')
+ 
+        if len(fav_items) > 0 :
+
+            for fav_item in fav_items:
+                if (fav_item['isfolder'] == 'false'):
+                    main.addPlayM(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
+                else:
+                    main.addDirM(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
                 
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")
@@ -763,16 +773,26 @@ def ListglobalFavIWO():
         main.VIEWS()
 
 def ListglobalFavT():
-        favpath=os.path.join(main.datapath,'Favourites')
-        tvfav=os.path.join(favpath,'TV')
-        FavFile=os.path.join(tvfav,'TVFav')
-        if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
-                for url,name,mode,thumb,plot,type in Favs:
-                        if type=='PLAY':
-                                main.addPlayT(name,url,int(mode),thumb,plot,'','','','')
-                        if type=='DIR':
-                                main.addDirT(name,url,int(mode),thumb,plot,'','','','')
+        from universal import favorites
+        fav = favorites.Favorites(addon_id, sys.argv)
+ 
+        fav_items = fav.get_my_favorites(section_title="TV Show Fav's", item_mode='addon')
+ 
+        if len(fav_items) > 0 :
+
+            for fav_item in fav_items:
+                if (fav_item['isfolder'] == 'false'):
+                    main.addPlayT(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
+                else:
+                    main.addDirT(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
                 
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")
@@ -780,16 +800,26 @@ def ListglobalFavT():
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
         
 def ListglobalFavTE():
-        favpath=os.path.join(main.datapath,'Favourites')
-        tvfav=os.path.join(favpath,'TV')
-        FavFile=os.path.join(tvfav,'TVEpiFav')
-        if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
-                for url,name,mode,thumb,plot,type in Favs:
-                        if type=='PLAY':
-                                main.addPlayTE(name,url,int(mode),thumb,plot,'','','','')
-                        if type=='DIR':
-                                main.addDirTE(name,url,int(mode),thumb,plot,'','','','')
+        from universal import favorites
+        fav = favorites.Favorites(addon_id, sys.argv)
+ 
+        fav_items = fav.get_my_favorites(section_title="TV Episode Fav's", item_mode='addon')
+ 
+        if len(fav_items) > 0 :
+
+            for fav_item in fav_items:
+                if (fav_item['isfolder'] == 'false'):
+                    main.addPlayTE(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
+                else:
+                    main.addDirTE(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
                 
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")
@@ -797,16 +827,26 @@ def ListglobalFavTE():
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
 
 def ListglobalFavM():
-        favpath=os.path.join(main.datapath,'Favourites')
-        tvfav=os.path.join(favpath,'Movies')
-        FavFile=os.path.join(tvfav,'OtherFav')
-        if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
-                for url,name,mode,thumb,plot,type in Favs:
-                        if type=='PLAY':
-                                main.addPlayM(name,url,int(mode),thumb,plot,'','','','')
-                        if type=='DIR':
-                                main.addDirM(name,url,int(mode),thumb,plot,'','','','')
+        from universal import favorites
+        fav = favorites.Favorites(addon_id, sys.argv)
+ 
+        fav_items = fav.get_my_favorites(section_title="Movie Fav's", item_mode='addon')
+ 
+        if len(fav_items) > 0 :
+
+            for fav_item in fav_items:
+                if (fav_item['isfolder'] == 'false'):
+                    main.addPlayM(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
+                else:
+                    main.addDirM(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
                 
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")
@@ -814,16 +854,26 @@ def ListglobalFavM():
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
 
 def ListglobalFavMs():
-        favpath=os.path.join(main.datapath,'Favourites')
-        tvfav=os.path.join(favpath,'Misc')
-        FavFile=os.path.join(tvfav,'MiscFav')
-        if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
-                for url,name,mode,thumb,plot,type in Favs:
-                        if type=='PLAY':
-                                main.addPlayMs(name,url,int(mode),thumb,plot,'','','','')
-                        if type=='DIR':
-                                main.addDirMs(name,url,int(mode),thumb,plot,'','','','')
+        from universal import favorites
+        fav = favorites.Favorites(addon_id, sys.argv)
+ 
+        fav_items = fav.get_my_favorites(section_title="Misc. Fav's", item_mode='addon')
+ 
+        if len(fav_items) > 0 :
+
+            for fav_item in fav_items:
+                if (fav_item['isfolder'] == 'false'):
+                    main.addPlayMs(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
+                else:
+                    main.addDirMs(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
                 
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")
@@ -831,16 +881,26 @@ def ListglobalFavMs():
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
 
 def ListglobalFavL():
-        favpath=os.path.join(main.datapath,'Favourites')
-        tvfav=os.path.join(favpath,'Live')
-        FavFile=os.path.join(tvfav,'LiveFav')
-        if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)",mode="(.+?)",thumb="(.*?)",plot="(.*?)",type="(.+?)"').findall(open(FavFile,'r').read())
-                for url,name,mode,thumb,plot,type in Favs:
-                        if type=='PLAY':
-                                main.addPlayL(name,url,int(mode),thumb,plot,'','','','')
-                        if type=='DIR':
-                                main.addDirL(name,url,int(mode),thumb,plot,'','','','')
+        from universal import favorites
+        fav = favorites.Favorites(addon_id, sys.argv)
+ 
+        fav_items = fav.get_my_favorites(section_title="Live Fav's", item_mode='addon')
+ 
+        if len(fav_items) > 0 :
+
+            for fav_item in fav_items:
+                if (fav_item['isfolder'] == 'false'):
+                    main.addPlayL(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
+                else:
+                    main.addDirL(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                        fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                        fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
+                        fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
+                        fav_item['infolabels'].get('year',''))
                 
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")

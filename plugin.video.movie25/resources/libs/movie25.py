@@ -14,22 +14,16 @@ art = main.art
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 def FAVS():
-        favpath=os.path.join(main.datapath,'Favourites')
-        moviefav=os.path.join(favpath,'Movies')
-        FavFile=os.path.join(moviefav,'Fav')
-        if os.path.exists(FavFile):
-                Favs=re.compile('url="(.+?)",name="(.+?)"').findall(open(FavFile,'r').read())
-                for url,name in Favs:
-                        name=name.replace('-','').replace('&','').replace('acute;','')
+        from universal import favorites
+        fav = favorites.Favorites(addon_id, sys.argv)
+ 
+        fav_items = fav.get_my_favorites(section_title="Movie25 Fav's", item_mode='addon')
 
-                        url=url.replace('(','').replace('[','')
-                        if url[0]=='m':
-                                url='http://movie25.com/'+url
-                        link=main.OPENURL(url)
-                        match=re.compile('<div class="movie_pic"><a href="(.+?)" target="_blank">').findall(link)
-                        for thumb in match:
-                                main.addInfo(name,url,3,thumb,'','')
-                
+        if len(fav_items) > 0 :
+            for fav_item in fav_items:
+                main.addInfo(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                    fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                    fav_item['infolabels'].get('genre',''), fav_item['infolabels'].get('year',''))
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR green]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")
         main.GA("None","Movie25-Fav")

@@ -18,6 +18,8 @@ grab = metahandlers.MetaData(preparezip = False)
 Dir = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.movie25', ''))
 repopath = xbmc.translatePath(os.path.join('special://home/addons/repository.mash2k3', ''))
 
+from universal import favorites
+fav = favorites.Favorites(addon_id, sys.argv)
 
 datapath = addon.get_profile()
 if selfAddon.getSetting('visitor_ga')=='':
@@ -1140,11 +1142,8 @@ def addDirT(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         type='DIR'
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,iconimage,plot,type)]
-        script1=Dir+'/resources/scripts/addFavsTv.py'
-        script2=Dir+'/resources/scripts/delFavsTv.py'
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_directory(name, u, section_title='TV', section_addon_title="TV Show Fav's", sub_section_title='Shows', img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='TV', section_addon_title="TV Show Fav's", sub_section_title='Shows'))]
         Commands.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         Commands.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz.addContextMenuItems( Commands )
@@ -1166,11 +1165,8 @@ def addPlayT(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         type='PLAY'
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,iconimage,plot,type)]
-        script1=Dir+'/resources/scripts/addFavsTv.py'
-        script2=Dir+'/resources/scripts/delFavsTv.py'
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_video_item(name, u, section_title='TV', section_addon_title="TV Show Fav's", sub_section_title='Shows', img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='TV', section_addon_title="TV Show Fav's", sub_section_title='Shows'))]
         Commands.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         Commands.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz.addContextMenuItems( Commands )
@@ -1200,12 +1196,8 @@ def addDirTE(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         plot=plot.encode('ascii', 'ignore')
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,str(img),str(plot),type)]
-        script1=Dir+'/resources/scripts/addFavsTE.py'
-        script2=Dir+'/resources/scripts/delFavsTE.py'
-        
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_directory(name, u, section_title='TV', section_addon_title="TV Episode Fav's", sub_section_title='Episodes', img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='TV', section_addon_title="TV Episode Fav's", sub_section_title='Episodes'))]
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='episode'
                 cname=infoLabels['title']
@@ -1253,12 +1245,8 @@ def addPlayTE(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,str(img),str(plot),type)]
-        script1=Dir+'/resources/scripts/addFavsTE.py'
-        script2=Dir+'/resources/scripts/delFavsTE.py'
-        
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_video_item(name, u, section_title='TV', section_addon_title="TV Episode Fav's", sub_section_title='Episodes', img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='TV', section_addon_title="TV Episode Fav's", sub_section_title='Episodes'))]
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='episode'
                 cname=infoLabels['title']
@@ -1309,12 +1297,8 @@ def addDirM(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         plot=plot.encode('ascii', 'ignore')
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,iconimage,str(plot),type)]
-        script1=Dir+'/resources/scripts/addFavsM.py'
-        script2=Dir+'/resources/scripts/delFavsM.py'
-        
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_directory(name, u, section_title='Movies', section_addon_title="Movie Fav's", img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Movies', section_addon_title="Movie Fav's"))]
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
@@ -1364,12 +1348,8 @@ def addPlayM(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         plot=plot.encode('ascii', 'ignore')
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,iconimage,str(plot),type)]
-        script1=Dir+'/resources/scripts/addFavsM.py'
-        script2=Dir+'/resources/scripts/delFavsM.py'
-        
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_video_item(name, u, section_title='Movies', section_addon_title="Movie Fav's", img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Movies', section_addon_title="Movie Fav's"))]
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
@@ -1401,11 +1381,8 @@ def addDirMs(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         type='DIR'
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,iconimage,str(plot),type)]
-        script1=Dir+'/resources/scripts/addFavsMs.py'
-        script2=Dir+'/resources/scripts/delFavsMs.py'
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_directory(name, u, section_title='Misc.', section_addon_title="Misc. Fav's", img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Misc.', section_addon_title="Misc. Fav's"))]
         Commands.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         Commands.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz.addContextMenuItems( Commands )
@@ -1427,11 +1404,8 @@ def addPlayMs(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         type='PLAY'
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,iconimage,plot,type)]
-        script1=Dir+'/resources/scripts/addFavsMs.py'
-        script2=Dir+'/resources/scripts/delFavsMs.py'
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_video_item(name, u, section_title='Misc.', section_addon_title="Misc. Fav's", img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Misc.', section_addon_title="Misc. Fav's"))]
         Commands.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         Commands.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz.addContextMenuItems( Commands )
@@ -1454,11 +1428,8 @@ def addDirL(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,iconimage,str(plot),type)]
-        script1=Dir+'/resources/scripts/addFavsL.py'
-        script2=Dir+'/resources/scripts/delFavsL.py'
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_directory(name, u, section_title='Live', section_addon_title="Live Fav's", img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Live', section_addon_title="Live Fav's"))]
         Commands.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         Commands.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz.addContextMenuItems( Commands )
@@ -1480,11 +1451,8 @@ def addPlayL(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         type='PLAY'
         plot=plot.replace(",",'.')
         name=name.replace(",",'')
-        args=[(url,name,mode,iconimage,plot,type)]
-        script1=Dir+'/resources/scripts/addFavsL.py'
-        script2=Dir+'/resources/scripts/delFavsL.py'
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_video_item(name, u, section_title='Live', section_addon_title="Live Fav's", img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Live', section_addon_title="Live Fav's"))]
         Commands.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         Commands.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz.addContextMenuItems( Commands )
@@ -1673,13 +1641,9 @@ def addDown3(name,url,mode,iconimage,fanart,id=False):#starplay only
         sysname= urllib.quote_plus(name)
         
         type='PLAY'
-        args=[(url,name,mode,iconimage,plot,type)]
-        script1=Dir+'/resources/scripts/addFavsM.py'
-        script2=Dir+'/resources/scripts/delFavsM.py'
-        
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")"),
-                  ('Direct Download', 'XBMC.RunPlugin(%s?mode=212&name=%s&url=%s)' % (sys.argv[0], sysname, sysurl))]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_video_item(name, u, section_title='Movies', section_addon_title="Movie Fav's", img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Movies', section_addon_title="Movie Fav's")),
+            ('Direct Download', 'XBMC.RunPlugin(%s?mode=212&name=%s&url=%s)' % (sys.argv[0], sysname, sysurl))]
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
@@ -1700,6 +1664,9 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         Commands=[]
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&genre="+urllib.quote_plus(genre)
         ok=True
+        st=""
+        sst=""
+        sat=""
         if re.findall('(.+?)\ss(\d+)e(\d+)\s',name,re.I):
             infoLabels =GETMETAEpiT(name,iconimage,plot)
             video_type='episode'
@@ -1707,8 +1674,9 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             epi=infoLabels['episode']
             cname=infoLabels['metaName']
             xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
-            script1=Dir+'/resources/scripts/addFavsTE.py'
-            script2=Dir+'/resources/scripts/delFavsTE.py'
+            st="TV"
+            sst="Episodes"
+            sat="TV Episode Fav's"
         elif re.findall('Season(.+?)Episode([^<]+)',name,re.I):
             infoLabels =GETMETAEpiT(name,iconimage,plot)
             video_type='episode'
@@ -1716,16 +1684,18 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             epi=infoLabels['episode']
             cname=infoLabels['metaName']
             xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
-            script1=Dir+'/resources/scripts/addFavsTE.py'
-            script2=Dir+'/resources/scripts/delFavsTE.py'
+            st="TV"
+            sst="Episodes"
+            sat="TV Episode Fav's"
         else:
             infoLabels =GETMETAT(name,genre,fanart,iconimage)
             video_type='movie'
             tmdbid=infoLabels['tmdb_id']
             cname=infoLabels['metaName']
             xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
-            script1=Dir+'/resources/scripts/addFavsM.py'
-            script2=Dir+'/resources/scripts/delFavsM.py'
+            st="Movies"
+            sst=""
+            sat="Movie Fav's"
         if selfAddon.getSetting("meta-view") == "true":
                 if infoLabels['overlay'] == 6:
                     watched_mark = 'Mark as Watched'
@@ -1755,8 +1725,8 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         name=name.replace(",",'')
         args=[(url,name,mode,iconimage,str(plot),type)]
         if '</sublink>' not in url:
-            Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")"),
+            Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_video_item(name, u, section_title=st, section_addon_title=sat, sub_section_title=sst, img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+                ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title=st, section_addon_title=sat, sub_section_title=sst)),
                   ('Direct Download', 'XBMC.RunPlugin(%s?mode=190&name=%s&url=%s)' % (sys.argv[0], sysname, sysurl)),
                   ('Download with jDownloader', 'XBMC.RunPlugin(%s?mode=776&name=%s&url=%s)' % (sys.argv[0], sysname, url))]
         if selfAddon.getSetting("meta-view") == "true":
@@ -1797,11 +1767,9 @@ def addInfo(name,url,mode,iconimage,gen,year):
         else:
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_UNSORTED )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_LABEL )
-        args=[(url,name)]
-        script1=Dir+'/resources/scripts/addFavs.py'
-        script2=Dir+'/resources/scripts/delFavs.py'
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[
+                ("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_directory(name, u, section_title='Movies', section_addon_title="Movie25 Fav's", img=iconimage, infolabels={'item_mode':mode, 'item_url':url, 'genre':gen,'year':year})),
+                ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Movies', section_addon_title="Movie25 Fav's"))]
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
@@ -1848,12 +1816,8 @@ def addDirIWO(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         plot=plot.replace(",",".").replace('"','')
         name=name.replace(",",'')
         iconimage=iconimage.replace(",",".")
-        args=[(url,name,mode,iconimage,str(plot),type)]
-        script1=Dir+'/resources/scripts/addFavsIWO.py'
-        script2=Dir+'/resources/scripts/delFavsIWO.py'
-        
-        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's","XBMC.RunScript(" + script1 + ", " + str(args) + ")"),
-              ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's","XBMC.RunScript(" + script2 + ", " + str(args) + ")")]
+        Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_directory(name, u, section_title='Movies', section_addon_title="iWatchOnline Fav's", img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
+            ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='Movies', section_addon_title="iWatchOnline Fav's"))]
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
