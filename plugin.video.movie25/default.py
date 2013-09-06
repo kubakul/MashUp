@@ -791,6 +791,10 @@ def getFavorites(section_title = None):
                             fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
                             fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
                             fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "Movie25 Fav's"):
+                        main.addInfo(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('genre',''), fav_item['infolabels'].get('year',''))
                 else:
                     if (fav_item['section_addon_title'] == "iWatchOnline Fav's" or 
                         fav_item['section_addon_title'] == "Movie Fav's"):
@@ -823,6 +827,10 @@ def getFavorites(section_title = None):
                             fav_item['infolabels'].get('plot',''), fav_item['fanart_url'],
                             fav_item['infolabels'].get('duration',''), fav_item['infolabels'].get('genre',''),
                             fav_item['infolabels'].get('year',''))
+                    elif (fav_item['section_addon_title'] == "Movie25 Fav's"):
+                        main.addInfo(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
+                            fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
+                            fav_item['infolabels'].get('genre',''), fav_item['infolabels'].get('year',''))
                 
         else:
                 xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")

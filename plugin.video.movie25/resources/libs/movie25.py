@@ -14,22 +14,9 @@ art = main.art
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 def FAVS():
-        from universal import favorites
-        fav = favorites.Favorites(addon_id, sys.argv)
- 
-        fav_items = fav.get_my_favorites(section_title="Movie25 Fav's", item_mode='addon')
-
-        if len(fav_items) > 0 :
-            for fav_item in fav_items:
-                main.addInfo(fav_item['title'],fav_item['infolabels'].get('item_url',''),  
-                    fav_item['infolabels'].get('item_mode',''), fav_item['image_url'], 
-                    fav_item['infolabels'].get('genre',''), fav_item['infolabels'].get('year',''))
-        else:
-                xbmc.executebuiltin("XBMC.Notification([B][COLOR green]Mash Up[/COLOR][/B],[B]You Have No Saved Favourites[/B],5000,"")")
+        main.getFavorites("Movie25 Fav's")
         main.GA("None","Movie25-Fav")
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
-        main.VIEWS()
-
 
 
 def LISTMOVIES(murl):
