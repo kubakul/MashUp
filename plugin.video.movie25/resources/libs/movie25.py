@@ -331,7 +331,7 @@ def NEXTPAGE(murl):
 def VIDEOLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
-        print link
+        #print link
         qual = re.compile('<h1 >Links - Quality              (.+?)            </h1>').findall(link)
         quality=str(qual)        
         quality=quality.replace("'","")
@@ -423,8 +423,6 @@ def PUTLINKS(name,url):
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         putlocker=re.compile('<li class="link_name">              putlocker            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
-        print '---------------------------------------------'
-        print putlocker
         for url in putlocker:
                 main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/putlocker.png',art+'/hosts/putlocker.png')
         if len(putlocker) == 0:
