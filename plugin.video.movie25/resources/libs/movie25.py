@@ -13,11 +13,6 @@ art = main.art
     
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 MainUrl='http://www.movie25.so'
-def FAVS():
-        main.getFavorites("Movie25 Fav's")
-        main.GA("None","Movie25-Fav")
-        xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
-
 
 def LISTMOVIES(murl):
         link=main.OPENURL(murl)
