@@ -41,46 +41,14 @@ def LivestationLink2(mname,murl,thumb):
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Playing Link,1000)")
-        r = re.findall('m3u8',murl)
-        if r:
-                stream_url =murl
-                listitem = xbmcgui.ListItem(thumbnailImage=thumb)
-                listitem.setInfo('video', {'Title': mname, 'Genre': 'Live'} )
+        stream_url =murl
+        listitem = xbmcgui.ListItem(thumbnailImage=thumb)
+        listitem.setInfo('video', {'Title': mname, 'Genre': 'Live'} )
                 
-                playlist.add(stream_url,listitem)
-                xbmcPlayer = xbmc.Player()
-                xbmcPlayer.play(playlist)
-                #WatchHistory
-                if selfAddon.getSetting("whistory") == "true":
-                    wh.add_item(mname+' '+'[COLOR green]Livestation[/COLOR]', sys.argv[0]+sys.argv[2], infolabels='', img=thumb, fanart='', is_folder=False)
-                return ok
-        else:
-        
-                link=main.OPENURL(murl)
-                rtmp= re.compile('"streamer":"(.+?)"').findall(link)
-                match= re.compile('"file":".+?".+?"file":"([^<]+)high.sdp"').findall(link)
-                if len(match)>0 and len(rtmp)>0:
-                    for fid in match[0:1]:
-                        stream_url = rtmp[0]+' playpath='+fid+'high.sdp swfUrl=http://beta.cdn.livestation.com/player/5.10/livestation-player.swf pageUrl='+murl
-                else:
-                    match3= re.compile('<source src="(.+?)" type="video/mp4"/>').findall(link)
-                    if len(match3)>0:
-                        for vid in match3:
-                            match2= re.compile('akamedia').findall(vid)
-                            if len(match2)>0:
-                                stream_url =vid
-                            else:
-                                stream_url =vid
-                    else:
-                        fid= re.compile('"file":"(.+?).sdp"').findall(link)
-                        stream_url = rtmp[0]+' playpath='+fid[0]+'.sdp swfUrl=http://beta.cdn.livestation.com/player/5.10/livestation-player.swf pageUrl='+murl      
-                listitem = xbmcgui.ListItem(thumbnailImage=thumb)
-                listitem.setInfo('video', {'Title': mname, 'Genre': 'Live'} )
-                
-                playlist.add(stream_url,listitem)
-                xbmcPlayer = xbmc.Player()
-                xbmcPlayer.play(playlist)
-                #WatchHistory
-                if selfAddon.getSetting("whistory") == "true":
-                    wh.add_item(mname+' '+'[COLOR green]Livestation[/COLOR]', sys.argv[0]+sys.argv[2], infolabels='', img=thumb, fanart='', is_folder=False)
-                return ok
+        playlist.add(stream_url,listitem)
+        xbmcPlayer = xbmc.Player()
+        xbmcPlayer.play(playlist)
+        #WatchHistory
+        if selfAddon.getSetting("whistory") == "true":
+                wh.add_item(mname+' '+'[COLOR green]Livestation[/COLOR]', sys.argv[0]+sys.argv[2], infolabels='', img=thumb, fanart='', is_folder=False)
+        return ok

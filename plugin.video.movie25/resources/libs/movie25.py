@@ -12,7 +12,7 @@ addon = Addon('plugin.video.movie25', sys.argv)
 art = main.art
     
 wh = watchhistory.WatchHistory('plugin.video.movie25')
-
+MainUrl='http://www.movie25.so'
 def FAVS():
         main.getFavorites("Movie25 Fav's")
         main.GA("None","Movie25-Fav")
@@ -22,9 +22,7 @@ def FAVS():
 def LISTMOVIES(murl):
         link=main.OPENURL(murl)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        #print link
-        #match=re.compile('<div class="movie_pic"><a href="(.+?)" ><img src="(.+?)" width=".+?" height=".+?" alt=".+?" /></a></div>  <div class=".+?">    <div class=".+?">      <h1><a href=".+?" >(.+?)</a></h1>      <div class=".+?">Genre:      <a href=".+?" title=\'.+?\'>(.+?)</a>.+?Release:.+?<br/>      Views: <span>(.+?)</span>.+?<span>(.+?)</span> votes.+?<div id=".+?">score:<span id=Rate_.+?>(.+?)</span></div>').findall(link)
-        match=re.compile('<div class="movie_pic"><a href="(.+?)"  target="_self">    <img src="(.+?)" width=".+?" height=".+?" />    </a></div><div class=".+?">  <div class=".+?"><h1><a href=".+?" target="_self">(.+?)</a></h1><div class=".+?">Genre:  <a href=".+?" target=\'_blank\'>(.+?)</a>.+?Release:.+?<br/>Views: <span>(.+?)</span> \((.+?) votes\).+?score:(.+?)</div>').findall(link)
+        match = re.findall('<div class="movie_pic"><a href="(.+?)"  target=".+?">    <img src="(.+?)".+?target="_self">(.+?)</a>.+?">Genre:  <a href=".+?>(.+?)</a>.+?<br/>Views: <span>(.+?)</span>.+?(.+?)votes.+?score:(.+?)</div>',link)
         dialogWait = xbmcgui.DialogProgress()
         ret = dialogWait.create('Please wait until Movie list is cached.')
         totalLinks = len(match)
@@ -32,9 +30,9 @@ def LISTMOVIES(murl):
         remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
         for url,thumb,name,genre,views,votes,rating in match:
-                url = 'http://www.movie25.com' + url
+                votes=votes.replace('(','')
                 name=name.replace('-','').replace('&','').replace('acute;','')
-                main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'[/COLOR]',url,3,thumb,genre,'')
+                main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'/5.00[/COLOR]',MainUrl+url,3,thumb,genre,'')
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks
                 remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
@@ -47,28 +45,18 @@ def LISTMOVIES(murl):
         main.GA("None","Movie25-list")
         
         
-        paginate=re.compile('http://www.movie25.com/movies/.+?/index-(.+?).html').findall(murl)
-       
-        if (len(paginate) == 0):
-                purl = murl + 'index-2.html'
-                r = re.findall('Next</a><a href="index-(.+?).html"  title="Last" >Last</a>',link)
-                if r:
-                        main.addDir('[COLOR red]Enter Page #[/COLOR]',murl,207,art+'/gotopage.png')
-                exist = re.findall('<a href="index-.+?" class=".+?">Next</a>',link)
-                if exist:
-                        main.addDir('[COLOR blue]Page 2[/COLOR]',purl,1,art+'/next2.png')
-        else:
-                paginate=re.compile('http://www.movie25.com/movies/(.+?)/index-(.+?).html').findall(murl)
-                for section, page in paginate:
-                        pg= int(page) +1
-                        xurl = main.Mainurl + str(section) + '/' + 'index-'+ str (pg) + '.html'
+        paginate=re.compile('</a><a href=\'([^<]+)\'>Next</a>').findall(link)
+        if paginate:
                 main.addDir('[COLOR red]Home[/COLOR]','',2000,art+'/home.png')
-                r = re.findall('Next</a><a href="index-(.+?).html"  title="Last" >Last</a>',link)
-                if r:
-                        main.addDir('[COLOR red]Enter Page #[/COLOR]',murl,207,art+'/gotopage.png')
                 
-                exist = re.findall('<a href="index-.+?" class=".+?">Next</a>',link)
-                if exist:
+                main.addDir('[COLOR red]Enter Page #[/COLOR]',murl,207,art+'/gotopage.png')
+                xurl=MainUrl+paginate[0]
+                r = re.findall('>Next</a><a href=\'/movies/.+?/([^<]+)\'>Last</a>',link)
+                pg= re.findall('/movies/.+?/([^<]+)',paginate[0])
+                pg=int(pg[0])-1
+                if r:
+                        main.addDir('[COLOR blue]Page '+ str(pg)+' of '+r[0]+'[/COLOR]',xurl,1,art+'/next2.png')
+                else:
                         main.addDir('[COLOR blue]Page '+ str(pg)+'[/COLOR]',xurl,1,art+'/next2.png')
         
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
@@ -76,7 +64,7 @@ def LISTMOVIES(murl):
 
 
 def UFCMOVIE25():
-                surl='http://www.movie25.com/search.php?key=ufc&submit='
+                surl='http://www.movie25.so/search.php?key=ufc&submit='
                 link=main.OPENURL(surl)
                 link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
                 match=re.compile('<div class="movie_pic"><a href="(.+?)" target=".+?">                            <img src="(.+?)" width=".+?" height=".+?" />                            </a></div>            <div class=".+?">              <div class=".+?">                <h1><a href=".+?" target=".+?">                  (.+?)                  </a></h1>                <div class=".+?">Genre:                  <a href=".+?" target=\'.+?\'>(.+?)</a>.+?Release:.+?Views: <span>                (.+?)                </span>.+?<span id=RateCount.+?>                (.+?)                </span> votes.+?<div id=".+?">score:<span id=Rate_.+?>(.+?)</span>').findall(link)
@@ -89,7 +77,7 @@ def UFCMOVIE25():
                 for url,thumb,name,genre,views,votes,rating in match:
                         name=name.replace('-','').replace('&','').replace('acute;','')
                         furl= 'http://movie25.com/'+url
-                        main.addInfo(name+'('+year+')[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'[/COLOR]',furl,3,thumb,genre,'')
+                        main.addInfo(name+'('+year+')[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'/5.00[/COLOR]',furl,3,thumb,genre,'')
                         loadedLinks = loadedLinks + 1
                         percent = (loadedLinks * 100)/totalLinks
                         remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
@@ -98,7 +86,7 @@ def UFCMOVIE25():
                                 return False 
                 dialogWait.close()
                 del dialogWait
-                main.addDir('[COLOR blue]Page 2[/COLOR]','http://www.movie25.com/search.php?page=2&key=ufc',9,art+'/next2.png')
+                main.addDir('[COLOR blue]Page 2[/COLOR]','http://www.movie25.so/search.php?page=2&key=ufc',9,art+'/next2.png')
                 main.GA("UFC","UFC_Movie25-List")
 
 def Searchhistory():
@@ -130,7 +118,7 @@ def SEARCH(murl):
                 if (keyb.isConfirmed()):
                     search = keyb.getText()
                     encode=urllib.quote(search)
-                    surl='http://www.movie25.com/search.php?key='+encode+'&submit='
+                    surl='http://www.movie25.so/search.php?key='+encode+'&submit='
                     if not os.path.exists(SeaFile) and encode != '':
                         open(SeaFile,'w').write('search="%s",'%encode)
                     else:
@@ -151,10 +139,10 @@ def SEARCH(murl):
                         return
         else:
                 encode = murl
-                surl='http://www.movie25.com/search.php?key='+encode+'&submit='
+                surl='http://www.movie25.so/search.php?key='+encode+'&submit='
         link=main.OPENURL(surl)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        match=re.compile('<div class="movie_pic"><a href="(.+?)" target=".+?">                            <img src="(.+?)" width=".+?" height=".+?" />                            </a></div>            <div class=".+?">              <div class=".+?">                <h1><a href=".+?" target=".+?">                  (.+?)                  </a></h1>                <div class=".+?">Genre:                  <a href=".+?" target=\'.+?\'>(.+?)</a>.+?Release:.+?Views: <span>                (.+?)                </span>.+?<span id=RateCount.+?>                (.+?)                </span> votes.+?<div id=".+?">score:<span id=Rate_.+?>(.+?)</span>').findall(link)
+        match=re.compile('<div class="movie_pic"><a href="(.+?)" target=".+?">    <img src="(.+?)" width=".+?" height=".+?" />.+?<a href=".+?" target=".+?">(.+?)</a></h1><div class=".+?">Genre:  <a href=".+?" target=\'.+?\'>(.+?)</a>.+?Release:.+?<br/>Views: <span>(.+?)</span>.+?id=RateCount_.+?>(.+?)</span> votes.+?>score:(.+?)</div>').findall(link)
         dialogWait = xbmcgui.DialogProgress()
         ret = dialogWait.create('Please wait until Movie list is cached.')
         totalLinks = len(match)
@@ -163,8 +151,8 @@ def SEARCH(murl):
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
         for url,thumb,name,genre,views,votes,rating in match:
                 name=name.replace('-','').replace('&','').replace('acute;','')
-                furl= 'http://movie25.com/'+url
-                main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'[/COLOR]',furl,3,thumb,genre,'')
+                furl= MainUrl+url
+                main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'/5.00[/COLOR]',furl,3,thumb,genre,'')
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks
                 remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
@@ -175,7 +163,11 @@ def SEARCH(murl):
         del dialogWait
         exist = re.findall("<a href='search.php.?page=.+?'>Next</a>",link)
         if exist:
-                main.addDir('[COLOR blue]Page 2[/COLOR]','http://www.movie25.com/search.php?page=2&key='+encode,9,art+'/next2.png')
+                r = re.findall(""">Next</a><a href='search.php.?page=([^<]+)&key=.+?'>Last</a>""",link)
+                if r:
+                        main.addDir('[COLOR blue]Page 1 of '+r[0]+'[/COLOR]','http://www.movie25.so/search.php?page=2&key='+encode,9,art+'/next2.png')
+                else:
+                        main.addDir('[COLOR blue]Page 1[/COLOR]','http://www.movie25.so/search.php?page=2&key='+encode,9,art+'/next2.png')
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
         main.GA("None","Movie25-Search")
 
@@ -186,7 +178,7 @@ def ENTYEAR():
         if d:
                 encode=urllib.quote(d)
                 if encode < '2014' and encode > '1900':
-                     surl='http://www.movie25.com/search.php?year='+encode+'/'
+                     surl='http://www.movie25.so/search.php?year='+encode+'/'
                      YEARB(surl)
                 else:
                     dialog = xbmcgui.Dialog()
@@ -195,15 +187,15 @@ def ENTYEAR():
 def GotoPage(url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        r = re.findall('Next</a><a href="index-(.+?).html"  title="Last" >Last</a>',link)
+        r = re.findall('>Next</a><a href=\'/movies/.+?/([^<]+)\'>Last</a>',link)
+        x = re.findall('>Next</a><a href=\'([^<]+)/.+?\'>Last</a>',link)
         dialog = xbmcgui.Dialog()
         d = dialog.numeric(0, 'Section Last Page = '+r[0])
         if d:
                 pagelimit=int(r[0])
                 if int(d) <= pagelimit:
                      encode=urllib.quote(d)
-                     url  = url.split('index-')[0]
-                     surl=url+'index-'+encode+'.html'
+                     surl=MainUrl+x[0]+'/'+encode
                      LISTMOVIES(surl)
                 else:
                     dialog = xbmcgui.Dialog()
@@ -233,7 +225,7 @@ def GotoPageB(url):
 def YEARB(murl):
         link=main.OPENURL(murl)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        match=re.compile('<div class="movie_pic"><a href="(.+?)" target=".+?">                            <img src="(.+?)" width=".+?" height=".+?" />                            </a></div>            <div class=".+?">              <div class=".+?">                <h1><a href=".+?" target=".+?">                  (.+?)                  </a></h1>                <div class=".+?">Genre:                  <a href=".+?" target=\'.+?\'>(.+?)</a>.+?Release:.+?Views: <span>                (.+?)                </span>.+?<span id=RateCount.+?>                (.+?)                </span> votes.+?<div id=".+?">score:<span id=Rate_.+?>(.+?)</span>').findall(link)
+        match=re.compile('<div class="movie_pic"><a href="(.+?)" target=".+?">    <img src="(.+?)" width=".+?" height=".+?" />.+?<a href=".+?" target=".+?">(.+?)</a></h1><div class=".+?">Genre:  <a href=".+?" target=\'.+?\'>(.+?)</a>.+?Release:.+?<br/>Views: <span>(.+?)</span>.+?id=RateCount_.+?>(.+?)</span> votes.+?>score:(.+?)</div>').findall(link)
         dialogWait = xbmcgui.DialogProgress()
         ret = dialogWait.create('Please wait until Movie list is cached.')
         totalLinks = len(match)
@@ -243,7 +235,7 @@ def YEARB(murl):
         for url,thumb,name,genre,views,votes,rating in match:
                 name=name.replace('-','').replace('&','').replace('acute;','')
                 furl= 'http://movie25.com/'+url
-                main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'[/COLOR]',furl,3,thumb,genre,'')
+                main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'/5.00[/COLOR]',furl,3,thumb,genre,'')
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks
                 remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
@@ -252,19 +244,21 @@ def YEARB(murl):
                         return False 
         dialogWait.close()
         del dialogWait
-        ye = murl[39:44]
-        r = re.findall("Next</a><a href='search.php.?page=.+?year=.+?'>Last</a>",link)
+        ye = murl[38:45]
+        r = re.findall("Next</a><a href='search.php.?page=([^<]+)&year=.+?'>Last</a>",link)
         if r:
                 main.addDir('[COLOR red]Enter Page #[/COLOR]',murl,208,art+'/gotopage.png')
-        
-        main.addDir('[COLOR blue]Page 2[/COLOR]','http://www.movie25.com/search.php?page=2&year='+str(ye),9,art+'/next2.png')
+                main.addDir('[COLOR blue]Page 1 of '+r[0]+'[/COLOR]','http://www.movie25.so/search.php?page=2&year='+str(ye),9,art+'/next2.png')    
+        else:
+                main.addDir('[COLOR blue]Page 1[/COLOR]','http://www.movie25.so/search.php?page=2&year='+str(ye),9,art+'/next2.png')
+       
         xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
         main.VIEWS()
         
 def NEXTPAGE(murl):
         link=main.OPENURL(murl)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        match=re.compile('<div class="movie_pic"><a href="(.+?)" target=".+?">                            <img src="(.+?)" width=".+?" height=".+?" />                            </a></div>            <div class=".+?">              <div class=".+?">                <h1><a href=".+?" target=".+?">                  (.+?)                  </a></h1>                <div class=".+?">Genre:                  <a href=".+?" target=\'.+?\'>(.+?)</a>.+?Release:.+?Views: <span>                (.+?)                </span>.+?<span id=RateCount.+?>                (.+?)                </span> votes.+?<div id=".+?">score:<span id=Rate_.+?>(.+?)</span>').findall(link)
+        match=re.compile('<div class="movie_pic"><a href="(.+?)" target=".+?">    <img src="(.+?)" width=".+?" height=".+?" />.+?<a href=".+?" target=".+?">(.+?)</a></h1><div class=".+?">Genre:  <a href=".+?" target=\'.+?\'>(.+?)</a>.+?Release:.+?<br/>Views: <span>(.+?)</span>.+?id=RateCount_.+?>(.+?)</span> votes.+?>score:(.+?)</div>').findall(link)
         dialogWait = xbmcgui.DialogProgress()
         ret = dialogWait.create('Please wait until Movie list is cached.')
         totalLinks = len(match)
@@ -273,8 +267,8 @@ def NEXTPAGE(murl):
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
         for url,thumb,name,genre,views,votes,rating in match:
                 name=name.replace('-','').replace('&','').replace('acute;','')
-                furl= 'http://movie25.com/'+url
-                main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'[/COLOR]',furl,3,thumb,genre,'')
+                furl= MainUrl+url
+                main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'/5.00[/COLOR]',furl,3,thumb,genre,'')
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks
                 remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
@@ -284,32 +278,34 @@ def NEXTPAGE(murl):
         dialogWait.close()
         del dialogWait
         
-        matchx=re.compile('http://www.movie25.com/search.php.+?page=(.+?)&year=(.+?)').findall(murl)
+        matchx=re.compile('http://www.movie25.so/search.php.+?page=(.+?)&year=(.+?)').findall(murl)
         if len(matchx)>0:
                 durl = murl + '/'
-                paginate=re.compile('http://www.movie25.com/search.php.+?page=(.+?)&year=(.+?)/').findall(durl)
+                paginate=re.compile('http://www.movie25.so/search.php.+?page=(.+?)&year=(.+?)/').findall(durl)
                 for page, yearb in paginate:
                         pgs = int(page)+1
-                        jurl='http://www.movie25.com/search.php?page='+str(pgs)+'&year='+str(yearb)
+                        jurl='http://www.movie25.so/search.php?page='+str(pgs)+'&year='+str(yearb)
                 main.addDir('[COLOR red]Home[/COLOR]','',0,art+'/home.png')
-                r = re.findall("Next</a><a href='search.php.?page=.+?year=.+?'>Last</a>",link)
+                r = re.findall("Next</a><a href='search.php.?page=([^<]+)&year=.+?'>Last</a>",link)
                 if r:
                         main.addDir('[COLOR red]Enter Page #[/COLOR]',murl,208,art+'/gotopage.png')
-                exist = re.findall("<a href='search.php.?page=.+?'>Next</a>",link)
-                if exist:
-                        main.addDir('[COLOR blue]Page '+str(pgs)+'[/COLOR]',jurl,9,art+'/next2.png')
+                        main.addDir('[COLOR blue]Page '+str(page)+' of '+r[0]+'[/COLOR]',jurl,9,art+'/next2.png')
+                else:
+                        main.addDir('[COLOR blue]Page '+str(page)+'[/COLOR]',jurl,9,art+'/next2.png')
                 xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
                 main.VIEWS()                
         else:
                 durl = murl + '/'
-                paginate=re.compile('http://www.movie25.com/search.php.+?page=(.+?)&key=(.+?)/').findall(durl)
+                paginate=re.compile('http://www.movie25.so/search.php.+?page=(.+?)&key=(.+?)/').findall(durl)
                 for page, search in paginate:
                         pgs = int(page)+1
-                        jurl='http://www.movie25.com/search.php?page='+str(pgs)+'&key='+str(search)
+                        jurl='http://www.movie25.so/search.php?page='+str(pgs)+'&key='+str(search)
                 main.addDir('[COLOR red]Home[/COLOR]','',0,art+'/home.png')
-                exist = re.findall("<a href='search.php.?page=.+?'>Next</a>",link)
-                if exist:
-                        main.addDir('[COLOR blue]Page '+str(pgs)+'[/COLOR]',jurl,9,art+'/next2.png')
+                r = re.findall(""">Next</a><a href='search.php.?page=([^<]+)&key=.+?'>Last</a>""",link)
+                if r:
+                        main.addDir('[COLOR blue]Page '+str(page)+' of '+r[0]+'[/COLOR]',jurl,9,art+'/next2.png')
+                else:
+                        main.addDir('[COLOR blue]Page '+str(page)+'[/COLOR]',jurl,9,art+'/next2.png')
         
 
 
@@ -317,101 +313,100 @@ def NEXTPAGE(murl):
 
 def VIDEOLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
-        #print link
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         qual = re.compile('<h1 >Links - Quality              (.+?)            </h1>').findall(link)
-        quality=str(qual)        
+        quality=str(qual)
         quality=quality.replace("'","")
         name  = name.split('[COLOR blue]')[0]
-        print" ll "+name
-        putlocker=re.compile('<li class="link_name">              putlocker            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        putlocker=re.compile('<li class="link_name">              putlocker            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)                      
         if len(putlocker) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Putlocker[/COLOR]",url,11,art+'/hosts/putlocker.png',art+'/hosts/putlocker.png')
         if len(putlocker) == 0:
                 putlocker=re.compile("javascript:window.open.+?'http://movie25.com/redirect.php.?url=http://www.putlocker.com/file/.+?',").findall(link)
                 if len(putlocker) > 0:
-                        main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Putlocker[/COLOR]",url,11,art+'/hosts/putlocker.png',art+'/hosts/putlocker.png')
-        sockshare=re.compile('<li class="link_name">              sockshare            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+                        main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Putlocker[/COLOR]",MainUrl+url,11,art+'/hosts/putlocker.png',art+'/hosts/putlocker.png')
+        sockshare=re.compile('<li class=link_name>              sockshare            </li>.+?<li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
         if len(sockshare) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Sockshare[/COLOR]",url,22,art+'/hosts/sockshare.png',art+'/hosts/sockshare.png')
         if len(sockshare) == 0:
                 sockshare=re.compile("javascript:window.open.+?'http://movie25.com/redirect.php.?url=http://www.sockshare.com/file/.+?',").findall(link)
                 if len(sockshare) > 0:
                         main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Sockshare[/COLOR]",url,22,art+'/hosts/sockshare.png',art+'/hosts/sockshare.png')
-        nowvideo=re.compile('<li class="link_name">              nowvideo            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(nowvideo) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Nowvideo[/COLOR]",url,24,art+'/hosts/nowvideo.png',art+'/hosts/nowvideo.png')
-        oeupload=re.compile('<li class="link_name">              180upload            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(oeupload) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : 180upload[/COLOR]",url,12,art+'/hosts/180upload.png',art+'/hosts/180upload.png')
-        filenuke=re.compile('<li class="link_name">              filenuke            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(filenuke) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Filenuke[/COLOR]",url,13,art+'/hosts/filenuke.png',art+'/hosts/filenuke.png')
-        flashx=re.compile('<li class="link_name">              flashx            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(flashx) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Flashx[/COLOR]",url,15,art+'/hosts/flashx.png',art+'/hosts/flashx.png')
-        novamov=re.compile('<li class="link_name">              novamov            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(novamov) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Novamov[/COLOR]",url,16,art+'/hosts/novamov.png',art+'/hosts/novamov.png')
-        gorillavid=re.compile('<li class="link_name">              gorillavid            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(gorillavid) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Gorillavid[/COLOR]",url,148,art+'/hosts/gorillavid.png',art+'/hosts/gorillavid.png')
-        divxstage=re.compile('<li class="link_name">              divxstage            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(divxstage) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Divxstage[/COLOR]",url,146,art+'/hosts/divxstage.png',art+'/hosts/divxstage.png')
-        movshare=re.compile('<li class="link_name">              movshare            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(movshare) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Movshare[/COLOR]",url,145,art+'/hosts/movshare.png',art+'/hosts/movshare.png')
-        sharesix=re.compile('<li class="link_name">              sharesix            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(sharesix) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Sharesix[/COLOR]",url,147,art+'/hosts/sharesix.png',art+'/hosts/sharesix.png')
-        movpod=re.compile('<li class="link_name">              movpod            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(movpod) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Movpod[/COLOR]",url,150,art+'/hosts/movpod.png',art+'/hosts/movpod.png')
-        daclips=re.compile('<li class="link_name">              daclips            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(daclips) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Daclips[/COLOR]",url,151,art+'/hosts/daclips.png',art+'/hosts/daclips.png')
-        videoweed=re.compile('<li class="link_name">              videoweed            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(videoweed) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Videoweed[/COLOR]",url,152,art+'/hosts/videoweed.png',art+'/hosts/videoweed.png')
-        played=re.compile('<li class="link_name">              played            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(played) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Played[/COLOR]",url,157,art+'/hosts/played.png',art+'/hosts/played.png')
-        movdivx=re.compile('<li class="link_name">              movdivx            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
-        if len(movdivx) > 0:
-                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : MovDivx[/COLOR]",url,153,art+'/hosts/movdivx.png',art+'/hosts/movdivx.png')
-        movreel=re.compile('<li class="link_name">              movreel            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        movreel=re.compile('<li class="link_name">              movreel            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         if len(movreel) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Movreel[/COLOR]",url,154,art+'/hosts/movreel.png',art+'/hosts/movreel.png')
-        billionuploads=re.compile('<li class="link_name">              billionuploads            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        billionuploads=re.compile('<li class="link_name">              billionuploads            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         if len(billionuploads) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : BillionUploads[/COLOR]",url,155,art+'/hosts/billionuploads.png',art+'/hosts/billionuploads.png')
-        uploadc=re.compile('<li class="link_name">              uploadc            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        nowvideo=re.compile('<li class="link_name">              nowvideo            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(nowvideo) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Nowvideo[/COLOR]",url,24,art+'/hosts/nowvideo.png',art+'/hosts/nowvideo.png')
+        oeupload=re.compile('<li class="link_name">              oeupload            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(oeupload) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : 180upload[/COLOR]",url,12,art+'/hosts/180upload.png',art+'/hosts/180upload.png')
+        filenuke=re.compile('<li class="link_name">              filenuke            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(filenuke) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Filenuke[/COLOR]",url,13,art+'/hosts/filenuke.png',art+'/hosts/filenuke.png')
+        flashx=re.compile('<li class="link_name">              flashx            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(flashx) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Flashx[/COLOR]",url,15,art+'/hosts/flashx.png',art+'/hosts/flashx.png')
+        novamov=re.compile('<li class="link_name">              novamov            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(novamov) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Novamov[/COLOR]",url,16,art+'/hosts/novamov.png',art+'/hosts/novamov.png')
+        gorillavid=re.compile('<li class="link_name">              gorillavid            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(gorillavid) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Gorillavid[/COLOR]",url,148,art+'/hosts/gorillavid.png',art+'/hosts/gorillavid.png')
+        divxstage=re.compile('<li class="link_name">              divxstage            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(divxstage) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Divxstage[/COLOR]",url,146,art+'/hosts/divxstage.png',art+'/hosts/divxstage.png')
+        movshare=re.compile('<li class="link_name">              movshare            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(movshare) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Movshare[/COLOR]",url,145,art+'/hosts/movshare.png',art+'/hosts/movshare.png')
+        sharesix=re.compile('<li class="link_name">              sharesix            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(sharesix) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Sharesix[/COLOR]",url,147,art+'/hosts/sharesix.png',art+'/hosts/sharesix.png')
+        movpod=re.compile('<li class="link_name">              movpod            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(movpod) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Movpod[/COLOR]",url,150,art+'/hosts/movpod.png',art+'/hosts/movpod.png')
+        daclips=re.compile('<li class="link_name">              daclips            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(daclips) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Daclips[/COLOR]",url,151,art+'/hosts/daclips.png',art+'/hosts/daclips.png')
+        videoweed=re.compile('<li class="link_name">              videoweed            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(videoweed) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Videoweed[/COLOR]",url,152,art+'/hosts/videoweed.png',art+'/hosts/videoweed.png')
+        played=re.compile('<li class="link_name">              played            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(played) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Played[/COLOR]",url,157,art+'/hosts/played.png',art+'/hosts/played.png')
+        movdivx=re.compile('<li class="link_name">              movdivx            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        if len(movdivx) > 0:
+                main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : MovDivx[/COLOR]",url,153,art+'/hosts/movdivx.png',art+'/hosts/movdivx.png')
+        
+        uploadc=re.compile('<li class="link_name">              uploadc            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         if len(uploadc) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Uploadc[/COLOR]",url,17,art+'/hosts/uploadc.png',art+'/hosts/uploadc.png')
-        xvidstage=re.compile('<li class="link_name">              xvidstage            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        xvidstage=re.compile('<li class="link_name">              xvidstage            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         if len(xvidstage) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Xvidstage[/COLOR]",url,18,art+'/hosts/xvidstage.png',art+'/hosts/xvidstage.png')        
-        zooupload=re.compile('<li class="link_name">              zooupload            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        zooupload=re.compile('<li class="link_name">              zooupload            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         if len(zooupload) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Zooupload[/COLOR]",url,19,art+'/hosts/zooupload.png',art+'/hosts/zooupload.png')
-        zalaa=re.compile('<li class="link_name">              zalaa            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        zalaa=re.compile('<li class="link_name">              zalaa            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         if len(zalaa) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Zalaa[/COLOR]",url,20,art+'/hosts/zalaa.png',art+'/hosts/zalaa.png')
-        vidxden=re.compile('<li class="link_name">              vidxden            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        vidxden=re.compile('<li class="link_name">              vidxden            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         if len(vidxden) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Vidxden[/COLOR]",url,21,art+'/hosts/vidxden.png',art+'/hosts/vidxden.png')
-        vidbux=re.compile('<li class="link_name">              vidbux            </li>                        <li class=".+?"><span><a href=(.+?) target=".+?">').findall(link)
+        vidbux=re.compile('<li class="link_name">              vidbux            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         if len(vidbux) > 0:
                 main.addDirb(name+" [COLOR red]"+quality+"[/COLOR]"+"[COLOR blue] : Vidbux[/COLOR]",url,14,art+'/hosts/vidbux.png',art+'/hosts/vidbux.png')
 
 def PUTLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        putlocker=re.compile('<li class="link_name">              putlocker            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        putlocker=re.compile('<li class="link_name">              putlocker            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in putlocker:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/putlocker.png',art+'/hosts/putlocker.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/putlocker.png',art+'/hosts/putlocker.png')
         if len(putlocker) == 0:
                 putlocker=re.compile("""javascript:window.open.+?'http://movie25.com/redirect.php.?url=(.+?)','.+?',.+?>(.+?)</a></span>""").findall(link)
                 for url,part in putlocker:
@@ -420,11 +415,11 @@ def PUTLINKS(name,url):
                                 main.addDown(name+"  [COLOR red]Part:"+part+"[/COLOR]",url,171,art+'/hosts/putlocker.png',art+'/hosts/putlocker.png')
 def SOCKLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        sockshare=re.compile('<li class="link_name">              sockshare            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        sockshare=re.compile('<li class="link_name">              sockshare            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in sockshare:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/sockshare.png',art+'/hosts/sockshare.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/sockshare.png',art+'/hosts/sockshare.png')
         if len(sockshare) == 0:
                 sockshare=re.compile("""javascript:window.open.+?'http://movie25.com/redirect.php.?url=(.+?)','.+?',.+?>(.+?)</a></span>""").findall(link)
                 for url,part in sockshare:
@@ -433,162 +428,161 @@ def SOCKLINKS(name,url):
                                 main.addDown(name+"  [COLOR red]Part:"+part+"[/COLOR]",url,171,art+'/hosts/sockshare.png',art+'/hosts/sockshare.png')
 def NOWLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        nowvideo=re.compile('<li class="link_name">              nowvideo            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        nowvideo=re.compile('<li class="link_name">              nowvideo            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in nowvideo:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/nowvideo.png',art+'/hosts/nowvideo.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/nowvideo.png',art+'/hosts/nowvideo.png')
 
 def OELINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        oeupload=re.compile('<li class="link_name">              180upload            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        oeupload=re.compile('<li class="link_name">              oeupload            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in oeupload:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/180upload.png',art+'/hosts/180upload.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/180upload.png',art+'/hosts/180upload.png')
 def FNLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        filenuke=re.compile('<li class="link_name">              filenuke            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        filenuke=re.compile('<li class="link_name">              filenuke            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in filenuke:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/filenuke.png',art+'/hosts/filenuke.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/filenuke.png',art+'/hosts/filenuke.png')
 def FLALINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        flashx=re.compile('<li class="link_name">              flashx            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        flashx=re.compile('<li class="link_name">              flashx            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in flashx:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/flashx.png',art+'/hosts/flashx.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/flashx.png',art+'/hosts/flashx.png')
 def VIDLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        vidbux=re.compile('<li class="link_name">              vidbux            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        vidbux=re.compile('<li class="link_name">              vidbux            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in vidbux:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/vidbux.png',art+'/hosts/vidbux.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/vidbux.png',art+'/hosts/vidbux.png')
 def NOVLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        novamov=re.compile('<li class="link_name">              novamov            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        novamov=re.compile('<li class="link_name">              novamov            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in novamov:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/novamov.png',art+'/hosts/novamov.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/novamov.png',art+'/hosts/novamov.png')
 def UPLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        uploadc=re.compile('<li class="link_name">              uploadc            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        uploadc=re.compile('<li class="link_name">              uploadc            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in uploadc:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/uploadc.png',art+'/hosts/uploadc.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/uploadc.png',art+'/hosts/uploadc.png')
 def XVLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        xvidstage=re.compile('<li class="link_name">              xvidstage            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        xvidstage=re.compile('<li class="link_name">              xvidstage            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in xvidstage:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/xvidstage.png',art+'/hosts/xvidstage.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/xvidstage.png',art+'/hosts/xvidstage.png')
 def ZOOLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        zooupload=re.compile('<li class="link_name">              zooupload            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        zooupload=re.compile('<li class="link_name">              zooupload            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in zooupload:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/zooupload.png',art+'/hosts/zooupload.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/zooupload.png',art+'/hosts/zooupload.png')
 def ZALINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        zalaa=re.compile('<li class="link_name">              zalaa            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        zalaa=re.compile('<li class="link_name">              zalaa            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in zalaa:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/zalaa.png',art+'/hosts/zalaa.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/zalaa.png',art+'/hosts/zalaa.png')
 def VIDXLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        vidxden=re.compile('<li class="link_name">              vidxden            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        vidxden=re.compile('<li class="link_name">              vidxden            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in vidxden:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/vidxden.png',art+'/hosts/vidxden.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/vidxden.png',art+'/hosts/vidxden.png')
 
 def PLAYEDLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        played=re.compile('<li class="link_name">              played            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        played=re.compile('<li class="link_name">              played            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in played:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/played.png',art+'/hosts/played.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/played.png',art+'/hosts/played.png')
 
 def MOVSHLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        moveshare=re.compile('<li class="link_name">              moveshare            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        moveshare=re.compile('<li class="link_name">              moveshare            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in moveshare:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/moveshare.png',art+'/hosts/moveshare.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/moveshare.png',art+'/hosts/moveshare.png')
 def DIVXSLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        divxstage=re.compile('<li class="link_name">              divxstage            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        divxstage=re.compile('<li class="link_name">              divxstage            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in divxstage:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/divxstage.png',art+'/hosts/divxstage.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/divxstage.png',art+'/hosts/divxstage.png')
 def SSIXLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        sharesix=re.compile('<li class="link_name">              sharesix            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        sharesix=re.compile('<li class="link_name">              sharesix            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in sharesix:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/sharesix.png',art+'/hosts/sharesix.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/sharesix.png',art+'/hosts/sharesix.png')
 def GORLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        gorillavid=re.compile('<li class="link_name">              gorillavid            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        gorillavid=re.compile('<li class="link_name">              gorillavid            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in gorillavid:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/gorillavid.png',art+'/hosts/gorillavid.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/gorillavid.png',art+'/hosts/gorillavid.png')
 def MOVPLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        movpod=re.compile('<li class="link_name">              movpod            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        movpod=re.compile('<li class="link_name">              movpod            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in movpod:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/movpod.png',art+'/hosts/movpod.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/movpod.png',art+'/hosts/movpod.png')
 def DACLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        daclips=re.compile('<li class="link_name">              daclips            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        daclips=re.compile('<li class="link_name">              daclips            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in daclips:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/daclips.png',art+'/hosts/daclips.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/daclips.png',art+'/hosts/daclips.png')
 def VWEEDLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        videoweed=re.compile('<li class="link_name">              videoweed            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        videoweed=re.compile('<li class="link_name">              videoweed            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in videoweed:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/Videoweed.png',art+'/hosts/Videoweed.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/Videoweed.png',art+'/hosts/Videoweed.png')
 def MOVDLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        movdivx=re.compile('<li class="link_name">              movdivx            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        movdivx=re.compile('<li class="link_name">              movdivx            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in movdivx:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/movdivx.png',art+'/hosts/movdivx.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/movdivx.png',art+'/hosts/movdivx.png')
 def MOVRLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        movreel=re.compile('<li class="link_name">              movreel            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        movreel=re.compile('<li class="link_name">              movreel            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in movreel:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/movreel.png',art+'/hosts/movreel.png')
+                main.addDown(name,MainUrl+url,5,art+'/hosts/movreel.png',art+'/hosts/movreel.png')
 def BUPLOADSLINKS(name,url):
         link=main.OPENURL(url)
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;',' ')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        billionuploads=re.compile('<li class="link_name">              billionuploads            </li>                        <li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
+        billionuploads=re.compile('<li class="link_name">              billionuploads            </li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in billionuploads:
-                main.addDown(name,'http://www.movie25.com' + url,5,art+'/hosts/billionuploads.png',art+'/hosts/billionuploads.png')
-
+                main.addDown(name,MainUrl+url,5,art+'/hosts/billionuploads.png',art+'/hosts/billionuploads.png')
 
 
 
