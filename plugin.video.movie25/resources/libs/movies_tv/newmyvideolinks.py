@@ -209,14 +209,16 @@ def LINKSP2(mname,url):
         link=main.OPENURL(url)
         link=main.unescapes(link)
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        match=re.compile('<li><a href="h(.+?)">(.+?)</a></li>').findall(link)
-        for murl, name in match:
-                thumb=name.lower()
-                murl='h'+murl
-                hosted_media = urlresolver.HostedMediaFile(url=murl, title=name)
-                match2=re.compile("{'url': '(.+?)', 'host': '(.+?)', 'media_id': '.+?'}").findall(str(hosted_media))
-                for murl,host in match2:
-                        main.addDown2(mname+' [COLOR blue]'+name+'[/COLOR]',murl,209,art+'/hosts/'+thumb+".png",art+'/hosts/'+thumb+".png")
+        match0=re.compile('<h4>(.+?)</h4>(.+?)</ul>').findall(link)
+        for mname, links in match0:
+            match=re.compile('<li><a href="h(.+?)">(.+?)</a></li>').findall(links)
+            for murl, name in match:
+                    thumb=name.lower()
+                    murl='h'+murl
+                    hosted_media = urlresolver.HostedMediaFile(url=murl, title=name)
+                    match2=re.compile("{'url': '(.+?)', 'host': '(.+?)', 'media_id': '.+?'}").findall(str(hosted_media))
+                    for murl,host in match2:
+                            main.addDown2(mname+' [COLOR blue]'+name+'[/COLOR]',murl,209,art+'/hosts/'+thumb+".png",art+'/hosts/'+thumb+".png")
        
 
 def LINKSP2B(mname,murl):
