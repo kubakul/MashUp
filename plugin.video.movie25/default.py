@@ -435,10 +435,15 @@ def SPORTS():
         main.addDir('Wild TV','https://www.wildtv.ca/shows',92,art+'/wildtv.png')
         main.addDir('Workouts','https://www.wildtv.ca/shows',194,art+'/workout.png')
         main.addDir('The Golf Channel','golf',217,art+'/golfchannel.png')
-        main.addDir('K1m05 On-Demand','https://github.com/mash2k3/MashUpK1m05/raw/master/OnDemandDir.xml',245,art+'/k1m05OD.png')   
-        main.addDir('Sports4u Streams','https://github.com/mash2k3/Sports4U_MashUp/raw/master/Sports4u-Directory.xml',181,art+'/sports4u.png')
-        main.addDir("K1m05's Sports",'https://github.com/mash2k3/MashUpK1m05/raw/master/k1m05%27s%20playlist/sportsk1.xml',182,art+'/k1m05.png')
-        main.addDir('Max Powers Streams','https://github.com/mash2k3/MashUpMaxPower/raw/master/maxpowers%20playlist/sportsmax',182,art+'/maxpowers.png')
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Sport_Directory.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><mode>(.+?)</mode>').findall(link)
+        for name,url,thumb,mode in match:
+                if re.findall('http',thumb):
+                    thumbs=thumb
+                else:
+                    thumbs=art+'/'+thumb+'.png'
+                main.addDir(name,url,int(mode),thumbs)
         
         main.GA("None","Sports")
 
