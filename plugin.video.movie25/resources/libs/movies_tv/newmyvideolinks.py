@@ -210,7 +210,7 @@ def LINKSP2(mname,url):
         link=main.unescapes(link)
         main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         match0=re.compile('<h4>(.+?)</h4>(.+?)</ul>').findall(link)
-        for mname, links in match0:
+        for mname, links in reversed(match0):
             match=re.compile('<li><a href="h(.+?)">(.+?)</a></li>').findall(links)
             for murl, name in match:
                     thumb=name.lower()
