@@ -142,7 +142,7 @@ def resolve_veehd(url):
             print '**** Mash Up VeeHD Error occured: %s' % e
             #addon.show_small_popup('[B][COLOR green]Mash Up: VeeHD Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',5000, error_logo)
             raise ResolverError(str(e),"VeeHD")
-        
+
 def resolve_billionuploads(url):
 # UPDATED BY THE-ONE @ XBMCHUB - 08-27-2013
     try:
@@ -196,59 +196,107 @@ def resolve_billionuploads(url):
                 print '***** BillionUploads - File Not Found'
                 xbmc.executebuiltin("XBMC.Notification(File Not Found,BillionUploads,2000)")
                 return False                                
-
-            postid = re.search('<input type="hidden" name="id" value="(.+?)">', html).group(1)
             
-            video_src_url = 'http://new.billionuploads.com/embed-' + postid + '.html'
-            print video_src_url
+            #NEW BILLIONUPLOADS
+            #postid = re.search('<input type="hidden" name="id" value="(.+?)">', html).group(1)
+            #video_src_url = 'http://new.billionuploads.com/embed-' + postid + '.html'
+            #print video_src_url
+            #html = normal.open(video_src_url).read()
             
-            html = normal.open(video_src_url).read()
-            
-            dialog.close()
+            #dialog.close()
             
             # SOLVEMEDIA CAPTCHA
-            try:
-                captcha_dir = os.path.join( datapath, 'resources')
-                captcha_img = os.path.join(captcha_dir, 'billion_uploads_resolver.png')
-                if not os.path.exists(captcha_dir):
-                    os.makedirs(captcha_dir)
-                os.remove(captcha_img)
-            except: 
-                pass
+            #try:
+            #    captcha_dir = os.path.join( datapath, 'resources')
+            #    captcha_img = os.path.join(captcha_dir, 'billion_uploads_resolver.png')
+            #    if not os.path.exists(captcha_dir):
+            #        os.makedirs(captcha_dir)
+            #    os.remove(captcha_img)
+            #except: 
+            #    pass
                 
-            net1 = net()
-            noscript=re.compile('<iframe src="(.+?)"').findall(html)[0]
-            check = net1.http_GET(noscript).content
-            hugekey=re.compile('id="adcopy_challenge" value="(.+?)">').findall(check)[0]           
-            captcha_headers= {'User-Agent':'Mozilla/6.0 (Macintosh; I; Intel Mac OS X 11_7_9; de-LI; rv:1.9b4) Gecko/2012010317 Firefox/10.0a4',
-                 'Host':'api.solvemedia.com','Referer':video_src_url,'Accept':'image/png,image/*;q=0.8,*/*;q=0.5'}
-            open(captcha_img, 'wb').write( net1.http_GET("http://api.solvemedia.com%s"%re.compile('<img src="(.+?)"').findall(check)[0]).content)
+            #net1 = net()
+            #noscript=re.compile('<iframe src="(.+?)"').findall(html)[0]
+            #check = net1.http_GET(noscript).content
+            #hugekey=re.compile('id="adcopy_challenge" value="(.+?)">').findall(check)[0]           
+            #captcha_headers= {'User-Agent':'Mozilla/6.0 (Macintosh; I; Intel Mac OS X 11_7_9; de-LI; rv:1.9b4) Gecko/2012010317 Firefox/10.0a4',
+            #     'Host':'api.solvemedia.com','Referer':video_src_url,'Accept':'image/png,image/*;q=0.8,*/*;q=0.5'}
+            #open(captcha_img, 'wb').write( net1.http_GET("http://api.solvemedia.com%s"%re.compile('<img src="(.+?)"').findall(check)[0]).content)
             
-            img = xbmcgui.ControlImage(550,15,240,100,captcha_img)
-            wdlg = xbmcgui.WindowDialog()
-            wdlg.addControl(img)
-            wdlg.show()
+            #img = xbmcgui.ControlImage(550,15,240,100,captcha_img)
+            #wdlg = xbmcgui.WindowDialog()
+            #wdlg.addControl(img)
+            #wdlg.show()
         
             #Prompt keyboard for user input
-            kb = xbmc.Keyboard('', 'Type the letters in the image', False)
-            kb.doModal()
-            capcode = kb.getText()
+            #kb = xbmc.Keyboard('', 'Type the letters in the image', False)
+            #kb.doModal()
+            #capcode = kb.getText()
         
             #Check input                             
-            if (kb.isConfirmed()):
-                userInput = kb.getText()
-                if userInput != '':
-                    capcode = kb.getText()
-                elif userInput == '':
-                    Notify('big', 'No text entered', 'You must enter text in the image to access video', '')
-                    return False
-            else:
-                return False 
-            wdlg.close()
+            #if (kb.isConfirmed()):
+            #    userInput = kb.getText()
+            #    if userInput != '':
+            #        capcode = kb.getText()
+            #    elif userInput == '':
+            #        Notify('big', 'No text entered', 'You must enter text in the image to access video', '')
+            #        return False
+            #else:
+            #    return False 
+            #wdlg.close()
                 
-            print 'Mash Up BillionUploads - Requesting POST URL: %s' % video_src_url
-            data={'op':'video_embed','file_code':postid, 'adcopy_response':capcode,'adcopy_challenge':hugekey}
-            html = normal.open(video_src_url, urllib.urlencode(data)).read()
+            #print 'Mash Up BillionUploads - Requesting POST URL: %s' % video_src_url
+            #data={'op':'video_embed','file_code':postid, 'adcopy_response':capcode,'adcopy_challenge':hugekey}
+            #html = normal.open(video_src_url, urllib.urlencode(data)).read()
+            
+            ####
+            #OLD BILLION UPLOADS
+            data = {}
+            r = re.findall(r'type="hidden" name="(.+?)" value="(.+?)">', html)
+            for name, value in r:
+                data[name] = value
+                
+            captchaimg = re.search('<img src="((?:http://|www\.)?BillionUploads.com/captchas/.+?)"', html)
+    
+            if captchaimg:
+                dialog.close()
+                img = xbmcgui.ControlImage(550,15,240,100,captchaimg.group(1))
+                wdlg = xbmcgui.WindowDialog()
+                wdlg.addControl(img)
+                wdlg.show()
+        
+                time.sleep(3)
+        
+                kb = xbmc.Keyboard('', 'Type the letters in the image', False)
+                kb.doModal()
+                capcode = kb.getText()
+        
+                if (kb.isConfirmed()):
+                    userInput = kb.getText()
+                    if userInput != '':
+                        capcode = kb.getText()
+                    elif userInput == '':
+                        common.addon.show_error_dialog("You must enter the text from the image to access video")
+                        return False
+                else:
+                    return False
+                wdlg.close()
+                dialog.close() 
+                dialog.create('Resolving', 'Resolving Mash Up BillionUploads Link...')
+                dialog.update(50)
+                data.update({'code':capcode})
+
+            else:  
+                dialog.create('Resolving', 'Resolving Mash Up BillionUploads Link...')
+                dialog.update(50)
+            
+            data.update({'submit_btn':''})
+            data.update({'geekref':'yeahman'})
+            
+            print 'Mash Up BillionUploads - Requesting POST URL: %s' % url
+            html = normal.open(url, urllib.urlencode(data)).read()
+            
+            dialog.update(100)
             
             def custom_range(start, end, step):
                 while start <= end:
@@ -307,7 +355,7 @@ def resolve_billionuploads(url):
         print '**** Mash Up BillionUploads Error occured: %s' % e
         raise ResolverError(str(e),"BillionUploads")
     finally:
-        dialog.close()
+        dialog.close()        
 
 def resolve_180upload(url):
 
