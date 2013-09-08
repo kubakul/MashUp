@@ -103,6 +103,12 @@ def unescapes(text):
 
         return text
 
+def removeColorTags(text):
+        return re.sub('\[COLOR[^\]\]{,15}\]','',text.replace("[/COLOR]", ""),re.I)
+    
+def removeColoredText(text):
+        return re.sub('\[COLOR.*?\[/COLOR\]','',text,re.I)
+
 def SwitchUp():
         if selfAddon.getSetting("switchup") == "false":
             selfAddon.setSetting(id="switchup", value="true")
@@ -282,7 +288,8 @@ def formatCast(cast):
 def GETMETAT(mname,genre,fan,thumb):
         originalName=mname
         if selfAddon.getSetting("meta-view") == "true":
-                mname  = mname.replace(' EXTENDED and UNRATED','').replace('Webrip','').replace('[COLOR purple]','').replace('MaxPowers','').replace('720p','').replace('1080p','').replace('TS','').replace('HD','').replace('R6','').replace('H.M.','').replace('HackerMil','').replace('[COLOR green]','').replace('[COLOR yellow]','').replace('[COLOR aqua]','').replace('[COLOR blue]','').replace('[COLOR red]','').replace('[/COLOR]','').replace('(','').replace(')','').replace('[','').replace(']','')
+                mname  = removeColoredText(mname)
+                mname  = mname.replace(' EXTENDED and UNRATED','').replace('Webrip','').replace('MaxPowers','').replace('720p','').replace('1080p','').replace('TS','').replace('HD','').replace('R6','').replace('H.M.','').replace('HackerMil','').replace('(','').replace(')','').replace('[','').replace(']','')
                 mname  = re.sub('Cam(?![A-Za-z])','',mname)
                 if re.findall('\s\d{4}',mname):
                     r = re.split('\s\d{4}',mname,re.DOTALL)
