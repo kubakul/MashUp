@@ -169,7 +169,7 @@ def resolve_billionuploads(url):
             opener = urllib2.build_opener(NoRedirection, urllib2.HTTPCookieProcessor(cj))
             opener.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
             response = opener.open(url).read()
-                
+            dialog.update(25)    
             jschl=re.compile('name="jschl_vc" value="(.+?)"/>').findall(response)
             if jschl:
                 jschl = jschl[0]    
@@ -182,7 +182,7 @@ def resolve_billionuploads(url):
                 normal = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
                 normal.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
                 final= normal.open(domain_url+'cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s'%(jschl,eval(maths)+len(domain))).read()
-                
+                dialog.update(50)    
                 html = normal.open(url).read()
             ################################################################################
             #Check page for any error msgs
@@ -265,7 +265,7 @@ def resolve_billionuploads(url):
                 wdlg.addControl(img)
                 wdlg.show()
         
-                time.sleep(3)
+                #time.sleep(3)
         
                 kb = xbmc.Keyboard('', 'Type the letters in the image', False)
                 kb.doModal()
@@ -283,12 +283,11 @@ def resolve_billionuploads(url):
                 wdlg.close()
                 dialog.close() 
                 dialog.create('Resolving', 'Resolving Mash Up BillionUploads Link...')
-                dialog.update(50)
+                dialog.update(75)
                 data.update({'code':capcode})
 
             else:  
-                dialog.create('Resolving', 'Resolving Mash Up BillionUploads Link...')
-                dialog.update(50)
+                dialog.update(75)
             
             data.update({'submit_btn':''})
             data.update({'geekref':'yeahman'})
