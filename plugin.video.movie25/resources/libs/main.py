@@ -205,51 +205,7 @@ def VIEWSB2():
                         return
 ################################################################################ Movies Metahandler ##########################################################################################################
 
-
-def GETMETA(mname,genre,year,thumb): 
-        if selfAddon.getSetting("meta-view") == "true":
-                mname  = mname.split('[COLOR blue]')[0]
-                mname  = mname.split('[COLOR red]')[0]
-                if re.findall('\s\d{4}',mname):
-                    r = re.split('\s\d{4}',mname,re.DOTALL)
-                    name = r[0]
-                    mname=mname+' MU'
-                    year = re.findall('\s(\d{4})\s',mname)
-                    if year:
-                        year = year[0]
-                    else:
-                        year=''
-                else:
-                    name=mname
-                    year=''
-                name=name.replace('-','').replace('&','').replace('acute;','').replace('C ','')
-                name = name.decode("ascii", "ignore")
-                if year =='':
-                        year=''
-                meta = grab.get_meta('movie',name,None,None,year)# first is Type/movie or tvshow, name of show,tvdb id,imdb id,string of year,unwatched = 6/watched  = 7
-                print "Movie mode: %s"%name
-                infoLabels = {'rating': meta['rating'],'duration': meta['duration'],'genre': meta['genre'],'mpaa':"rated %s"%meta['mpaa'],
-                  'plot': meta['plot'],'title': meta['title'],'writer': meta['writer'],'cover_url': meta['cover_url'],'overlay':meta['overlay'],
-                  'director': meta['director'],'cast': meta['cast'],'backdrop_url': meta['backdrop_url'],'tmdb_id': meta['tmdb_id'],'year': meta['year'], 'imdb_id' : meta['imdb_id']}
-                if infoLabels['genre']=='':
-                        infoLabels['genre']=genre
-                if infoLabels['cover_url']=='':
-                        infoLabels['cover_url']=thumb
-                if infoLabels['backdrop_url']=='':
-                        fan=Dir+'fanart.jpg'
-                        infoLabels['backdrop_url']=fan
-                if meta['overlay'] == 7:
-                   infoLabels['playcount'] = 1
-                else:
-                   infoLabels['playcount'] = 0
-        else:
-                if thumb=='':
-                    thumb=art+'vidicon.png'
-                fan=Dir+'fanart.jpg'
-                infoLabels = {'title': mname,'cover_url': thumb,'backdrop_url': fan,'season': '','episode': '','year': year,'plot': '','genre': genre,'imdb_id': ''}
-        return infoLabels
-
-def GETMETAB(mname,genre,year,thumb): 
+def GETMETAB(mname,genre,year,thumb):
         if selfAddon.getSetting("meta-view") == "true":
                 mname  = mname.split('[COLOR blue]')[0]
                 mname  = mname.split('[COLOR red]')[0]
@@ -286,16 +242,15 @@ def formatCast(cast):
         return roles
 
 def GETMETAT(mname,genre,fan,thumb):
+        mname  = removeColoredText(mname)
         originalName=mname
         if selfAddon.getSetting("meta-view") == "true":
-                mname  = removeColoredText(mname)
                 mname  = mname.replace(' EXTENDED and UNRATED','').replace('Webrip','').replace('MaxPowers','').replace('720p','').replace('1080p','').replace('TS','').replace('HD','').replace('R6','').replace('H.M.','').replace('HackerMil','').replace('(','').replace(')','').replace('[','').replace(']','')
                 mname  = re.sub('Cam(?![A-Za-z])','',mname)
                 if re.findall('\s\d{4}',mname):
                     r = re.split('\s\d{4}',mname,re.DOTALL)
                     name = r[0]
-                    mname=mname+' MU'
-                    year = re.findall('\s(\d{4})\s',mname)
+                    year = re.findall('\s(\d{4})\s',mname + " ")
                     if year:
                         year = year[0]
                     else:
@@ -350,16 +305,16 @@ def GETMETAT(mname,genre,fan,thumb):
 
 
 def GETMETAShow(mname): 
+        mname = removeColoredText(mname)
         if selfAddon.getSetting("meta-view") == "true":
-                mname=mname.replace(' [COLOR red]Recently Updated[/COLOR]','').replace('.','').replace('M.D.','').replace('<span class="updated">Updated!</span>','')    
-                mname  = mname.replace('[COLOR blue]','').replace('[COLOR red]','').replace('[/COLOR]','').replace('(','').replace(')','').replace('[','').replace(']','')
-                mname= mname.replace('-','').replace('-2012','').replace('acute;','').replace('Vampire Diaries','The Vampire Diaries').replace('Comedy Central Roast','Comedy Central Roasts')
-                mname= mname.replace('Doctor Who  2005','Doctor Who').replace(' (US)','(US)').replace(' (UK)','(UK)').replace(' (AU)','(AU)').replace('%','')
+                mname = mname.replace('.','').replace('M.D.','').replace('<span class="updated">Updated!</span>','')    
+                mname = mname.replace('(','').replace(')','').replace('[','').replace(']','')
+                mname = mname.replace('-','').replace('-2012','').replace('acute;','').replace('Vampire Diaries','The Vampire Diaries').replace('Comedy Central Roast','Comedy Central Roasts')
+                mname = mname.replace('Doctor Who  2005','Doctor Who').replace(' (US)','(US)').replace(' (UK)','(UK)').replace(' (AU)','(AU)').replace('%','')
                 if re.findall('\s\d{4}',mname):
                     r = re.split('\s\d{4}',mname,re.DOTALL)
                     name = r[0]
-                    mname=mname+' MU'
-                    year = re.findall('\s(\d{4})\s',mname)
+                    year = re.findall('\s(\d{4})\s',mname + " ")
                     if year:
                         year = year[0]
                     else:
@@ -380,31 +335,12 @@ def GETMETAShow(mname):
                 infoLabels = {'title': mname,'cover_url': art+'/vidicon.png','backdrop_url': ''}
         return infoLabels
 
-def GETMETAEpi(mname,data):
-        if selfAddon.getSetting("meta-view") == "true":
-                match=re.compile('(.+?)xoxc(.+?)xoxc(.+?)xoxc(.+?)xoxc').findall(data)
-                for showname, sea, epi, epiname in match:
-                        showname= showname.replace('-','').replace('-2012','').replace('acute;','').replace('Comedy Central Roast','Comedy Central Roasts')
-                        showname= showname.replace('Doctor Who  2005','Doctor Who').replace(' (US)','(US)').replace(' (UK)','(UK)').replace(' (AU)','(AU)').replace('%','').replace(' [COLOR red]Recently Updated[/COLOR]','').replace('.','').replace('M.D.','').replace('<span class="updated">Updated!</span>','')
-                        print showname+' '+sea+' '+epi+' '+epiname
-                meta = grab.get_episode_meta(str(showname),None, int(sea), int(epi),episode_title=str(epiname), overlay='6')
-                print "Episode Mode: Name %s Season %s - Episode %s"%(str(epiname),str(sea),str(epi))
-                infoLabels = {'rating': meta['rating'],'duration': meta['duration'],'genre': meta['genre'],'mpaa':"rated %s"%meta['mpaa'],
-                      'plot': meta['plot'],'title': meta['title'],'cover_url': meta['cover_url'],
-                      'poster': meta['poster'],'episode': meta['episode'],'backdrop_url': meta['backdrop_url']}
-                
-        else:
-                infoLabels = {'title': mname,'cover_url': '','backdrop_url': ''}       
-        
-        return infoLabels
-
 def GETMETAEpiT(mname,thumb,desc):
+        mname = removeColoredText(mname)
         originalName=mname
         if selfAddon.getSetting("meta-view") == "true":
-                mname  = mname.replace('[COLOR purple]','').replace('[COLOR green]','').replace('[COLOR yellow]','').replace('[COLOR aqua]','').replace('[COLOR blue]','').replace('[COLOR red]','').replace('[/COLOR]','')
                 mname  = mname.replace('New Episode','').replace('Main Event','').replace('New Episodes','')
-                mname=mname+' MU'
-                r = re.findall('(.+?)\ss(\d+)e(\d+)\s',mname,re.I)
+                r = re.findall('(.+?)\ss(\d+)e(\d+)\s',mname + " ",re.I)
                 if r:
                     for name,sea,epi in r:
                         year=''
@@ -419,7 +355,7 @@ def GETMETAEpiT(mname,thumb,desc):
                         year=metaq['year']
                         epiname=''
 
-                f = re.findall('(.+?)\sseason\s(\d+)\sepisode\s(\d+)\s',mname,re.I)
+                f = re.findall('(.+?)\sseason\s(\d+)\sepisode\s(\d+)\s',mname + " ",re.I)
                 if f:
                     for name,sea,epi in f:
                         year=''
