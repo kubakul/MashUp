@@ -272,8 +272,6 @@ def resolve_billionuploads(url):
                 wdlg.addControl(img)
                 wdlg.show()
         
-                time.sleep(3)
-        
                 kb = xbmc.Keyboard('', 'Type the letters in the image', False)
                 kb.doModal()
                 capcode = kb.getText()
@@ -294,7 +292,6 @@ def resolve_billionuploads(url):
                 data.update({'code':capcode})
 
             else:  
-                dialog.create('Resolving', 'Resolving Mash Up BillionUploads Link...')
                 dialog.update(50)
             
             data.update({'submit_btn':''})
