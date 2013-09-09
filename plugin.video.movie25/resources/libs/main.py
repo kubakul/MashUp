@@ -104,7 +104,7 @@ def unescapes(text):
         return text
 
 def removeColorTags(text):
-        return re.sub('\[COLOR[^\]\]{,15}\]','',text.replace("[/COLOR]", ""),re.I)
+        return re.sub('\[COLOR[^\]]{,15}\]','',text.replace("[/COLOR]", ""),re.I)
     
 def removeColoredText(text):
         return re.sub('\[COLOR.*?\[/COLOR\]','',text,re.I)
@@ -242,12 +242,13 @@ def formatCast(cast):
         return roles
 
 def GETMETAT(mname,genre,fan,thumb):
-        mname  = removeColoredText(mname)
         originalName=mname
         if selfAddon.getSetting("meta-view") == "true":
+                mname = re.sub(r'\[COLOR red\]\(?(\d{4})\)?\[/COLOR\]',r'\1',mname)
+                mname = removeColoredText(mname)
                 mname = mname.replace(' EXTENDED and UNRATED','').replace('Webrip','').replace('MaxPowers','').replace('720p','').replace('1080p','').replace('TS','').replace('HD','').replace('R6','').replace('H.M.','').replace('HackerMil','').replace('(','').replace(')','').replace('[','').replace(']','')
                 mname = re.sub('Cam(?![A-Za-z])','',mname)
-                mname = re.sub('^\s+','',mname)
+                mname = mname.strip()
                 if re.findall('\s\d{4}',mname):
                     r = re.split('\s\d{4}',mname,re.DOTALL)
                     name = r[0]
@@ -260,10 +261,10 @@ def GETMETAT(mname,genre,fan,thumb):
                     name=mname
                     year=''
                 name = name.decode("ascii", "ignore")
-                meta = grab.get_meta('movie',name,None,None,year='')# first is Type/movie or tvshow, name of show,tvdb id,imdb id,string of year,unwatched = 6/watched  = 7
+                meta = grab.get_meta('movie',name,None,None,year=year)# first is Type/movie or tvshow, name of show,tvdb id,imdb id,string of year,unwatched = 6/watched  = 7
                 if not meta['year']:
                       name  = re.sub(':.*','',name)
-                      meta = grab.get_meta('movie',name,None,None,'')
+                      meta = grab.get_meta('movie',name,None,None,year=year)
                 print "Movie mode: %s"%name
                 infoLabels = {'rating': meta['rating'],'duration': meta['duration'],'genre': meta['genre'],'mpaa':"rated %s"%meta['mpaa'],
                   'plot': meta['plot'],'title': meta['title'],'writer': meta['writer'],'cover_url': meta['cover_url'],'overlay':meta['overlay'],
@@ -286,7 +287,7 @@ def GETMETAT(mname,genre,fan,thumb):
                 if infoLabels['cover_url']=='':
                     thumb=art+'vidicon.png'
                     infoLabels['cover_url']=thumb
-            	if(int(year+'0')):                      
+                if int(year+'0'):
                     infoLabels['year']=year 
                 infoLabels['metaName']=infoLabels['title']
                 infoLabels['title']=originalName
@@ -304,45 +305,12 @@ def GETMETAT(mname,genre,fan,thumb):
 
 ################################################################################ TV Shows Metahandler ##########################################################################################################
 
-
-def GETMETAShow(mname): 
-        mname = removeColoredText(mname)
-        if selfAddon.getSetting("meta-view") == "true":
-                mname = mname.replace('.','').replace('M.D.','').replace('<span class="updated">Updated!</span>','')    
-                mname = mname.replace('(','').replace(')','').replace('[','').replace(']','')
-                mname = mname.replace('-','').replace('-2012','').replace('acute;','').replace('Vampire Diaries','The Vampire Diaries').replace('Comedy Central Roast','Comedy Central Roasts')
-                mname = mname.replace('Doctor Who  2005','Doctor Who').replace(' (US)','(US)').replace(' (UK)','(UK)').replace(' (AU)','(AU)').replace('%','')
-                mname = re.sub('^\s+','',mname)
-                if re.findall('\s\d{4}',mname):
-                    r = re.split('\s\d{4}',mname,re.DOTALL)
-                    name = r[0]
-                    year = re.findall('\s(\d{4})\s',mname + " ")
-                    if year:
-                        year = year[0]
-                    else:
-                        year=''
-                else:
-                    name=mname
-                    year=''
-                
-                meta = grab.get_meta('tvshow',name,None,None,year,overlay=6)# first is Type/movie or tvshow, name of show,tvdb id,imdb id,string of year,unwatched = 6/watched  = 7
-                print "Tv Mode: %s"%name
-                infoLabels = {'rating': meta['rating'],'duration': meta['duration'],'genre': meta['genre'],'mpaa':"rated %s"%meta['mpaa'],
-                  'plot': meta['plot'],'title': mname,'cover_url': meta['cover_url'],
-                  'cast': meta['cast'],'studio': meta['studio'],'banner_url': meta['banner_url'],
-                      'backdrop_url': meta['backdrop_url'],'status': meta['status']}
-                if infoLabels['cover_url']=='':
-                        infoLabels['cover_url']=art+'/vidicon.png'
-        else:
-                infoLabels = {'title': mname,'cover_url': art+'/vidicon.png','backdrop_url': ''}
-        return infoLabels
-
 def GETMETAEpiT(mname,thumb,desc):
-        mname = removeColoredText(mname)
         originalName=mname
+        mname = removeColoredText(mname)
         if selfAddon.getSetting("meta-view") == "true":
                 mname = mname.replace('New Episode','').replace('Main Event','').replace('New Episodes','')
-                mname = re.sub('^\s+','',mname)
+                mname = mname.strip()
                 r = re.findall('(.+?)\ss(\d+)e(\d+)\s',mname + " ",re.I)
                 if r:
                     for name,sea,epi in r:
@@ -977,8 +945,7 @@ def GA(group,name):
             
         except:
             print "================  CANNOT POST TO ANALYTICS  ================" 
-            
-            
+
 def APP_LAUNCH():
         versionNumber = int(xbmc.getInfoLabel("System.BuildVersion" )[0:2])
         if versionNumber < 12:
@@ -1774,15 +1741,6 @@ def addDirIWO(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         liz.setProperty('fanart_image', infoLabels['backdrop_url'])
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok 
-def addInfo2(name,url,mode,iconimage,plot):
-        ok=True
-        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)
-        infoLabels = GETMETAShow(name)
-        liz=xbmcgui.ListItem(name, iconImage=art+'/vidicon.png', thumbnailImage=infoLabels['cover_url'])
-        liz.setInfo( type="Video", infoLabels=infoLabels)
-        liz.setProperty('fanart_image', infoLabels['backdrop_url'])
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
-        return ok
     
 def addDLog(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&genre="+urllib.quote_plus(genre)
