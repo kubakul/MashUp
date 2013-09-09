@@ -24,7 +24,8 @@ def LISTTV2(murl):
             murl=murl
         
         if urllist:
-                match=re.compile('href="(.+?)"><img width=".+?" height=".+?" style=".+?" data-cfsrc="(.+?)" class=".+?" alt=".+?" title="(.+?)"/>').findall(urllist)
+                urllist=urllist.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+                match=re.compile('<li class=".+?"><div class=".+?"><a class=".+?" href="(.+?)"><img width=".+?" height=".+?" style=".+?" data-cfsrc="(.+?)" class=".+?" alt=".+?" title="(.+?)" />').findall(urllist)
                 dialogWait = xbmcgui.DialogProgress()
                 ret = dialogWait.create('Please wait until Show list is cached.')
                 totalLinks = len(match)
@@ -103,7 +104,8 @@ def SEARCHMovie1k(murl):
                 encode = murl
                 surl='http://www.movie1k.net/?s='+encode
         link=main.OPENURL(surl)
-        match=re.compile('href="(.+?)"><img width=".+?" height=".+?" style=".+?" data-cfsrc="(.+?)" class=".+?" alt=".+?" title="(.+?)"/>').findall(link)
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<li class=".+?"><div class=".+?"><a class=".+?" href="(.+?)"><img width=".+?" height=".+?" style=".+?" data-cfsrc="(.+?)" class=".+?" alt=".+?" title="(.+?)" />').findall(link)
         for url,thumb,name in match:
                     main.addPlayc(name,url,31,thumb,'','','','','')
         main.GA("Movie1k","Search")
@@ -130,7 +132,8 @@ def VIDEOLINKST2(mname,murl,thumb):
         link=main.OPENURL(murl)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
         ok=True
-        match=re.compile('<tr><td>.+?<td>(.+?)</td><td><.+?href="(.+?)" target=.+?</a></td>').findall(link)
+        match=re.compile('<tr><td >.+?</td><td >(.+?)</td><td ><.+?href="http://www.linkembed.net/watch.php.?idl=(.+?)".+?>').findall(link)
+                          
         
         for  host,url in match:
                 match2=re.compile('http://.+?/watch.php.?idl=([^<]+)').findall(url)
