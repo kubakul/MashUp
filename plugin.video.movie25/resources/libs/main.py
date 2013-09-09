@@ -991,24 +991,19 @@ def APP_LAUNCH():
                 log_path = '/var/mobile/Library/Preferences'
             elif xbmc.getCondVisibility('system.platform.windows'):
                 log_path = xbmc.translatePath('special://home')
-                log = os.path.join(log_path, 'xbmc.log')
-                logfile = open(log, 'r').read()
             elif xbmc.getCondVisibility('system.platform.linux'):
                 log_path = xbmc.translatePath('special://home/temp')
             else:
                 log_path = xbmc.translatePath('special://logpath')
-            log = os.path.join(log_path, 'xbmc.log')
-            logfile = open(log, 'r').read()
-            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
-        elif versionNumber > 11:
+        else:
             print '======================= more than ===================='
             log_path = xbmc.translatePath('special://logpath')
-            log = os.path.join(log_path, 'xbmc.log')
+        log = os.path.join(log_path, 'xbmc.log')
+        try:
             logfile = open(log, 'r').read()
-            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
-        else:
-            logfile='Starting XBMC (Unknown Git:.+?Platform: Unknown. Built.+?'
-            match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
+        except:
+            logfile='Starting XBMC ('+versionNumber+'.0 Git:.+?Platform: Unknown. Built.+?'
+        match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
         print '==========================   '+PATH+' '+VERSION+'   =========================='
         try:
             repo = os.path.join(repopath, 'addon.xml')
