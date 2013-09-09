@@ -245,8 +245,9 @@ def GETMETAT(mname,genre,fan,thumb):
         mname  = removeColoredText(mname)
         originalName=mname
         if selfAddon.getSetting("meta-view") == "true":
-                mname  = mname.replace(' EXTENDED and UNRATED','').replace('Webrip','').replace('MaxPowers','').replace('720p','').replace('1080p','').replace('TS','').replace('HD','').replace('R6','').replace('H.M.','').replace('HackerMil','').replace('(','').replace(')','').replace('[','').replace(']','')
-                mname  = re.sub('Cam(?![A-Za-z])','',mname)
+                mname = mname.replace(' EXTENDED and UNRATED','').replace('Webrip','').replace('MaxPowers','').replace('720p','').replace('1080p','').replace('TS','').replace('HD','').replace('R6','').replace('H.M.','').replace('HackerMil','').replace('(','').replace(')','').replace('[','').replace(']','')
+                mname = re.sub('Cam(?![A-Za-z])','',mname)
+                mname = re.sub('^\s+','',mname)
                 if re.findall('\s\d{4}',mname):
                     r = re.split('\s\d{4}',mname,re.DOTALL)
                     name = r[0]
@@ -311,6 +312,7 @@ def GETMETAShow(mname):
                 mname = mname.replace('(','').replace(')','').replace('[','').replace(']','')
                 mname = mname.replace('-','').replace('-2012','').replace('acute;','').replace('Vampire Diaries','The Vampire Diaries').replace('Comedy Central Roast','Comedy Central Roasts')
                 mname = mname.replace('Doctor Who  2005','Doctor Who').replace(' (US)','(US)').replace(' (UK)','(UK)').replace(' (AU)','(AU)').replace('%','')
+                mname = re.sub('^\s+','',mname)
                 if re.findall('\s\d{4}',mname):
                     r = re.split('\s\d{4}',mname,re.DOTALL)
                     name = r[0]
@@ -339,7 +341,8 @@ def GETMETAEpiT(mname,thumb,desc):
         mname = removeColoredText(mname)
         originalName=mname
         if selfAddon.getSetting("meta-view") == "true":
-                mname  = mname.replace('New Episode','').replace('Main Event','').replace('New Episodes','')
+                mname = mname.replace('New Episode','').replace('Main Event','').replace('New Episodes','')
+                mname = re.sub('^\s+','',mname)
                 r = re.findall('(.+?)\ss(\d+)e(\d+)\s',mname + " ",re.I)
                 if r:
                     for name,sea,epi in r:
