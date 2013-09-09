@@ -146,7 +146,9 @@ def resolve_veehd(url):
             raise ResolverError(str(e),"VeeHD")
 
 def resolve_billionuploads(url):
+# UPDATED BY THE-ONE @ XBMCHUB - 09-09-2013
 # UPDATED BY THE-ONE @ XBMCHUB - 08-27-2013
+
     try:
             #########
             dialog = xbmcgui.DialogProgress()
@@ -154,6 +156,10 @@ def resolve_billionuploads(url):
             dialog.update(0)
                                                                       
             print 'Mash Up BillionUploads - Requesting GET URL: %s' % url
+            
+            cj = cookielib.CookieJar()
+            normal = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+            normal.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
             
             ########################################################
             ######## CLOUD FLARE STUFF
@@ -164,14 +170,13 @@ def resolve_billionuploads(url):
                     code, msg, hdrs = response.code, response.msg, response.info()
 
                     return response
-                https_response = http_response
-
-            cj = cookielib.CookieJar()
+                https_response = http_response            
             
             opener = urllib2.build_opener(NoRedirection, urllib2.HTTPCookieProcessor(cj))
             opener.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
             response = opener.open(url).read()
-            dialog.update(25)    
+                
+            html = None
             jschl=re.compile('name="jschl_vc" value="(.+?)"/>').findall(response)
             if jschl:
                 jschl = jschl[0]    
@@ -180,12 +185,12 @@ def resolve_billionuploads(url):
 
                 domain_url = re.compile('(https?://.+?/)').findall(url)[0]
                 domain = re.compile('https?://(.+?)/').findall(domain_url)[0]
-                
-                normal = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-                normal.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36')]
+                                
                 final= normal.open(domain_url+'cdn-cgi/l/chk_jschl?jschl_vc=%s&jschl_answer=%s'%(jschl,eval(maths)+len(domain))).read()
-                dialog.update(50)    
+                
                 html = normal.open(url).read()
+            else:
+                html = response
             ################################################################################
             #Check page for any error msgs
             if re.search('This server is in maintenance mode', html, re.I):
@@ -267,7 +272,7 @@ def resolve_billionuploads(url):
                 wdlg.addControl(img)
                 wdlg.show()
         
-                #time.sleep(3)
+                time.sleep(3)
         
                 kb = xbmc.Keyboard('', 'Type the letters in the image', False)
                 kb.doModal()
@@ -285,11 +290,12 @@ def resolve_billionuploads(url):
                 wdlg.close()
                 dialog.close() 
                 dialog.create('Resolving', 'Resolving Mash Up BillionUploads Link...')
-                dialog.update(75)
+                dialog.update(50)
                 data.update({'code':capcode})
 
             else:  
-                dialog.update(75)
+                dialog.create('Resolving', 'Resolving Mash Up BillionUploads Link...')
+                dialog.update(50)
             
             data.update({'submit_btn':''})
             data.update({'geekref':'yeahman'})
@@ -356,7 +362,8 @@ def resolve_billionuploads(url):
         print '**** Mash Up BillionUploads Error occured: %s' % e
         raise ResolverError(str(e),"BillionUploads")
     finally:
-        dialog.close()        
+        dialog.close()
+
 
 def resolve_180upload(url):
 
