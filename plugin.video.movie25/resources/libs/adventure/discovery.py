@@ -90,20 +90,30 @@ def LISTDISC(mname,murl):
         for thumb in Thumb:
                 thumbList.append(thumb)
          
-        match=re.compile('<a href="(.+?)" class=".+?" data-track-rule=".+?"  data-module-name=".+?" data-module-location=".+?" data-link-position=".+?" data-track-more=".+?">(.+?)</a></h4>\n                        <p class="clip-count-all">(.+?)</p>\n').findall(link)
-        i=0
-        for url, name, view in match:
-                url=url.replace('http://animal.discovery.com','').replace('http://military.discovery.com','').replace('http://science.discovery.com','').replace('http://velocity.discovery.com','').replace('http://dsc.discovery.com','')
-                link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-                Full=re.compile('<img src="([^<]+)" />[^<]+>Full Episode</span>').findall(link)
-                Full=re.compile('<span class="full-episode-flag">Full Episode</span>.+?<a href="(.+?)" class=".+?" data-track-rule=".+?"').findall(link)
-                if Full:
-                    for ind in Full:
-                        if ind == url:
-                                name= name + '  [COLOR red]Full Episode[/COLOR]'
-                name=name.replace('&#39;',"'").replace('&quot;','"').replace('&amp;',"&")
-                main.addPlayMs(name+'  [COLOR blue]'+view+'[/COLOR]',turl+url,65,thumbList[i],'','','','','')
-                i=i+1
+        match=re.compile('<a href="(.+?)" class=".+?" data-track-rule=".+?"  data-module-name=".+?" data-module-location=".+?" data-link-position=".+?" data-track-more=".+?">(.+?)</a></h4>\n                        \n                        <p>(.+?)</p>\n ').findall(link)
+        if len(match)==0:
+                match=re.compile('<a href="(.+?)" class=".+?" data-track-rule=".+?"  data-module-name=".+?" data-module-location=".+?" data-link-position=".+?" data-track-more=".+?">(.+?)</a></h4>\n                        <p class="clip-count-all">(.+?)</p>\n').findall(link)
+                i=0
+                for url, name, view in match:
+                        url=url.replace('http://animal.discovery.com','').replace('http://military.discovery.com','').replace('http://science.discovery.com','').replace('http://velocity.discovery.com','').replace('http://dsc.discovery.com','')
+                        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+                        Full=re.compile('<img src="([^<]+)" />[^<]+>Full Episode</span>').findall(link)
+                        Full=re.compile('<span class="full-episode-flag">Full Episode</span>.+?<a href="(.+?)" class=".+?" data-track-rule=".+?"').findall(link)
+                        if Full:
+                            for ind in Full:
+                                if ind == url:
+                                        name= name + '  [COLOR red]Full Episode[/COLOR]'
+                        name=name.replace('&#39;',"'").replace('&quot;','"').replace('&amp;',"&")
+                        main.addPlayMs(name+'  [COLOR blue]'+view+'[/COLOR]',turl+url,65,thumbList[i],'','','','','')
+                        i=i+1
+        else:
+                i=0
+                for url, name, types in match:
+                        url=url.replace('http://animal.discovery.com','').replace('http://military.discovery.com','').replace('http://science.discovery.com','').replace('http://velocity.discovery.com','').replace('http://dsc.discovery.com','')
+                
+                        name=name.replace('&#39;',"'").replace('&quot;','"').replace('&amp;',"&")
+                        main.addPlayMs(name+'  [COLOR blue]'+types+'[/COLOR]',turl+url,65,thumbList[i],'','','','','')
+                        i=i+1
         main.GA("Discovery",mname+"-list")
 
 def LINKDISC(name,url):
@@ -137,7 +147,7 @@ def LINKDISC(name,url):
         for etitle in ETitle:
             etitle=etitle.replace('3E','').replace('\u0027',"").replace('\u0026#8212\u003B',' ').replace('\u002D',' ')
             ETitleList.append(etitle)
-        Full=re.findall('Full Episode',name)
+        Full=re.findall('full episode',name,re.I)
         if Full:
             match2=re.compile('"m3u8": "http://discidevflash-f.akamaihd.net/i/digmed/(.+?).mp4.csmil/master.m3u8"').findall(link)
             main.GA("Discovery-"+name,"Watching")

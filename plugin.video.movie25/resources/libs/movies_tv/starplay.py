@@ -17,7 +17,7 @@ user = selfAddon.getSetting('username')
 passw = selfAddon.getSetting('password')
 if user == '' and passw == '':
         dialog = xbmcgui.Dialog()
-        dialog.ok("[COLOR=FF67cc33]MashUp[/COLOR]", "Please set your Noobroom credentials", "in Addon settings under Noobroom login tab")
+        dialog.ok("[COLOR=FF67cc33]MashUp[/COLOR]", "Please set your Noobroom credentials", "in Addon settings under logins tab")
         selfAddon.openSettings()
 
         

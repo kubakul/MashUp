@@ -1460,22 +1460,22 @@ elif mode==79:
     wbkids.LINKWB(name,url)
 
 elif mode==80:
-    from resources.libs.movies_tv import discovery
+    from resources.libs.adventure import discovery
     print ""+url
     discovery.MILIT(url)
         
 elif mode==81:
-    from resources.libs.movies_tv import discovery
+    from resources.libs.adventure import discovery
     print ""+url
     discovery.SCI(url)
 
 elif mode==82:
-    from resources.libs.movies_tv import discovery
+    from resources.libs.adventure import discovery
     print ""+url
     discovery.VELO(url)
 
 elif mode==83:
-    from resources.libs.movies_tv import discovery
+    from resources.libs.adventure import discovery
     print ""+url
     discovery.ANIP(url)
 

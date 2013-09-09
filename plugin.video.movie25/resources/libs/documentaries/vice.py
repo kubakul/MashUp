@@ -17,7 +17,8 @@ wh = watchhistory.WatchHistory('plugin.video.movie25')
 def Vice(murl):
     main.GA("Documentary","Vice")
     link=main.OPENURL(murl)
-    match=re.compile('<a href="(.+?)"><img width=".+?" height=".+?" src="(.+?)" /></a>    <h2><a href=".+?">(.+?)</a></h2>\n    <p>(.+?)</p>').findall(link)
+    link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+    match=re.compile('<a class=".+?" href="(.+?)"><img width=".+?" height=".+?" src="(.+?)" /></a>    <h2><a href=".+?">(.+?)</a></h2>    <p>(.+?)</p>').findall(link)
     for url,thumb,name,desc in match:
         url='http://www.vice.com'+url
         main.addDirc(name,url,105,thumb,desc,'','','','')
