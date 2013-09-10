@@ -171,8 +171,7 @@ def VIDEOLINKST2(mname,murl,thumb):
                 else:
                         source = urlresolver.choose_source(sources)
                         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                        import resolvers
-                        stream_url = resolvers.resolve_url(source.get_url())
+                        stream_url = main.resolve_url(source.get_url())
                         if(stream_url == False):
                             return
                                   
