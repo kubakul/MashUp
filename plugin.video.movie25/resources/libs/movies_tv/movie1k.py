@@ -133,7 +133,8 @@ def VIDEOLINKST2(mname,murl,thumb):
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
         ok=True
         match=re.compile('<tr><td >.+?</td><td >(.+?)</td><td ><.+?href="http://www.linkembed.net/watch.php.?idl=(.+?)".+?>').findall(link)
-                          
+        if not match:
+            match=re.compile('<p><strong>Server.+?: (.+?)</strong><.+?href="http://www.linkembed.net/watch.php.?idl=(.+?)".+?>').findall(link)
         
         for  host,url in match:
                 match2=re.compile('http://.+?/watch.php.?idl=([^<]+)').findall(url)
@@ -170,7 +171,8 @@ def VIDEOLINKST2(mname,murl,thumb):
                 else:
                         source = urlresolver.choose_source(sources)
                         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
-                        stream_url = main.resolve_url(source.get_url())
+                        import resolvers
+                        stream_url = resolvers.resolve_url(source.get_url())
                         if(stream_url == False):
                             return
                                   
