@@ -2247,6 +2247,11 @@ elif mode==248:
 elif mode==249:
     from resources.libs.movies_tv import movieplaylist
     movieplaylist.subLink(name,url)
+
+elif mode==250:
+    from resources.libs.live import customchannel
+    customchannel.addPlaylist()
+
 ######################################################################################################
         ######################################################################################
         ######################################################################################
