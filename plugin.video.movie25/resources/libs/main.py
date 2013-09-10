@@ -969,7 +969,7 @@ def APP_LAUNCH():
         try:
             logfile = open(log, 'r').read()
         except:
-            logfile='Starting XBMC ('+versionNumber+'.0 Git:.+?Platform: Unknown. Built.+?'
+            logfile='Starting XBMC ('+str(versionNumber)+'.0 Git:.+?Platform: Unknown. Built.+?'
         match=re.compile('Starting XBMC \((.+?) Git:.+?Platform: (.+?)\. Built.+?').findall(logfile)
         print '==========================   '+PATH+' '+VERSION+'   =========================='
         try:
