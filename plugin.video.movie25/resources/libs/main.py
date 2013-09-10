@@ -306,8 +306,8 @@ def GETMETAT(mname,genre,fan,thumb):
 ################################################################################ TV Shows Metahandler ##########################################################################################################
 
 def GETMETAEpiT(mname,thumb,desc):
-        originalName=mname
         mname = removeColoredText(mname)
+        originalName=mname
         if selfAddon.getSetting("meta-view") == "true":
                 mname = mname.replace('New Episode','').replace('Main Event','').replace('New Episodes','')
                 mname = mname.strip()
