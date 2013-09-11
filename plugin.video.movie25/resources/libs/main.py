@@ -1415,6 +1415,45 @@ def addDirc(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         liz.addContextMenuItems(contextMenuItems, replaceItems=False)
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
+
+def addDirXml(name,url,mode,iconimage,plot,fanart,dur,genre,year):
+        contextMenuItems = []
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage=art+'/vidicon.png', thumbnailImage=iconimage)
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot } )
+        if fanart == '':
+            fanart=Dir+'fanart.jpg'
+        liz.setProperty('fanart_image', fanart)
+        if selfAddon.getSetting("addmethod") == "true":
+            contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Playlist','XBMC.RunPlugin(%s?name=None&mode=250&url=None&iconimage=None)'% (sys.argv[0])))
+        contextMenuItems.append(("[B][COLOR red]Remove[/COLOR][/B] Playlist",'XBMC.RunPlugin(%s?name=%s&mode=251&url=%s&iconimage=%s)'% (sys.argv[0],name,url,plot)))
+        if selfAddon.getSetting("addmethod") == "true":
+            contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Folder','XBMC.RunPlugin(%s?name=%s&mode=252&url=%s&iconimage=None)'% (sys.argv[0],name,url)))
+        contextMenuItems.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
+        contextMenuItems.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
+        liz.addContextMenuItems(contextMenuItems, replaceItems=False)
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+        return ok
+
+def addXmlFolder(name,url,mode,iconimage,plot,fanart,dur,genre,year):
+        contextMenuItems = []
+        u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)
+        ok=True
+        liz=xbmcgui.ListItem(name, iconImage=art+'/vidicon.png', thumbnailImage=iconimage)
+        liz.setInfo( type="Video", infoLabels={ "Title": name, "Plot": plot } )
+        if fanart == '':
+            fanart=Dir+'fanart.jpg'
+        liz.setProperty('fanart_image', fanart)
+        if selfAddon.getSetting("addmethod") == "true":
+            contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Playlist','XBMC.RunPlugin(%s?name=None&mode=250&url=None&iconimage=None)'% (sys.argv[0])))
+            contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Folder','XBMC.RunPlugin(%s?name=%s&mode=252&url=%s&iconimage=None)'% (sys.argv[0],name,url)))
+        contextMenuItems.append(("[B][COLOR red]Remove[/COLOR][/B] Folder",'XBMC.RunPlugin(%s?name=%s&mode=254&url=%s&iconimage=None)'% (sys.argv[0],name,url)))
+        contextMenuItems.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
+        contextMenuItems.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
+        liz.addContextMenuItems(contextMenuItems, replaceItems=False)
+        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+        return ok
     
 def addLink(name,url,iconimage):
         ok=True

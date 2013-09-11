@@ -41,7 +41,13 @@
 	</category>	
    <category label="Custom Channels">
     <setting id="customchannel" type="bool" label="Custom Channels" default="true"/>
-    <setting id="xml-folder" type="folder" label="[B]XML File Path[/B]" default=""/>
+	<setting id="hideinstruction" type="bool" label="Hide Instructions" default="false"/>
+	<setting id="addmethod" type="bool" label="Move Add Playlist & Add Folder to Context Menu" default="false"/>
+	<setting id="playlistthumb" type="bool" label="Playlist Thumbnail" default="true"/>
+	<setting id="playlistfanart" type="bool" label="Playlist Fanart" default="true"/>
+	<setting id="folderthumb" type="bool" label="Folder Thumbnail" default="true"/>
+	<setting id="folderfanart" type="bool" label="Folder Fanart" default="true"/>
+    
 
    </category>
 </settings>

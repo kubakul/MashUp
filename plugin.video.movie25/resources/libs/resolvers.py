@@ -44,6 +44,8 @@ def resolve_url(url):
                 source = urlresolver.HostedMediaFile(url)
                 if source:
                     stream_url = source.resolve()
+                else:
+                    stream_url=url
             try:
                 stream_url=stream_url.split('referer')[0]
                 stream_url=stream_url.replace('|','')

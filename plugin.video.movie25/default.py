@@ -2250,8 +2250,23 @@ elif mode==249:
 
 elif mode==250:
     from resources.libs.live import customchannel
-    customchannel.addPlaylist()
+    customchannel.addPlaylist(url)
 
+elif mode==251:
+    from resources.libs.live import customchannel
+    customchannel.removePlaylist(name,url,iconimage)
+
+elif mode==252:
+    from resources.libs.live import customchannel
+    customchannel.addFolder(url)
+
+elif mode==253:
+    from resources.libs.live import customchannel
+    customchannel.openFolder(name,url)
+
+elif mode==254:
+    from resources.libs.live import customchannel
+    customchannel.removeFolder(name,url)
 ######################################################################################################
         ######################################################################################
         ######################################################################################
