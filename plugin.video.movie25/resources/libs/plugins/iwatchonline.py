@@ -282,8 +282,15 @@ def iWatchLISTMOVIES(murl):
 def iWatchToday(murl):
         main.GA("Tvshows","TodaysList")
         link=main.OPENURL(murl)
+        daysback = 2
+        for x in range(0, daysback):
+            match = re.findall(r"</i></a> <a href='(.*?)'" , link)
+            if(match):
+                    link = link + main.OPENURL("http://www.iwatchonline.to/tv-schedule" + match[x])
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        match=re.compile('<img pagespeed_.+?_src="(.+?)".+?<a href="(.+?)">(.+?)</a></td><td.+?>(.+?)</td><td.+?>(.+?)</td>').findall(link)
+        link  = re.sub('>\s*','>',link)
+        link  = re.sub('\s*<','<',link)
+        match=re.compile('<img src="(.+?)"[^<]+?<br /><a href="(.+?)">(.+?)</a></td><td.+?>(.+?)</td><td.+?>(.+?)</td>.*?>(\d{,2}) Link\(s\)', re.M).findall(link)
         
         dialogWait = xbmcgui.DialogProgress()
         ret = dialogWait.create('Please wait until Show list is cached.')
@@ -291,7 +298,15 @@ def iWatchToday(murl):
         loadedLinks = 0
         remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
-        for thumb,url,name,episea,epiname in match:
+        for thumb,url,name,episea,epiname,active in match:
+                if(active == '0'):
+                    totalLinks -= 1
+                    continue
+                name=name.strip()
+                thumb=thumb.strip()
+                url=url.strip()
+                episea=episea.strip()
+                epiname=epiname.strip()
                 name=name.replace('(','').replace(')','')
                 name=name.replace('(\d{4})','')
                 main.addDirTE(name+' '+episea+' '+epiname,url,588,thumb,'','','','','')
