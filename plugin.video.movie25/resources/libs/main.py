@@ -1429,7 +1429,7 @@ def addDirXml(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Playlist','XBMC.RunPlugin(%s?name=None&mode=250&url=None&iconimage=None)'% (sys.argv[0])))
         contextMenuItems.append(("[B][COLOR red]Remove[/COLOR][/B] Playlist",'XBMC.RunPlugin(%s?name=%s&mode=251&url=%s&iconimage=%s)'% (sys.argv[0],name,url,plot)))
         if selfAddon.getSetting("addmethod") == "true":
-            contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Folder','XBMC.RunPlugin(%s?name=%s&mode=252&url=%s&iconimage=None)'% (sys.argv[0],name,url)))
+            contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Folder','XBMC.RunPlugin(%s?name=%s&mode=252&url=%s&iconimage=None)'% (sys.argv[0],name,plot)))
         contextMenuItems.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         contextMenuItems.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz.addContextMenuItems(contextMenuItems, replaceItems=False)
@@ -1447,7 +1447,8 @@ def addXmlFolder(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         liz.setProperty('fanart_image', fanart)
         if selfAddon.getSetting("addmethod") == "true":
             contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Playlist','XBMC.RunPlugin(%s?name=None&mode=250&url=None&iconimage=None)'% (sys.argv[0])))
-            contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Folder','XBMC.RunPlugin(%s?name=%s&mode=252&url=%s&iconimage=None)'% (sys.argv[0],name,url)))
+            if url=='home':
+                contextMenuItems.append(('[B][COLOR blue]Add[/COLOR][/B] Folder','XBMC.RunPlugin(%s?name=%s&mode=252&url=%s&iconimage=None)'% (sys.argv[0],name,url)))
         contextMenuItems.append(("[B][COLOR red]Remove[/COLOR][/B] Folder",'XBMC.RunPlugin(%s?name=%s&mode=254&url=%s&iconimage=None)'% (sys.argv[0],name,url)))
         contextMenuItems.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         contextMenuItems.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))

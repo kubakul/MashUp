@@ -27,6 +27,8 @@ FolderFile=os.path.join(CustomChannel,'FolderFile')
 
 def MAIN():
     folders='home'
+    pl=0
+    fl=0
     if selfAddon.getSetting("hideinstruction") == "false":
         main.addPlayc('My XML Channel Instructions','nills',248,art+'/xml.png','','','','','')
     if selfAddon.getSetting("addmethod") == "false":
@@ -35,14 +37,22 @@ def MAIN():
     if os.path.exists(PlaylistFile):
         playlist=re.compile("{'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(PlaylistFile,'r').read())
         for url,fanart,folder,thumb,name in playlist:
-            if folders==folder:
+            if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                name=urllib.unquote_plus(name)
+                url=urllib.unquote_plus(url)
                 main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
+                pl=pl+1
     if os.path.exists(FolderFile):
-        folder=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
-        for fanart,folder,thumb,name in folder:
-            if folders==folder:
+        foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
+        for fanart,folder,thumb,name in foldered:
+            if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                name=urllib.unquote_plus(name)
+                folder=urllib.unquote_plus(folder)
                 main.addXmlFolder(name,folder+'-'+name,253,thumb,'',fanart,'','','')
-    
+                fl=fl+1
+    if fl==0 and pl==0:
+        main.addPlayc('Add Playlist',folders,250,art+'/xml.png','','','','','')
+        main.addPlayc('Add Folder',folders,252,art+'/xml.png','','','','','')
 
 def XmlIns():
         dir = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.movie25/resources/message', ''))
@@ -93,11 +103,11 @@ def addPlaylist(folder):
                         fanart=''
                     
                 playlists = {}
-                playlists['title'] = name
-                playlists['url'] = xmlfile
+                playlists['title'] = urllib.quote_plus(name)
+                playlists['url'] = urllib.quote_plus(xmlfile)
                 playlists['thumb'] = thumb
                 playlists['fanart'] = fanart
-                playlists['folder'] = folder
+                playlists['folder'] = urllib.quote_plus(folder)
                 if not os.path.exists(PlaylistFile):
                     open(PlaylistFile,'w').write(str(playlists))
                     xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Playlist Created.[/B],3000,"")")
@@ -115,7 +125,7 @@ def removePlaylist(title,murl,folders):
             xbmc.executebuiltin("Container.Refresh")
         if os.path.exists(PlaylistFile):
             for url,fanart,folder,thumb,name in reversed (playlist):
-                if title == name and folders==folder:
+                if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
                     playlist.remove((url,fanart,folder,thumb,name))
                     os.remove(PlaylistFile)
                     for url,fanart,folder,thumb,name in playlist:
@@ -150,10 +160,10 @@ def addFolder(folder):
                 else:
                     fanart=''
                 folders = {}
-                folders['title'] = name
+                folders['title'] = urllib.quote_plus(name)
                 folders['thumb'] = thumb.replace('\\\\','\\')
                 folders['fanart'] = fanart.replace('\\\\','\\')
-                folders['folder'] = folder
+                folders['folder'] = urllib.quote_plus(folder)
                 if not os.path.exists(FolderFile):
                     open(FolderFile,'w').write(str(folders))
                     xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Folder Created.[/B],3000,"")")
@@ -166,24 +176,33 @@ def addFolder(folder):
 def openFolder(name,folders):
     if selfAddon.getSetting("addmethod") == "false":
         main.addPlayc('Add Playlist',folders,250,art+'/xml.png','','','','','')
-        main.addPlayc('Add Folder',folders,252,art+'/xml.png','','','','','')
+    pl=0
+    fl=0
     if os.path.exists(PlaylistFile):
         playlist=re.compile("{'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(PlaylistFile,'r').read())
         for url,fanart,folder,thumb,name in playlist:
-            if folders==folder:
+            if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                name=urllib.unquote_plus(name)
+                url=urllib.unquote_plus(url)
                 main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
+                pl=pl+1
     if os.path.exists(FolderFile):
         folder=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
         for fanart,folder,thumb,name in folder:
-            if folders==folder:
+            if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                name=urllib.unquote_plus(name)
                 main.addXmlFolder(name,folder+'-'+name,253,thumb,'',fanart,'','','')
+                fl=fl+1
+    if fl==0 and pl==0:
+        main.addPlayc('Add Playlist',folders,250,art+'/xml.png','','','','','')
+        
                 
 def removeFolder(title,folders):
     if os.path.exists(PlaylistFile):
         playlist=re.compile("{'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(PlaylistFile,'r').read())
         if os.path.exists(PlaylistFile):
             for url,fanart,folder,thumb,name in reversed (playlist):
-                if folders==folder:
+                if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
                     playlist.remove((url,fanart,folder,thumb,name))
                     os.remove(PlaylistFile)
                     for url,fanart,folder,thumb,name in playlist:
@@ -200,7 +219,7 @@ def removeFolder(title,folders):
         foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.+?)', 'thumb': '(.*?)', 'title': '(.+?)'}").findall(open(FolderFile,'r').read())
         if os.path.exists(FolderFile):
             for fanart,folder,thumb,name in reversed (foldered):
-                if title == name and folders==folder+'-'+title:
+                if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder)+'-'+title:
                     foldered.remove((fanart,folder,thumb,name))
                     os.remove(FolderFile)
                     for fanart,folder,thumb,name in foldered:
