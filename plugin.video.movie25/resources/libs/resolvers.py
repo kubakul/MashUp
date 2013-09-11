@@ -689,5 +689,5 @@ def resolve_mightyupload(url):
     except Exception, e:
         print 'Mash Up: Resolve MightyUpload Error - '+str(e)
         addon.show_small_popup('[B][COLOR green]Mash Up: MightyUpload Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',
-                               5000, error_logo)
+                               5000, elogo)
         return

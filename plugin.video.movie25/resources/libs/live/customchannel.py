@@ -38,7 +38,7 @@ def MAIN():
             if folders==folder:
                 main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
     if os.path.exists(FolderFile):
-        folder=re.compile("{'fanart': '(.*?)', 'folder': '(.+?)', 'thumb': '(.*?)', 'title': '(.+?)'}").findall(open(FolderFile,'r').read())
+        folder=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
         for fanart,folder,thumb,name in folder:
             if folders==folder:
                 main.addXmlFolder(name,folder+'-'+name,253,thumb,'',fanart,'','','')
@@ -56,8 +56,7 @@ def addPlaylist(folder):
         return
     else:
         if ret == 0:
-            xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')
-                        
+            xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')                        
         if ret == 1:
             xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'files')
         
@@ -74,14 +73,25 @@ def addPlaylist(folder):
                 return
             else:
                 name = keyboard.getText()
-                if selfAddon.getSetting("playlistthumb") == "true":
-                    thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'files')
+                if ret == 1:
+                    if selfAddon.getSetting("playlistthumb") == "true":
+                        thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'files')
+                    else:
+                        thumb=''
+                    if selfAddon.getSetting("playlistfanart") == "true":
+                        fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'files')
+                    else:
+                        fanart=''
                 else:
-                    thumb=''
-                if selfAddon.getSetting("playlistfanart") == "true":
-                    fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'files')
-                else:
-                    fanart=''
+                    if selfAddon.getSetting("playlistthumb") == "true":
+                        thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'programs')
+                    else:
+                        thumb=''
+                    if selfAddon.getSetting("playlistfanart") == "true":
+                        fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'programs')
+                    else:
+                        fanart=''
+                    
                 playlists = {}
                 playlists['title'] = name
                 playlists['url'] = xmlfile
@@ -130,27 +140,28 @@ def addFolder(folder):
             return
         else:
             name = keyboard.getText()
-            if selfAddon.getSetting("folderthumb") == "true":
-                thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'files')
-            else:
-                thumb=''
-            if selfAddon.getSetting("folderfanart") == "true":
-                fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'files')
-            else:
-                fanart=''
-            folders = {}
-            folders['title'] = name
-            folders['thumb'] = thumb.replace('\\\\','\\')
-            folders['fanart'] = fanart.replace('\\\\','\\')
-            folders['folder'] = folder
-            if not os.path.exists(FolderFile):
-                open(FolderFile,'w').write(str(folders))
-                xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Folder Created.[/B],3000,"")")
-            else:
-                open(FolderFile,'a').write(str(folders))
-                xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Folder Created.[/B],3000,"")")
-            xbmc.executebuiltin("Container.Refresh")
-        return
+            if name != '':
+                if selfAddon.getSetting("folderthumb") == "true":
+                    thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'programs')
+                else:
+                    thumb= ''
+                if selfAddon.getSetting("folderfanart") == "true":
+                    fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'programs')
+                else:
+                    fanart=''
+                folders = {}
+                folders['title'] = name
+                folders['thumb'] = thumb.replace('\\\\','\\')
+                folders['fanart'] = fanart.replace('\\\\','\\')
+                folders['folder'] = folder
+                if not os.path.exists(FolderFile):
+                    open(FolderFile,'w').write(str(folders))
+                    xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Folder Created.[/B],3000,"")")
+                else:
+                    open(FolderFile,'a').write(str(folders))
+                    xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Folder Created.[/B],3000,"")")
+                xbmc.executebuiltin("Container.Refresh")
+            return
         
 def openFolder(name,folders):
     if selfAddon.getSetting("addmethod") == "false":
@@ -162,7 +173,7 @@ def openFolder(name,folders):
             if folders==folder:
                 main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
     if os.path.exists(FolderFile):
-        folder=re.compile("{'fanart': '(.*?)', 'folder': '(.+?)', 'thumb': '(.*?)', 'title': '(.+?)'}").findall(open(FolderFile,'r').read())
+        folder=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
         for fanart,folder,thumb,name in folder:
             if folders==folder:
                 main.addXmlFolder(name,folder+'-'+name,253,thumb,'',fanart,'','','')
