@@ -649,7 +649,7 @@ try:
         url = 'http://xbmc-hub-repo.googlecode.com/svn/addons/repository.xbmchub/repository.xbmchub-1.0.1.zip'
         path = xbmc.translatePath(os.path.join('special://home/addons','packages'))
         lib=os.path.join(path, 'repository.xbmchub-1.0.1.zip')
-        DownloaderClass(url,lib)
+        DownloaderClass2(url,lib)
         print lib
         addonfolder = xbmc.translatePath(os.path.join('special://home/addons',''))
         time.sleep(2)
@@ -663,7 +663,21 @@ try:
         url = 'https://bitbucket.org/mash2k3/mash2k3-repository/src/a3be11dd1482e4b08fcc3905b9150971117e7955/zips/repository.mash2k3/repository.mash2k3-1.5.zip?at=master'
         path = xbmc.translatePath(os.path.join('special://home/addons','packages'))
         lib=os.path.join(path, 'repository.mash2k3-1.5.zip')
-        DownloaderClass(url,lib)
+        DownloaderClass2(url,lib)
+        print lib
+        addonfolder = xbmc.translatePath(os.path.join('special://home/addons',''))
+        time.sleep(2)
+        xbmc.executebuiltin("XBMC.Extract(%s,%s)"%(lib,addonfolder))
+except:
+    pass
+
+repopath = xbmc.translatePath(os.path.join('special://home/addons', 'repository.divingmule.addons'))
+try: 
+    if not os.path.exists(repopath):
+        url = 'https://dl.dropboxusercontent.com/u/35068738/Mashup/repository.divingmule.addons.zip'
+        path = xbmc.translatePath(os.path.join('special://home/addons','packages'))
+        lib=os.path.join(path, 'repository.divingmule.addons.zip')
+        DownloaderClass2(url,lib)
         print lib
         addonfolder = xbmc.translatePath(os.path.join('special://home/addons',''))
         time.sleep(2)
@@ -2278,7 +2292,7 @@ elif mode==256:
 
 elif mode==257:
     from resources.libs.live import customchannel
-    customchannel.listLS(name,url)
+    customchannel.listLS(name,url,fanart)
 ######################################################################################################
         ######################################################################################
         ######################################################################################

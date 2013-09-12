@@ -1,8 +1,7 @@
 import urllib,urllib2,re,cookielib,sys,os
 import xbmc, xbmcgui, xbmcaddon, xbmcplugin
 from resources.libs import main
-import xbmcvfs
-from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup, BeautifulSOAP
+
 #Mash Up - by Mash2k3 2012.
 
 from t0mm0.common.addon import Addon
@@ -32,25 +31,6 @@ if selfAddon.getSetting("artbrowser") == "1":
     browseType='programs'
 
 
-def getSoup(url):
-        if url.startswith('http://'):
-            data = makeRequest(url)
-        else:
-            if xbmcvfs.exists(url):
-                if url.startswith("smb://") or url.startswith("nfs://"):
-                    copy = xbmcvfs.copy(url, os.path.join(profile, 'temp', 'sorce_temp.txt'))
-                    if copy:
-                        data = open(os.path.join(profile, 'temp', 'sorce_temp.txt'), "r").read()
-                        xbmcvfs.delete(os.path.join(profile, 'temp', 'sorce_temp.txt'))
-                    else:
-                        addon_log("failed to copy from smb:")
-                else:
-                    data = open(url, 'r').read()
-            else:
-                addon_log("Soup Data not found!")
-                return
-        return BeautifulSOAP(data, convertEntities=BeautifulStoneSoup.XML_ENTITIES)
-
 
 def MAIN():
     folders='home'
@@ -72,7 +52,7 @@ def MAIN():
                 if typeXml =='MashUp':
                     main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
                 else:
-                    main.addDirXml(name,url,257,thumb,folders,fanart,'','','')
+                    main.addDirXml(name,url,257,thumb,folders,fanart,typeXml,'','')
                 pl=pl+1
     if os.path.exists(FolderFile):
         foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
@@ -106,7 +86,7 @@ def addPlaylist(folder):
             xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'files')
             typeXml='MashUp'
         if ret == 2:
-            keyboard = xbmc.Keyboard('http://','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
+            keyboard = xbmc.Keyboard('','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
             keyboard.doModal()
             if (keyboard.isConfirmed() == False):
                 return
@@ -119,7 +99,7 @@ def addPlaylist(folder):
             xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'files')
             typeXml='Livestreams'
         if ret == 5:
-            keyboard = xbmc.Keyboard('http://','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
+            keyboard = xbmc.Keyboard('','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
             keyboard.doModal()
             if (keyboard.isConfirmed() == False):
                 return
@@ -180,7 +160,7 @@ def removePlaylist(title,murl,folders):
         if os.path.exists(PlaylistFile):
             for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
                 if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
-                    playlist.remove((url,fanart,folder,thumb,name))
+                    playlist.remove((thumb,name,url,fanart,folder,typeXml))
                     os.remove(PlaylistFile)
                     for thumb,name,url,fanart,folder,typeXml in playlist:
                         try:
@@ -247,7 +227,7 @@ def editFolder(title,folders):
                             for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
                                 if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
                                     newfolder='home-'+newname
-                                    playlist.remove((url,fanart,folder,thumb,name))
+                                    playlist.remove((thumb,name,url,fanart,folder,typeXml))
                                     os.remove(PlaylistFile)
                                     playlists['title'] = name
                                     playlists['url'] = url
@@ -342,7 +322,7 @@ def editPlaylist(title,murl,folders):
                         playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
                         for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
                             if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
-                                playlist.remove((url,fanart,folder,thumb,name))
+                                playlist.remove((thumb,name,url,fanart,folder,typeXml))
                                 os.remove(PlaylistFile)
                                 playlists['title'] = urllib.quote_plus(newname)
                                 playlists['url'] = url
@@ -365,20 +345,36 @@ def editPlaylist(title,murl,folders):
                                     except: pass
                                 xbmc.executebuiltin("Container.Refresh")
         if ret == 1:
-            ret = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Browse for XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Browse for XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]'])
+            ret = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Select a MashUp XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Select a MashUp XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter a MashUp XML URL[/COLOR][/B]','[B][COLOR yellow]Select a Livestreams XML Using Filemanager[/COLOR][/B]','[B][COLOR yellow]Select a Livestreams XML Using Set User Source[/COLOR][/B]','[B][COLOR yellow]Enter a Livestreams XML URL[/COLOR][/B]'])
             if ret == -1:
                 return
             else:
                 if ret == 0:
-                    newxmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')                        
+                    newxmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')
+                    newtypeXml='MashUp'
                 if ret == 1:
                     newxmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'files')
+                    newtypeXml='MashUp'
                 if ret == 2:
-                    keyboard = xbmc.Keyboard(murl,'[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
+                    keyboard = xbmc.Keyboard('','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
                     keyboard.doModal()
                     if (keyboard.isConfirmed() == False):
                         return
                     newxmlfile = keyboard.getText()
+                    newtypeXml='MashUp'
+                if ret == 3:
+                    newxmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')
+                    newtypeXml='Livestreams'
+                if ret == 4:
+                    newxmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'files')
+                    newtypeXml='Livestreams'
+                if ret == 5:
+                    keyboard = xbmc.Keyboard('','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
+                    keyboard.doModal()
+                    if (keyboard.isConfirmed() == False):
+                        return
+                    newxmlfile = keyboard.getText()
+                    newtypeXml='Livestreams'
                 if newxmlfile:
                     if newxmlfile != '':
                         playlists = {}
@@ -386,14 +382,14 @@ def editPlaylist(title,murl,folders):
                             playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
                             for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
                                 if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
-                                    playlist.remove((url,fanart,folder,thumb,name))
+                                    playlist.remove((thumb,name,url,fanart,folder,typeXml))
                                     os.remove(PlaylistFile)
                                     playlists['title'] = name
                                     playlists['url'] = urllib.quote_plus(newxmlfile)
                                     playlists['thumb'] = thumb
                                     playlists['fanart'] = fanart
                                     playlists['folder'] = folder
-                                    playlists['typeXml'] = typeXml
+                                    playlists['typeXml'] = urllib.quote_plus(newtypeXml)
                                     open(PlaylistFile,'a').write(str(playlists))
                                     for thumb,name,url,fanart,folder,typeXml in playlist:
                                         try:
@@ -417,7 +413,7 @@ def editPlaylist(title,murl,folders):
                             playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
                             for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
                                 if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
-                                    playlist.remove((url,fanart,folder,thumb,name))
+                                    playlist.remove((thumb,name,url,fanart,folder,typeXml))
                                     os.remove(PlaylistFile)
                                     playlists['title'] = name
                                     playlists['url'] = url
@@ -447,7 +443,7 @@ def editPlaylist(title,murl,folders):
                             playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
                             for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
                                 if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
-                                    playlist.remove((url,fanart,folder,thumb,name))
+                                    playlist.remove((thumb,name,url,fanart,folder,typeXml))
                                     os.remove(PlaylistFile)
                                     playlists['title'] = name
                                     playlists['url'] = url
@@ -515,7 +511,10 @@ def openFolder(name,folders):
                 url=urllib.unquote_plus(url)
                 thumb=urllib.unquote_plus(thumb)
                 fanart=urllib.unquote_plus(fanart)
-                main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
+                if typeXml =='MashUp':
+                    main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
+                else:
+                    main.addDirXml(name,url,257,thumb,folders,fanart,typeXml,'','')
                 pl=pl+1
     if os.path.exists(FolderFile):
         foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
@@ -526,7 +525,7 @@ def openFolder(name,folders):
                 fanart=urllib.unquote_plus(fanart)
                 main.addXmlFolder(name,folder+'-'+name,253,thumb,'',fanart,'','','')
                 fl=fl+1
-    if fl==0 and pl==0:
+    if fl==0 and pl==0 and selfAddon.getSetting("addmethod") == "true":
         main.addPlayc('Add Playlist',folders,250,art+'/xmlplaylistadd.png','','','','','')
         
                 
@@ -534,11 +533,11 @@ def removeFolder(title,folders):
     if os.path.exists(PlaylistFile):
         playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
         if os.path.exists(PlaylistFile):
-            for url,fanart,folder,thumb,name in reversed (playlist):
+            for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
                 if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
-                    playlist.remove((url,fanart,folder,thumb,name))
+                    playlist.remove((thumb,name,url,fanart,folder,typeXml))
                     os.remove(PlaylistFile)
-                    for url,fanart,folder,thumb,name in playlist:
+                    for thumb,name,url,fanart,folder,typeXml in playlist:
                         try:
                             playlists = {}
                             playlists['title'] = name
@@ -597,61 +596,12 @@ def LIST(mname,murl):
     for channels in items:
         main.addPlayMs(channels['title'],channels['path'],240,channels['thumbnail'],'','','','','')
 
-def listLS(name,url):
-        fanart=''
-        soup = getSoup(url)
-        if len(soup('channels')) > 0:
-            channels = soup('channel')
-            for channel in channels:
-                name = channel('name')[0].string
-                thumbnail = channel('thumbnail')[0].string
-                if thumbnail == None:
-                    thumbnail = ''
+def listLS(name,url,fanart):
+    ok=True
+    xbmc.executebuiltin('XBMC.Container.Update (plugin://plugin.video.live.streams/?url=%s&mode=1&name=%s&fanart=%s)' % (url,name,fanart))
+    return ok
 
-                try:
-                    if not channel('fanart'):
-                        if addon.getSetting('use_thumb') == "true":
-                            fanArt = thumbnail
-                        else:
-                            fanArt = fanart
-                    else:
-                        fanArt = channel('fanart')[0].string
-                    if fanArt == None:
-                        raise
-                except:
-                    fanArt = fanart
-
-                try:
-                    desc = channel('info')[0].string
-                    if desc == None:
-                        raise
-                except:
-                    desc = ''
-
-                try:
-                    genre = channel('genre')[0].string
-                    if genre == None:
-                        raise
-                except:
-                    genre = ''
-
-                try:
-                    date = channel('date')[0].string
-                    if date == None:
-                        raise
-                except:
-                    date = ''
-
-                try:
-                    credits = channel('credits')[0].string
-                    if credits == None:
-                        raise
-                except:
-                    credits = ''
-                try:
-                    main.addDirc(name.encode('utf-8', 'ignore'),url.encode('utf-8'),3,thumbnail,desc,fanArt,'',genre,'')
-                except:
-                    pass
+    
     
 def LINK(mname,murl,thumb):
         main.GA(mname,"Watched")

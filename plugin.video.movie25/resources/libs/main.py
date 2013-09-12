@@ -1435,7 +1435,10 @@ def addDirXml(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         contextMenuItems.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         contextMenuItems.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz.addContextMenuItems(contextMenuItems, replaceItems=False)
-        ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
+        if dur=='Livestreams':
+            ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=False)
+        else:
+            ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
         return ok
 
 def addXmlFolder(name,url,mode,iconimage,plot,fanart,dur,genre,year):
