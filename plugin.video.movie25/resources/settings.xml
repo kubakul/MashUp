@@ -43,6 +43,7 @@
     <setting id="customchannel" type="bool" label="Custom Channels" default="true"/>
 	<setting id="hideinstruction" type="bool" label="Hide Instructions" default="false"/>
 	<setting id="addmethod" type="bool" label="Move Add Playlist & Add Folder to Context Menu" default="false"/>
+	<setting id="artbrowser"	type="enum" label="Artwork Browsing Type" values="Set Source|File Manager" default="0"/>
 	<setting id="playlistthumb" type="bool" label="Playlist Thumbnail" default="true"/>
 	<setting id="playlistfanart" type="bool" label="Playlist Fanart" default="true"/>
 	<setting id="folderthumb" type="bool" label="Folder Thumbnail" default="true"/>

@@ -1,7 +1,8 @@
 import urllib,urllib2,re,cookielib,sys,os
 import xbmc, xbmcgui, xbmcaddon, xbmcplugin
 from resources.libs import main
-
+import xbmcvfs
+from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup, BeautifulSOAP
 #Mash Up - by Mash2k3 2012.
 
 from t0mm0.common.addon import Addon
@@ -25,6 +26,32 @@ except:
 PlaylistFile=os.path.join(CustomChannel,'PlaylistFile')
 FolderFile=os.path.join(CustomChannel,'FolderFile')
 
+if selfAddon.getSetting("artbrowser") == "0":
+    browseType='files'
+if selfAddon.getSetting("artbrowser") == "1":
+    browseType='programs'
+
+
+def getSoup(url):
+        if url.startswith('http://'):
+            data = makeRequest(url)
+        else:
+            if xbmcvfs.exists(url):
+                if url.startswith("smb://") or url.startswith("nfs://"):
+                    copy = xbmcvfs.copy(url, os.path.join(profile, 'temp', 'sorce_temp.txt'))
+                    if copy:
+                        data = open(os.path.join(profile, 'temp', 'sorce_temp.txt'), "r").read()
+                        xbmcvfs.delete(os.path.join(profile, 'temp', 'sorce_temp.txt'))
+                    else:
+                        addon_log("failed to copy from smb:")
+                else:
+                    data = open(url, 'r').read()
+            else:
+                addon_log("Soup Data not found!")
+                return
+        return BeautifulSOAP(data, convertEntities=BeautifulStoneSoup.XML_ENTITIES)
+
+
 def MAIN():
     folders='home'
     pl=0
@@ -32,27 +59,34 @@ def MAIN():
     if selfAddon.getSetting("hideinstruction") == "false":
         main.addPlayc('My XML Channel Instructions','nills',248,art+'/xml.png','','','','','')
     if selfAddon.getSetting("addmethod") == "false":
-        main.addPlayc('Add Playlist',folders,250,art+'/xml.png','','','','','')
-        main.addPlayc('Add Folder',folders,252,art+'/xml.png','','','','','')
+        main.addPlayc('Add Playlist',folders,250,art+'/xmlplaylistadd.png','','','','','')
+        main.addPlayc('Add Folder',folders,252,art+'/folderadd.png','','','','','')
     if os.path.exists(PlaylistFile):
-        playlist=re.compile("{'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(PlaylistFile,'r').read())
-        for url,fanart,folder,thumb,name in playlist:
+        playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+        for thumb,name,url,fanart,folder,typeXml in sorted(playlist):
             if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
                 name=urllib.unquote_plus(name)
                 url=urllib.unquote_plus(url)
-                main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
+                thumb=urllib.unquote_plus(thumb)
+                fanart=urllib.unquote_plus(fanart)
+                if typeXml =='MashUp':
+                    main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
+                else:
+                    main.addDirXml(name,url,257,thumb,folders,fanart,'','','')
                 pl=pl+1
     if os.path.exists(FolderFile):
         foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
-        for fanart,folder,thumb,name in foldered:
+        for fanart,folder,thumb,name in sorted(foldered):
             if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
                 name=urllib.unquote_plus(name)
                 folder=urllib.unquote_plus(folder)
-                main.addXmlFolder(name,folder+'-'+name,253,thumb,'',fanart,'','','')
+                thumb=urllib.unquote_plus(thumb)
+                fanart=urllib.unquote_plus(fanart)
+                main.addXmlFolder(name,folder+'-'+name,253,thumb,folder,fanart,'','','')
                 fl=fl+1
-    if fl==0 and pl==0:
-        main.addPlayc('Add Playlist',folders,250,art+'/xml.png','','','','','')
-        main.addPlayc('Add Folder',folders,252,art+'/xml.png','','','','','')
+    if fl==0 and pl==0 and selfAddon.getSetting("addmethod") == "true":
+        main.addPlayc('Add Playlist',folders,250,art+'/xmlplaylistadd.png','','','','','')
+        main.addPlayc('Add Folder',folders,252,art+'/folderadd.png','','','','','')
 
 def XmlIns():
         dir = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.movie25/resources/message', ''))
@@ -61,21 +95,36 @@ def XmlIns():
 
 def addPlaylist(folder):
     dialog = xbmcgui.Dialog()
-    ret = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Browse for XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Browse for XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]'])
+    ret = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Select a MashUp XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Select a MashUp XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter a MashUp XML URL[/COLOR][/B]','[B][COLOR yellow]Select a Livestreams XML Using Filemanager[/COLOR][/B]','[B][COLOR yellow]Select a Livestreams XML Using Set User Source[/COLOR][/B]','[B][COLOR yellow]Enter a Livestreams XML URL[/COLOR][/B]'])
     if ret == -1:
         return
     else:
         if ret == 0:
-            xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')                        
+            xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')
+            typeXml='MashUp'
         if ret == 1:
             xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'files')
-        
+            typeXml='MashUp'
         if ret == 2:
-            keyboard = xbmc.Keyboard('','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
+            keyboard = xbmc.Keyboard('http://','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
             keyboard.doModal()
             if (keyboard.isConfirmed() == False):
                 return
             xmlfile = keyboard.getText()
+            typeXml='MashUp'
+        if ret == 3:
+            xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')
+            typeXml='Livestreams'
+        if ret == 4:
+            xmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'files')
+            typeXml='Livestreams'
+        if ret == 5:
+            keyboard = xbmc.Keyboard('http://','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
+            keyboard.doModal()
+            if (keyboard.isConfirmed() == False):
+                return
+            xmlfile = keyboard.getText()
+            typeXml='Livestreams'
         if xmlfile:
             keyboard = xbmc.Keyboard('','[B][COLOR=FF67cc33]Enter Playlist Name[/COLOR][/B]')
             keyboard.doModal()
@@ -83,52 +132,57 @@ def addPlaylist(folder):
                 return
             else:
                 name = keyboard.getText()
-                if ret == 1:
-                    if selfAddon.getSetting("playlistthumb") == "true":
-                        thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'files')
-                    else:
-                        thumb=''
-                    if selfAddon.getSetting("playlistfanart") == "true":
-                        fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'files')
-                    else:
-                        fanart=''
-                else:
-                    if selfAddon.getSetting("playlistthumb") == "true":
-                        thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'programs')
-                    else:
-                        thumb=''
-                    if selfAddon.getSetting("playlistfanart") == "true":
-                        fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'programs')
-                    else:
-                        fanart=''
+                if name != '':
                     
-                playlists = {}
-                playlists['title'] = urllib.quote_plus(name)
-                playlists['url'] = urllib.quote_plus(xmlfile)
-                playlists['thumb'] = thumb
-                playlists['fanart'] = fanart
-                playlists['folder'] = urllib.quote_plus(folder)
-                if not os.path.exists(PlaylistFile):
-                    open(PlaylistFile,'w').write(str(playlists))
-                    xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Playlist Created.[/B],3000,"")")
+                    if ret == 1:
+                        if selfAddon.getSetting("playlistthumb") == "true":
+                            thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'files')
+                        else:
+                            thumb=''
+                        if selfAddon.getSetting("playlistfanart") == "true":
+                            fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'files')
+                        else:
+                            fanart=''
+                    else:
+                        if selfAddon.getSetting("playlistthumb") == "true":
+                            thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'programs')
+                        else:
+                            thumb=''
+                        if selfAddon.getSetting("playlistfanart") == "true":
+                            fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'programs')
+                        else:
+                            fanart=''
+                    
+                    playlists = {}
+                    playlists['title'] = urllib.quote_plus(name)
+                    playlists['url'] = urllib.quote_plus(xmlfile)
+                    playlists['thumb'] = urllib.quote_plus(thumb)
+                    playlists['fanart'] = urllib.quote_plus(fanart)
+                    playlists['folder'] = urllib.quote_plus(folder)
+                    playlists['typeXml'] = urllib.quote_plus(typeXml)
+                    if not os.path.exists(PlaylistFile):
+                        open(PlaylistFile,'w').write(str(playlists))
+                        xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Playlist Created.[/B],3000,"")")
+                    else:
+                        open(PlaylistFile,'a').write(str(playlists))
+                        xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Playlist Created.[/B],3000,"")")
+                    xbmc.executebuiltin("Container.Refresh")
                 else:
-                    open(PlaylistFile,'a').write(str(playlists))
-                    xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Playlist Created.[/B],3000,"")")
-                xbmc.executebuiltin("Container.Refresh")
+                    xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Sorry![/COLOR][/B],[B]Invalid entry[/B],3000,"")")
         return
 
 def removePlaylist(title,murl,folders):
     if os.path.exists(PlaylistFile):
-        playlist=re.compile("{'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+        playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
         if len(playlist)<=1 and str(playlist).find(title):
             os.remove(PlaylistFile)
             xbmc.executebuiltin("Container.Refresh")
         if os.path.exists(PlaylistFile):
-            for url,fanart,folder,thumb,name in reversed (playlist):
+            for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
                 if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
                     playlist.remove((url,fanart,folder,thumb,name))
                     os.remove(PlaylistFile)
-                    for url,fanart,folder,thumb,name in playlist:
+                    for thumb,name,url,fanart,folder,typeXml in playlist:
                         try:
                             playlists = {}
                             playlists['title'] = name
@@ -136,12 +190,285 @@ def removePlaylist(title,murl,folders):
                             playlists['thumb'] = thumb
                             playlists['fanart'] = fanart
                             playlists['folder'] = folder
+                            playlists['typeXml'] = typeXml
                             open(PlaylistFile,'a').write(str(playlists))
                             xbmc.executebuiltin("Container.Refresh")
                             xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+title+"[/COLOR][/B],[B]Playlist Removed from Custom Channels[/B],4000,"")")
                         except: pass
         else: xbmc.executebuiltin("XBMC.Notification([B][COLOR green]Mash Up[/COLOR][/B],[B]You Have No Playlists[/B],1000,"")")
     return
+
+def editFolder(title,folders):
+    dialog = xbmcgui.Dialog()
+    if selfAddon.getSetting("folderthumb") == "true" and selfAddon.getSetting("folderfanart") == "true":
+        ret = dialog.select('[COLOR red][B]What Would you Like to Edit?[/COLOR][/B]',['[B][COLOR=FF67cc33]Folder Name[/COLOR][/B]','[B][COLOR=FF67cc33]Folder Thumbnail[/COLOR][/B]','[B][COLOR=FF67cc33]Folder Fanart[/COLOR][/B]'])
+    if selfAddon.getSetting("folderthumb") == "true" and selfAddon.getSetting("folderfanart") == "false":
+        ret = dialog.select('[COLOR red][B]What Would you Like to Edit?[/COLOR][/B]',['[B][COLOR=FF67cc33]Folder Name[/COLOR][/B]','[B][COLOR=FF67cc33]Folder Thumbnail[/COLOR][/B]'])
+    if selfAddon.getSetting("folderthumb") == "false" and selfAddon.getSetting("folderfanart") == "true":
+        ret = dialog.select('[COLOR red][B]What Would you Like to Edit?[/COLOR][/B]',['[B][COLOR=FF67cc33]Folder Name[/COLOR][/B]','[B][COLOR=FF67cc33]Folder Fanart[/COLOR][/B]'])
+    if selfAddon.getSetting("folderthumb") == "false" and selfAddon.getSetting("folderfanart") == "false":
+        ret = dialog.select('[COLOR red][B]What Would you Like to Edit?[/COLOR][/B]',['[B][COLOR=FF67cc33]Folder Name[/COLOR][/B]'])
+    if ret == -1:
+        return
+    else:
+        if ret == 0:
+            playlists = {}
+            keyboard = xbmc.Keyboard(title,'[B][COLOR=FF67cc33]Enter Folder Name[/COLOR][/B]')
+            keyboard.doModal()
+            if (keyboard.isConfirmed() == False):
+                return
+            else:
+                newname = keyboard.getText()
+                if newname != '':
+                    
+                    if os.path.exists(FolderFile):
+                        foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.+?)', 'thumb': '(.*?)', 'title': '(.+?)'}").findall(open(FolderFile,'r').read())
+                        for fanart,folder,thumb,name in reversed (foldered):
+                            if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder)+'-'+title:
+                                foldered.remove((fanart,folder,thumb,name))
+                                os.remove(FolderFile)
+                                foldersDict = {}
+                                foldersDict['title'] = urllib.quote_plus(newname)
+                                foldersDict['thumb'] = thumb
+                                foldersDict['fanart'] = fanart
+                                foldersDict['folder'] = urllib.quote_plus(folder)
+                                open(FolderFile,'a').write(str(foldersDict))
+                                for fanart,folder,thumb,name in foldered:
+                                        foldersDict['title'] = name
+                                        foldersDict['thumb'] = thumb
+                                        foldersDict['fanart'] = fanart
+                                        foldersDict['folder'] = folder
+                                        open(FolderFile,'a').write(str(foldersDict))
+                                        xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+newname+"[/COLOR][/B],[B]Playlist Renamed[/B],4000,"")")
+                                    #except: pass
+                        
+                        if os.path.exists(PlaylistFile):
+                            playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+                            for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
+                                if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                                    newfolder='home-'+newname
+                                    playlist.remove((url,fanart,folder,thumb,name))
+                                    os.remove(PlaylistFile)
+                                    playlists['title'] = name
+                                    playlists['url'] = url
+                                    playlists['thumb'] = thumb
+                                    playlists['fanart'] = fanart
+                                    playlists['folder'] = newfolder
+                                    playlists['typeXml'] = typeXml
+                                    open(PlaylistFile,'a').write(str(playlists))
+                                    for thumb,name,url,fanart,folder,typeXml in playlist:
+                                        try:
+                                        
+                                            playlists['title'] = name
+                                            playlists['url'] = url
+                                            playlists['thumb'] = thumb
+                                            playlists['fanart'] = fanart
+                                            playlists['folder'] = folder
+                                            playlists['typeXml'] = typeXml
+                                            open(PlaylistFile,'a').write(str(playlists))
+                                        except: pass
+                        xbmc.executebuiltin("Container.Refresh")
+        if ret == 1:
+            newthumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", browseType)
+            if newthumb:
+                    if os.path.exists(FolderFile):
+                        foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.+?)', 'thumb': '(.*?)', 'title': '(.+?)'}").findall(open(FolderFile,'r').read())
+                        for fanart,folder,thumb,name in reversed (foldered):
+                            if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder)+'-'+title:
+                                foldered.remove((fanart,folder,thumb,name))
+                                os.remove(FolderFile)
+                                foldersDict = {}
+                                foldersDict['title'] = name
+                                foldersDict['thumb'] = urllib.quote_plus(newthumb)
+                                foldersDict['fanart'] = fanart
+                                foldersDict['folder'] = folder
+                                open(FolderFile,'a').write(str(foldersDict))
+                                for fanart,folder,thumb,name in foldered:
+                                        foldersDict['title'] = name
+                                        foldersDict['thumb'] = thumb
+                                        foldersDict['fanart'] = fanart
+                                        foldersDict['folder'] = folder
+                                        open(FolderFile,'a').write(str(foldersDict))
+                                        xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+newthumb+"[/COLOR][/B],[B]Folder Thumbnail Changed[/B],4000,"")")
+                                xbmc.executebuiltin("Container.Refresh")
+        if ret == 2:
+            newfanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", browseType)
+            if newfanart:
+                    if os.path.exists(FolderFile):
+                        foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.+?)', 'thumb': '(.*?)', 'title': '(.+?)'}").findall(open(FolderFile,'r').read())
+                        for fanart,folder,thumb,name in reversed (foldered):
+                            if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder)+'-'+title:
+                                foldered.remove((fanart,folder,thumb,name))
+                                os.remove(FolderFile)
+                                foldersDict = {}
+                                foldersDict['title'] = name
+                                foldersDict['thumb'] = thumb
+                                foldersDict['fanart'] = urllib.quote_plus(newfanart)
+                                foldersDict['folder'] = folder
+                                open(FolderFile,'a').write(str(foldersDict))
+                                for fanart,folder,thumb,name in foldered:
+                                        foldersDict['title'] = name
+                                        foldersDict['thumb'] = thumb
+                                        foldersDict['fanart'] = fanart
+                                        foldersDict['folder'] = folder
+                                        open(FolderFile,'a').write(str(foldersDict))
+                                        xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+newfanart+"[/COLOR][/B],[B]Folder Fanart Changed[/B],4000,"")")
+                                xbmc.executebuiltin("Container.Refresh")
+                            
+def editPlaylist(title,murl,folders):
+    dialog = xbmcgui.Dialog()
+    if selfAddon.getSetting("playlistthumb") == "true" and selfAddon.getSetting("playlistfanart") == "true":
+        ret = dialog.select('[COLOR red][B]What Would you Like to Edit?[/COLOR][/B]',['[B][COLOR=FF67cc33]Playlist Name[/COLOR][/B]','[B][COLOR=FF67cc33]Playlist XML File[/COLOR][/B]','[B][COLOR=FF67cc33]Playlist Thumbnail[/COLOR][/B]','[B][COLOR=FF67cc33]Playlist Fanart[/COLOR][/B]'])
+    if selfAddon.getSetting("playlistthumb") == "true" and selfAddon.getSetting("playlistfanart") == "false":
+        ret = dialog.select('[COLOR red][B]What Would you Like to Edit?[/COLOR][/B]',['[B][COLOR=FF67cc33]Playlist Name[/COLOR][/B]','[B][COLOR=FF67cc33]Playlist XML File[/COLOR][/B]','[B][COLOR=FF67cc33]Playlist Thumbnail[/COLOR][/B]'])
+    if selfAddon.getSetting("playlistthumb") == "false" and selfAddon.getSetting("playlistfanart") == "true":
+        ret = dialog.select('[COLOR red][B]What Would you Like to Edit?[/COLOR][/B]',['[B][COLOR=FF67cc33]Playlist Name[/COLOR][/B]','[B][COLOR=FF67cc33]Playlist XML File[/COLOR][/B]','[B][COLOR=FF67cc33]Playlist Fanart[/COLOR][/B]'])
+    if selfAddon.getSetting("playlistthumb") == "false" and selfAddon.getSetting("playlistfanart") == "false":
+        ret = dialog.select('[COLOR red][B]What Would you Like to Edit?[/COLOR][/B]',['[B][COLOR=FF67cc33]Playlist Name[/COLOR][/B]','[B][COLOR=FF67cc33]Playlist XML File[/COLOR][/B]'])
+
+    if ret == -1:
+        return
+    else:
+        if ret == 0:
+            playlists = {}
+            keyboard = xbmc.Keyboard(title,'[B][COLOR=FF67cc33]Enter Playlist Name[/COLOR][/B]')
+            keyboard.doModal()
+            if (keyboard.isConfirmed() == False):
+                return
+            else:
+                newname = keyboard.getText()
+                if newname != '':
+                    if os.path.exists(PlaylistFile):
+                        playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+                        for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
+                            if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                                playlist.remove((url,fanart,folder,thumb,name))
+                                os.remove(PlaylistFile)
+                                playlists['title'] = urllib.quote_plus(newname)
+                                playlists['url'] = url
+                                playlists['thumb'] = thumb
+                                playlists['fanart'] = fanart
+                                playlists['folder'] = folder
+                                playlists['typeXml'] = typeXml
+                                open(PlaylistFile,'a').write(str(playlists))
+                                for thumb,name,url,fanart,folder,typeXml in playlist:
+                                    try:
+                                        
+                                        playlists['title'] = name
+                                        playlists['url'] = url
+                                        playlists['thumb'] = thumb
+                                        playlists['fanart'] = fanart
+                                        playlists['folder'] = folder
+                                        playlists['typeXml'] = typeXml
+                                        open(PlaylistFile,'a').write(str(playlists))
+                                        xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+newname+"[/COLOR][/B],[B]Playlist Renamed[/B],4000,"")")
+                                    except: pass
+                                xbmc.executebuiltin("Container.Refresh")
+        if ret == 1:
+            ret = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Browse for XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Browse for XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]'])
+            if ret == -1:
+                return
+            else:
+                if ret == 0:
+                    newxmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'programs')                        
+                if ret == 1:
+                    newxmlfile = xbmcgui.Dialog().browse(1, "[B][COLOR=FF67cc33]XML File Location[/COLOR][/B]", 'files')
+                if ret == 2:
+                    keyboard = xbmc.Keyboard(murl,'[B][COLOR=FF67cc33]Enter XML URL[/COLOR][/B]')
+                    keyboard.doModal()
+                    if (keyboard.isConfirmed() == False):
+                        return
+                    newxmlfile = keyboard.getText()
+                if newxmlfile:
+                    if newxmlfile != '':
+                        playlists = {}
+                        if os.path.exists(PlaylistFile):
+                            playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+                            for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
+                                if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                                    playlist.remove((url,fanart,folder,thumb,name))
+                                    os.remove(PlaylistFile)
+                                    playlists['title'] = name
+                                    playlists['url'] = urllib.quote_plus(newxmlfile)
+                                    playlists['thumb'] = thumb
+                                    playlists['fanart'] = fanart
+                                    playlists['folder'] = folder
+                                    playlists['typeXml'] = typeXml
+                                    open(PlaylistFile,'a').write(str(playlists))
+                                    for thumb,name,url,fanart,folder,typeXml in playlist:
+                                        try:
+                                        
+                                            playlists['title'] = name
+                                            playlists['url'] = url
+                                            playlists['thumb'] = thumb
+                                            playlists['fanart'] = fanart
+                                            playlists['folder'] = folder
+                                            playlists['typeXml'] = typeXml
+                                            open(PlaylistFile,'a').write(str(playlists))
+                                            xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]MashUp[/COLOR][/B],[B]Playlist XML Changed[/B],4000,"")")
+                                        except: pass
+                                    xbmc.executebuiltin("Container.Refresh")
+        
+        if ret == 2:
+            newthumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", browseType)
+            if newthumb:
+                        playlists = {}
+                        if os.path.exists(PlaylistFile):
+                            playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+                            for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
+                                if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                                    playlist.remove((url,fanart,folder,thumb,name))
+                                    os.remove(PlaylistFile)
+                                    playlists['title'] = name
+                                    playlists['url'] = url
+                                    playlists['thumb'] = newthumb
+                                    playlists['fanart'] = fanart
+                                    playlists['folder'] = folder
+                                    playlists['typeXml'] = typeXml
+                                    open(PlaylistFile,'a').write(str(playlists))
+                                    for thumb,name,url,fanart,folder,typeXml in playlist:
+                                        try:
+                                        
+                                            playlists['title'] = name
+                                            playlists['url'] = url
+                                            playlists['thumb'] = thumb
+                                            playlists['fanart'] = fanart
+                                            playlists['folder'] = folder
+                                            playlists['typeXml'] = typeXml
+                                            open(PlaylistFile,'a').write(str(playlists))
+                                            xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]MashUp[/COLOR][/B],[B]Playlist Thumbnail Changed[/B],4000,"")")
+                                        except: pass
+                                    xbmc.executebuiltin("Container.Refresh")
+        if ret == 3:
+            newfanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", browseType)
+            if newfanart:
+                        playlists = {}
+                        if os.path.exists(PlaylistFile):
+                            playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+                            for thumb,name,url,fanart,folder,typeXml in reversed (playlist):
+                                if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
+                                    playlist.remove((url,fanart,folder,thumb,name))
+                                    os.remove(PlaylistFile)
+                                    playlists['title'] = name
+                                    playlists['url'] = url
+                                    playlists['thumb'] = thumb
+                                    playlists['fanart'] = newfanart
+                                    playlists['folder'] = folder
+                                    playlists['typeXml'] = typeXml
+                                    open(PlaylistFile,'a').write(str(playlists))
+                                    for thumb,name,url,fanart,folder,typeXml in playlist:
+                                        try:
+                                        
+                                            playlists['title'] = name
+                                            playlists['url'] = url
+                                            playlists['thumb'] = thumb
+                                            playlists['fanart'] = fanart
+                                            playlists['folder'] = folder
+                                            playlists['typeXml'] = typeXml
+                                            open(PlaylistFile,'a').write(str(playlists))
+                                            xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]MashUp[/COLOR][/B],[B]Playlist Thumbnail Changed[/B],4000,"")")
+                                        except: pass
+                                    xbmc.executebuiltin("Container.Refresh")
 
 def addFolder(folder):
         keyboard = xbmc.Keyboard('','[B][COLOR=FF67cc33]Enter Folder Name[/COLOR][/B]')
@@ -152,17 +479,17 @@ def addFolder(folder):
             name = keyboard.getText()
             if name != '':
                 if selfAddon.getSetting("folderthumb") == "true":
-                    thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", 'programs')
+                    thumb = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Thumbnail File Location[/COLOR][/B]", browseType)
                 else:
                     thumb= ''
                 if selfAddon.getSetting("folderfanart") == "true":
-                    fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", 'programs')
+                    fanart = xbmcgui.Dialog().browse(2, "[B][COLOR=FF67cc33]Fanart File Location[/COLOR][/B]", browseType)
                 else:
                     fanart=''
                 folders = {}
                 folders['title'] = urllib.quote_plus(name)
-                folders['thumb'] = thumb.replace('\\\\','\\')
-                folders['fanart'] = fanart.replace('\\\\','\\')
+                folders['thumb'] = urllib.quote_plus(thumb)
+                folders['fanart'] = urllib.quote_plus(fanart)
                 folders['folder'] = urllib.quote_plus(folder)
                 if not os.path.exists(FolderFile):
                     open(FolderFile,'w').write(str(folders))
@@ -171,35 +498,41 @@ def addFolder(folder):
                     open(FolderFile,'a').write(str(folders))
                     xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]"+name+"[/COLOR][/B],[B]Folder Created.[/B],3000,"")")
                 xbmc.executebuiltin("Container.Refresh")
+            else:
+                xbmc.executebuiltin("XBMC.Notification([B][COLOR=FF67cc33]Sorry![/COLOR][/B],[B]Invalid entry[/B],3000,"")")
             return
         
 def openFolder(name,folders):
     if selfAddon.getSetting("addmethod") == "false":
-        main.addPlayc('Add Playlist',folders,250,art+'/xml.png','','','','','')
+        main.addPlayc('Add Playlist',folders,250,art+'/xmlplaylistadd.png','','','','','')
     pl=0
     fl=0
     if os.path.exists(PlaylistFile):
-        playlist=re.compile("{'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(PlaylistFile,'r').read())
-        for url,fanart,folder,thumb,name in playlist:
+        playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+        for thumb,name,url,fanart,folder,typeXml in sorted(playlist):
             if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
                 name=urllib.unquote_plus(name)
                 url=urllib.unquote_plus(url)
+                thumb=urllib.unquote_plus(thumb)
+                fanart=urllib.unquote_plus(fanart)
                 main.addDirXml(name,url,239,thumb,folders,fanart,'','','')
                 pl=pl+1
     if os.path.exists(FolderFile):
-        folder=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
-        for fanart,folder,thumb,name in folder:
+        foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(FolderFile,'r').read())
+        for fanart,folder,thumb,name in sorted(foldered):
             if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
                 name=urllib.unquote_plus(name)
+                thumb=urllib.unquote_plus(thumb)
+                fanart=urllib.unquote_plus(fanart)
                 main.addXmlFolder(name,folder+'-'+name,253,thumb,'',fanart,'','','')
                 fl=fl+1
     if fl==0 and pl==0:
-        main.addPlayc('Add Playlist',folders,250,art+'/xml.png','','','','','')
+        main.addPlayc('Add Playlist',folders,250,art+'/xmlplaylistadd.png','','','','','')
         
                 
 def removeFolder(title,folders):
     if os.path.exists(PlaylistFile):
-        playlist=re.compile("{'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'thumb': '(.*?)', 'title': '(.*?)'}").findall(open(PlaylistFile,'r').read())
+        playlist=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(PlaylistFile,'r').read())
         if os.path.exists(PlaylistFile):
             for url,fanart,folder,thumb,name in reversed (playlist):
                 if urllib.unquote_plus(folders)==urllib.unquote_plus(folder):
@@ -213,16 +546,17 @@ def removeFolder(title,folders):
                             playlists['thumb'] = thumb.replace('\\\\','\\')
                             playlists['fanart'] = fanart.replace('\\\\','\\')
                             playlists['folder'] = folder
+                            playlists['typeXml'] = typeXml
                             open(PlaylistFile,'a').write(str(playlists))
                         except: pass
     if os.path.exists(FolderFile):
-        foldered=re.compile("{'fanart': '(.*?)', 'folder': '(.+?)', 'thumb': '(.*?)', 'title': '(.+?)'}").findall(open(FolderFile,'r').read())
+        foldered=re.compile("{'thumb': '(.*?)', 'title': '(.*?)', 'url': '(.*?)', 'fanart': '(.*?)', 'folder': '(.*?)', 'typeXml': '(.*?)'}").findall(open(FolderFile,'r').read())
         if os.path.exists(FolderFile):
-            for fanart,folder,thumb,name in reversed (foldered):
+            for thumb,name,url,fanart,folder,typeXml in reversed (foldered):
                 if title == urllib.unquote_plus(name) and urllib.unquote_plus(folders)==urllib.unquote_plus(folder)+'-'+title:
                     foldered.remove((fanart,folder,thumb,name))
                     os.remove(FolderFile)
-                    for fanart,folder,thumb,name in foldered:
+                    for thumb,name,url,fanart,folder,typeXml in foldered:
                         try:
                             folders = {}
                             folders['title'] = name
@@ -234,6 +568,7 @@ def removeFolder(title,folders):
                         except: pass
 
     xbmc.executebuiltin("Container.Refresh")   
+
 
 
 def LIST(mname,murl):
@@ -261,6 +596,62 @@ def LIST(mname,murl):
         i=i+1
     for channels in items:
         main.addPlayMs(channels['title'],channels['path'],240,channels['thumbnail'],'','','','','')
+
+def listLS(name,url):
+        fanart=''
+        soup = getSoup(url)
+        if len(soup('channels')) > 0:
+            channels = soup('channel')
+            for channel in channels:
+                name = channel('name')[0].string
+                thumbnail = channel('thumbnail')[0].string
+                if thumbnail == None:
+                    thumbnail = ''
+
+                try:
+                    if not channel('fanart'):
+                        if addon.getSetting('use_thumb') == "true":
+                            fanArt = thumbnail
+                        else:
+                            fanArt = fanart
+                    else:
+                        fanArt = channel('fanart')[0].string
+                    if fanArt == None:
+                        raise
+                except:
+                    fanArt = fanart
+
+                try:
+                    desc = channel('info')[0].string
+                    if desc == None:
+                        raise
+                except:
+                    desc = ''
+
+                try:
+                    genre = channel('genre')[0].string
+                    if genre == None:
+                        raise
+                except:
+                    genre = ''
+
+                try:
+                    date = channel('date')[0].string
+                    if date == None:
+                        raise
+                except:
+                    date = ''
+
+                try:
+                    credits = channel('credits')[0].string
+                    if credits == None:
+                        raise
+                except:
+                    credits = ''
+                try:
+                    main.addDirc(name.encode('utf-8', 'ignore'),url.encode('utf-8'),3,thumbnail,desc,fanArt,'',genre,'')
+                except:
+                    pass
     
 def LINK(mname,murl,thumb):
         main.GA(mname,"Watched")
