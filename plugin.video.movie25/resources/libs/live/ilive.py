@@ -13,6 +13,22 @@ from universal import watchhistory
     
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
+try:
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Token.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+
+except:
+        link='nill'
+r = re.findall(r'<token>(.+?)</token>',link)
+if r:
+        token=r[0]
+        if token == 'DOWN':
+                xbmc.executebuiltin("XBMC.Notification(Sorry!,iLive Token Needs Updating,6000)")
+                
+else:
+        token='9898'
+        
+
 def iLive():
         main.addDir('General','general',120,art+'/ilive.png')
         main.addDir('Entertainment','entertainment',120,art+'/ilive.png')
@@ -97,7 +113,7 @@ def iLiveLink(mname,murl,thumb):
                 if len(playpath)==0:
                         playpath=re.compile('http://snapshots.ilive.to/snapshots/(.+?)_snapshot.jpg').findall(thumb)      
                 for playPath in playpath:
-                    stream_url = 'rtmp://live.iguide.to/edge playpath=' + playPath + " swfUrl=http://player.ilive.to/player_ilive_2.swf pageUrl="+pageUrl+" live=1 timeout=15"
+                    stream_url = 'rtmp://live.iguide.to/edge playpath=' + playPath + " live=1 timeout=15 swfUrl=http://player.ilive.to/player_ilive_2.swf pageUrl="+pageUrl+" token="+token
                 listitem = xbmcgui.ListItem(thumbnailImage=thumb)
                 listitem.setInfo('video', {'Title': mname, 'Genre': 'Live'} )
         
