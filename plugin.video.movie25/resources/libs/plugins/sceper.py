@@ -77,6 +77,7 @@ def LISTSCEPER(name,murl):
         remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
         for url,name,thumb in match:
+            
             if len(audiolist)<8:
                 audiolist.append('Audio Unknown')
             if len(desclist)<8:

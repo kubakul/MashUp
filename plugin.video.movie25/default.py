@@ -514,10 +514,8 @@ def LiveStreams():
             print 'Github Link Down'
         main.addDir('Livestation News','http://mobile.livestation.com/',116,art+'/livestation.png')
         main.addDir('iLive Streams','ilive',119,art+'/ilive.png')
-        #main.addDir('Desi Streams','desi',129,art+'/desistream.png')
         main.addDir('Castalba Streams','castalgba',122,art+'/castalba.png')
         main.addDir('Misc. Music Streams','music',127,art+'/miscmusic.png')
-        #main.addDir('Playlists','navi',138,art+'/random.png')
         main.addDir('By Country','navi',143,art+'/countrysec.png')
         main.addDir('Arabic Streams','navi',231,art+'/arabicstream.png')
         try:
@@ -532,8 +530,6 @@ def LiveStreams():
                 else:
                     thumbs=art+'/'+thumb+'.png'
                 main.addDir(name,url,int(mode),thumbs)
-        main.addDir('Live TV','https://github.com/mash2k3/MashUpStreams/raw/master/playlists/generallivetv.xml',149,art+'/livetv.png')
-        main.addDir('UK TV','https://github.com/mash2k3/MashUpStreams/raw/master/playlists/liveuktv.xml',141,art+'/uktv.png')
         if selfAddon.getSetting("customchannel") == "true":
                 main.addDir('My XML Channels','nills',238,art+'/xml.png')
         main.addDir('TubTub.com','http://tubtub.com/',185,art+'/tubtub.png')
@@ -2293,6 +2289,11 @@ elif mode==256:
 elif mode==257:
     from resources.libs.live import customchannel
     customchannel.listLS(name,url,fanart)
+
+elif mode==259:
+    from resources.libs.movies_tv import movieplaylist
+    print ""+url
+    movieplaylist.MLink2(name,url,iconimage)
 ######################################################################################################
         ######################################################################################
         ######################################################################################

@@ -257,7 +257,7 @@ def iWatchLISTMOVIES(murl):
         loadedLinks = 0
         remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
-        for url,thumb,name in match:    
+        for url,thumb,name in match:
                 main.addDirIWO(name,url,588,thumb,'','','','','')
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks

@@ -439,7 +439,6 @@ def resolve_180upload(url):
         dialog.close()
         
 def resolve_videto(url):
-    error_logo = art+'/bigx.png'
     user_agent='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
     from resources.libs import jsunpack
     try:

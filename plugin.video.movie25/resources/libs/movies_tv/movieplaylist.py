@@ -1,9 +1,8 @@
 import urllib,urllib2,re,cookielib,sys,os,urlresolver
 import xbmc, xbmcgui, xbmcaddon, xbmcplugin
 from resources.libs import main
-from t0mm0.common.net import Net
+from t0mm0.common.net import Net as net
 from t0mm0.common.addon import Addon
-net = Net()
 from urlresolver import common
 
 #Mash Up - by Mash2k3 2012.
@@ -14,7 +13,8 @@ addon_id = 'plugin.video.movie25'
 selfAddon = xbmcaddon.Addon(id=addon_id)
 addon = Addon('plugin.video.movie25', sys.argv)
 art = main.art
-    
+elogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/bigx.png')
+refererTXT = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/message/referer.txt')    
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 
@@ -82,6 +82,8 @@ def MList(mname,murl):
                 
                 if '</sublink>' in url:
                         main.addDown4(name+' [COLOR blue]'+vip+'[/COLOR]',url,249,thumb,'',fan,'','','')
+                if '</referer>' in url:
+                        main.addDown4(name+' [COLOR blue]'+vip+'[/COLOR]',url,259,thumb,'',fan,'','','')
                         
                 else:        
                         main.addDown4(name+' [COLOR blue]'+vip+'[/COLOR]',url,237,thumb,'',fan,'','','')
@@ -119,6 +121,132 @@ def MLink(mname,murl,thumb):
         infolabels = { 'supports_meta' : 'true', 'video_type':video_type, 'name':str(infoLabels['title']), 'imdb_id':str(infoLabels['imdb_id']), 'season':str(season), 'episode':str(episode), 'year':str(infoLabels['year']) }
         try:
             stream_url = main.resolve_url(murl)
+            if stream_url == False:
+                  return                                                            
+            infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre'], 'originaltitle': infoLabels['metaName']}
+            # play with bookmark
+            stream_url=stream_url.replace(' ','%20')
+            player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type=video_type, title=str(infoLabels['title']),season=str(season), episode=str(episode), year=str(infoLabels['year']),img=img,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id=imdb_id)
+            #WatchHistory
+            if selfAddon.getSetting("whistory") == "true":
+                wh.add_item(mname+' '+'[COLOR green]VIPlaylist[/COLOR]', sys.argv[0]+sys.argv[2], infolabels=infolabels, img=img, fanart=fanart, is_folder=False)
+            player.KeepAlive()
+            return ok
+        except Exception, e:
+                if stream_url != False:
+                        main.ErrorReport(e)
+                return ok
+
+def refererResolver(url):
+        Names = []
+        for line in open(refererTXT,'r').readlines():
+                Names.append(line.strip())
+        from random import choice
+        refer=choice(Names)
+        stream_url = False
+        if re.search('vidto',url,re.I):
+                stream_url=resolve_videto(url,refer)
+                
+        elif re.search('mightyupload',url,re.I):
+                stream_url=resolve_mightyupload(url,refer)               
+        else:
+                source = urlresolver.HostedMediaFile(url)
+                if source:
+                    stream_url = source.resolve()
+                else:
+                    stream_url=url
+        return stream_url
+def resolve_videto(url,referer):
+    user_agent='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
+    from resources.libs import jsunpack
+    try:
+        html = net(user_agent).http_GET(url).content
+        addon.log_error('Mash Up: Resolve Vidto - Requesting GET URL: '+url)
+        r = re.findall(r'<font class="err">File was removed</font>',html,re.I)
+        if r:
+            addon.log_error('Mash Up: Resolve Vidto - File Was Removed')
+            xbmc.executebuiltin("XBMC.Notification(File Not Found,Vidto,2000)")
+            return False
+        if not r:
+            r = re.findall(r'(eval\(function\(p,a,c,k,e,d\)\{while.+?flvplayer.+?)</script>'
+                           ,html,re.M|re.DOTALL)
+            if r:
+                unpacked = jsunpack.unpack(r[0])#this is where it will error, not sure if resources,libs added to os path
+                r = re.findall(r'label:"\d+p",file:"(.+?)"}',unpacked)
+            if not r:
+                r = re.findall('type="hidden" name="(.+?)" value="(.+?)">',html)
+                post_data = {}
+                for name, value in r:
+                    post_data[name] = value
+                post_data['usr_login'] = ''
+                post_data['referer'] = referer
+                addon.show_countdown(7, 'Please Wait', 'Resolving')
+                print "post data "+str(post_data)
+                html = net(user_agent).http_POST(url,post_data).content
+                r = re.findall(r'(eval\(function\(p,a,c,k,e,d\)\{while.+?flvplayer.+?)</script>'
+                               ,html,re.M|re.DOTALL)
+                if r:
+                    unpacked = jsunpack.unpack(r[0])
+                    r = re.findall(r'label:"\d+p",file:"(.+?)"}',unpacked)
+                if not r:
+                    r = re.findall(r"var file_link = '(.+?)';",html)
+        return r[0]
+    except Exception, e:
+        print 'Mash Up: Resolve Vidto Error - '+str(e)
+        addon.show_small_popup('[B][COLOR green]Mash Up: Vidto Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',
+                               5000, elogo)
+
+def resolve_mightyupload(url,referer):
+    from resources.libs import jsunpack
+    try:
+        html1 = net().http_GET(url).content
+        addon.log_error('Mash Up: Resolve MightyUpload - Requesting GET URL: '+url)
+        r = re.findall(r'\"hidden\" name=\"?(.+?)\" value=\"?(.+?)\"', html1, re.I)
+        post_data = {}
+        for name, value in r:
+            post_data[name] = value
+        post_data['referer'] = referer
+        html = net().http_POST(url, post_data).content
+        r = re.findall(r'id=\'flvplayer\'\>\<\/span\>.+?javascript\'\>(eval\(function\(p\,a\,c\,k\,e\,d\).+?)\<\/script\>', html, re.DOTALL)
+        if r:
+            unpacked = jsunpack.unpack(r[0])
+            unpacked=unpacked.replace('\\','')
+            x = re.findall("'file','(.+?)'",unpacked)
+        else:
+            
+            link = re.findall(r'<IFRAME SRC="(.+?)".+?></IFRAME>', html1, re.I)[0]
+            html = net().http_POST(link, post_data).content
+            r = re.findall(r'''id=\"player_code"><script type='.+?javascript\'\>(eval\(function\(p\,a\,c\,k\,e\,d\).+?)\<\/script\>''', html, re.DOTALL)
+            if r:
+                unpacked = jsunpack.unpack(r[0])
+                unpacked=unpacked.replace('\\','')
+                x = re.findall('<embed id="np_vid"type="video/divx"src="(.+?)"',unpacked)
+            else:
+                addon.log_error('Mash Up: Resolve MightyUpload - File Was Removed')
+                addon.show_small_popup('[B][COLOR green]Mash Up: MightyUpload Resolver[/COLOR][/B]','No Such File Or The File Has Been Removed',
+                                   5000, elogo)
+        return x[0]
+    except Exception, e:
+        print 'Mash Up: Resolve MightyUpload Error - '+str(e)
+        addon.show_small_popup('[B][COLOR green]Mash Up: MightyUpload Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',
+                               5000, elogo)
+        return
+
+def MLink2(mname,murl,thumb):
+        match=re.compile('<referer>(.+?)</referer>').findall(murl)[0]
+        main.GA(mname,"Watched")
+        ok=True
+        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Opening Link,5000)")
+        infoLabels =main.GETMETAT(mname,'','','')
+        video_type='movie'
+        season=''
+        episode=''
+        img=infoLabels['cover_url']
+        fanart =infoLabels['backdrop_url']
+        imdb_id=infoLabels['imdb_id']
+        infolabels = { 'supports_meta' : 'true', 'video_type':video_type, 'name':str(infoLabels['title']), 'imdb_id':str(infoLabels['imdb_id']), 'season':str(season), 'episode':str(episode), 'year':str(infoLabels['year']) }
+        try:
+            stream_url = refererResolver(match)
             if stream_url == False:
                   return                                                            
             infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre'], 'originaltitle': infoLabels['metaName']}

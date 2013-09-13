@@ -91,6 +91,7 @@ def LISTWATCHS(murl):
         remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
         for url, name in match:
+              
             name=name.replace('Seas.','Season').replace('Ep.','Episode')
             main.addDirTE(name,'http://watchseries.lt'+url,575,'','','','','','')
             loadedLinks = loadedLinks + 1
@@ -130,6 +131,7 @@ def LISTWATCHEPISODE(mname, murl):
         remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
         for url, name in reversed(match):
+              
             main.addDirTE(mname+' [COLOR red]'+name+'[/COLOR]','http://watchseries.lt'+url,575,'','','','','','')
             loadedLinks = loadedLinks + 1
             percent = (loadedLinks * 100)/totalLinks
