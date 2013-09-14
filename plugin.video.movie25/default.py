@@ -2294,6 +2294,22 @@ elif mode==259:
     from resources.libs.movies_tv import movieplaylist
     print ""+url
     movieplaylist.MLink2(name,url,iconimage)
+
+elif mode==260:
+    from resources.libs.movies_tv import viplus
+    viplus.VIP(url)
+
+elif mode==261:
+    from resources.libs.movies_tv import viplus
+    viplus.VIPList(url)
+
+elif mode==262:
+    from resources.libs.movies_tv import viplus
+    viplus.subLink(name,url)
+
+elif mode==263:
+    from resources.libs.movies_tv import viplus
+    viplus.MLink(name,url,iconimage)
 ######################################################################################################
         ######################################################################################
         ######################################################################################

@@ -61,6 +61,75 @@ def _parse_channels_from_html_dom(html):
             'title': 'MBC 4',
             'thumbnail': 'https://si0.twimg.com/profile_images/1133002857/mbc4.jpg',
             'path': 'mbc_4'})
+    items.append({
+            'title': 'JSC +1',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_1'})
+    items.append({
+            'title': 'JSC +2',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_2'})
+    items.append({
+            'title': 'JSC +3',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_3'})
+    items.append({
+            'title': 'JSC +4',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_4'})
+    items.append({
+            'title': 'JSC +5',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_5'})
+    items.append({
+            'title': 'JSC +6',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_6'})
+    items.append({
+            'title': 'JSC +7',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_7'})
+    items.append({
+            'title': 'JSC +8',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_8'})
+    items.append({
+            'title': 'JSC +9',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_9'})
+    items.append({
+            'title': 'JSC +10',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'jsc_10'})
+    items.append({
+            'title': 'Abu Dhabi Al Oula',
+            'thumbnail': 'https://www.zawya.com/pr/images/2009/ADTV_One_RGB_2009_10_08.jpg',
+            'path': 'abu_dhabi'})
+    items.append({
+            'title': 'Abu Dhabi Sports',
+            'thumbnail': 'https://si0.twimg.com/profile_images/2485587448/2121.png',
+            'path': 'abu_dhabi_sports_1'})
+    items.append({
+            'title': 'Al Jazeera',
+            'thumbnail': 'http://www.chicagonow.com/chicago-sports-media-watch/files/2013/04/Al-Jazeera.jpg',
+            'path': 'aljazeera'})
+    items.append({
+            'title': 'JAl Jazeera Sport 1',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'aljazeera_sport_1'})
+    items.append({
+            'title': 'Al Jazeera Sport 2',
+            'thumbnail': 'http://nowwatchtvlive.com/wp-content/uploads/2011/07/AljazeeraSport-264x300.jpg',
+            'path': 'aljazeera_sport_2'})
+    items.append({
+            'title': 'Al Jazeera Mubasher Masr',
+            'thumbnail': 'http://www.chicagonow.com/chicago-sports-media-watch/files/2013/04/Al-Jazeera.jpg',
+            'path': 'aljazeera_mubasher_masr'})
+    items.append({
+            'title': 'Al Jazeera Children',
+            'thumbnail': 'http://www.chicagonow.com/chicago-sports-media-watch/files/2013/04/Al-Jazeera.jpg',
+            'path': 'aljazeera_children'})
+    
     return items
 
 def MAIN():

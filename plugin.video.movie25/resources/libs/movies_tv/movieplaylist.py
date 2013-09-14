@@ -1,6 +1,6 @@
-import urllib,urllib2,re,cookielib,sys,os,urlresolver
+import urllib,urllib2,re,cookielib,sys,os,urlresolver,cookielib
 import xbmc, xbmcgui, xbmcaddon, xbmcplugin
-from resources.libs import main
+from resources.libs import main, debridroutines
 from t0mm0.common.net import Net as net
 from t0mm0.common.addon import Addon
 from urlresolver import common
@@ -17,8 +17,6 @@ elogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources
 refererTXT = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/message/referer.txt')    
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
-
-
 def Mplaylists(murl):
         link=main.OPENURL(murl)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
@@ -34,7 +32,10 @@ def Mplaylists(murl):
                 fan=art+'/fanart2.jpg'
         match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><date>(.+?)</date>').findall(link)
         for name,url,thumb,date in match:
-            main.addDirc(name+' [COLOR red] Updated '+date+'[/COLOR]',url,236,thumb,'',fan,'','','')
+                if '</vip>' in url:
+                        main.addDirc(name+' [COLOR red] '+date+'[/COLOR]',url,260,thumb,'',fan,'','','')
+                else:
+                        main.addDirc(name+' [COLOR red] '+date+'[/COLOR]',url,236,thumb,'',fan,'','','')
         info=re.findall('<info><message>(.+?)</message><thumbnail>(.+?)</thumbnail></info>',link)
         if info:
             for msg,pic in info:
@@ -44,6 +45,8 @@ def Mplaylists(murl):
                 main.addPlayc(name,image,244,thumb,'',fan,'','','')
         main.GA("MoviePL",vip+"-Directory")
 
+
+        
 
 def MList(mname,murl):
         mname  = mname.split('[C')[0]
@@ -105,6 +108,8 @@ def subLink(mname,suburl):
                 match6=re.compile('http://(.+?)/.+?').findall(url)
                 for url2 in match6:
                         host = url2.replace('www.','').replace('.in','').replace('.net','').replace('.com','').replace('.to','').replace('.org','').replace('.ch','')
+                        if re.findall('\d+.\d+.\d+.\d+',host):
+                            host='Static Link'
                         main.addDown2(mname+' [COLOR blue]'+host.upper()+'[/COLOR]',url,237,art+'/hosts/'+host.lower()+'.png',art+'/hosts/'+host.lower()+'.png')
 
 def MLink(mname,murl,thumb):
