@@ -56,6 +56,7 @@ def VIP(murl):
                                 fan=art+'/fanart2.jpg'
                         match=re.compile('<item><name>([^<]+)</name.+?link>([^<]+)</link.+?thumbnail>([^<]+)</thumbnail.+?username>([^<]+)</username></item>').findall(link)
                         for name,url,thumb,user in match:
+                            if debriduser == user or debriduser == 'mash2k3' or debriduser == 'hackermil':
                                 main.addDirc(name+' [COLOR red] '+user+'[/COLOR]',url,261,thumb,'',fan,'','','')
                         info=re.findall('<info><message>(.+?)</message><thumbnail>(.+?)</thumbnail></info>',link)
                         if info:
@@ -130,24 +131,31 @@ def subLink(mname,suburl):
                         host = url2.replace('www.','').replace('.in','').replace('.net','').replace('.com','').replace('.to','').replace('.org','').replace('.ch','')
                         if re.findall('\d+.\d+.\d+.\d+',host):
                             host='Static Link'
-                        main.addDown2(mname+' [COLOR blue]'+host.upper()+'[/COLOR]',url,263,art+'/hosts/'+host.lower()+'.png',art+'/hosts/'+host.lower()+'.png')
+                        main.addDown2(mname+' [COLOR red]'+host.upper()+'[/COLOR]',url,263,art+'/hosts/'+host.lower()+'.png',art+'/hosts/'+host.lower()+'.png')
 
 
 def Get_video(murl):
-    #Determine who our source is, grab all needed info
-    debriduser = selfAddon.getSetting('hmvusername')
-    debridpass = selfAddon.getSetting('hmvpassword')
-    rd = debridroutines.RealDebrid(cookie_jar, debriduser, debridpass)
-    if rd.Login():
-            link = rd.Resolve(murl)
-            print 'hh '+str(link)
+        debriduser = selfAddon.getSetting('hmvusername')
+        debridpass = selfAddon.getSetting('hmvpassword')
+        rd = debridroutines.RealDebrid(cookie_jar, debriduser, debridpass)
+        if rd.Login():
+            download_details = rd.Resolve(murl)
+            link = download_details['download_link']
             if not link:
                 dialog = xbmcgui.Dialog()
-                dialog.ok('VIP++','Error occurred attempting to stream the file.')
+                dialog.ok('VIP++','Error occurred attempting to stream the file.',download_details['message'])
                 return None
             else:
                 print 'VIP++ Link resolved: %s ' % link
                 return link
+def valid_host(host):
+        hoster = re.findall('https?://[www\.]*([^/]+)/', host)
+        url = 'http://real-debrid.com/lib/api/hosters.php'
+        allhosts = main.OPENURL(url)
+        if hoster[0] in allhosts:
+            return True
+        else:
+            return False
 
 def MLink(mname,murl,thumb):
         main.GA(mname,"Watched")
@@ -163,8 +171,11 @@ def MLink(mname,murl,thumb):
         imdb_id=infoLabels['imdb_id']
         infolabels = { 'supports_meta' : 'true', 'video_type':video_type, 'name':str(infoLabels['title']), 'imdb_id':str(infoLabels['imdb_id']), 'season':str(season), 'episode':str(episode), 'year':str(infoLabels['year']) }
         try:
-            stream_url = Get_video(murl)
-            print stream_url
+            linktype=valid_host(murl)
+            if linktype== True:
+                stream_url = Get_video(murl)
+            else:
+                stream_url = main.resolve_url(murl)
             if stream_url == False:
                   return                                                            
             infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre'], 'originaltitle': infoLabels['metaName']}
@@ -180,3 +191,4 @@ def MLink(mname,murl,thumb):
                 if stream_url != False:
                         main.ErrorReport(e)
                 return ok
+

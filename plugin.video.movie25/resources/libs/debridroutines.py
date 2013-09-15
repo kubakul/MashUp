@@ -43,25 +43,26 @@ class RealDebrid:
         source = self.GetURL(url)
         source=source.replace('\/','/')
         print 'DebridRoutines - Returned Source: %s' % source
+        download_details = {}
+        download_details['download_link'] = ''
+        download_details['message'] = ''
         if re.search('"error":5', source):
-            print 'Upgrade your account to generate a link'
+            download_details['message'] = 'Upgrade your account to generate a link.'
+            return download_details
         if re.search('"error":10',source):
-            print 'No server is available for this hoster.'
+            download_details['message'] = 'No server is available for this hoster.'
+            return download_details
         if re.search('"error":11',source):
-            print 'Your file is unavailable on the hoster.'
+            download_details['message'] = 'Your file is unavailable on the hoster.'
+            return download_details
         if re.search('"error":0',source):
             link =re.compile('generated_links":.+?,.+?,"(.+?)".+?"main_link"').findall(source)[0]
             print 'DebridRoutines - Resolved Link: %s' % link
-            return link
+            download_details['download_link'] = link
+            return download_details
 
 
-    def valid_host(self, host):
-        url = 'http://real-debrid.com/lib/api/hosters.php'
-        allhosts = self.GetURL(url)
-        if host in allhosts:
-            return True
-        else:
-            return False
+
 
 
     def  checkLogin(self):

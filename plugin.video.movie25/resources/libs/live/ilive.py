@@ -13,21 +13,7 @@ from universal import watchhistory
     
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
-try:
-        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Token.xml')
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
 
-except:
-        link='nill'
-r = re.findall(r'<token>(.+?)</token>',link)
-if r:
-        token=r[0]
-        if token == 'DOWN':
-                xbmc.executebuiltin("XBMC.Notification(Sorry!,iLive Token Needs Updating,6000)")
-                
-else:
-        token='9898'
-        
 
 def iLive():
         main.addDir('General','general',120,art+'/ilive.png')
@@ -96,12 +82,31 @@ def iLiveList(murl):
         del dialogWait
         main.GA("iLive","List") 
 
+def getToken(url):
+        from t0mm0.common.net import Net
+        net = Net()
+        html = net.http_GET(url).content
+        token_url = re.compile('\$.getJSON\("(.+?)",').findall(html)[0]
+
+        import datetime
+        time_now=datetime.datetime.now()
+        import time
+        epoch=time.mktime(time_now.timetuple())+(time_now.microsecond/1000000.)
+        epoch_str = str('%f' % epoch)
+        epoch_str = epoch_str.replace('.','')
+        epoch_str = epoch_str[:-3]
+
+        token_url = token_url + '&_=' + epoch_str
+        token = re.compile('":"(.+?)"').findall(net.http_GET(token_url+'&_='+str(epoch), headers={'Referer':url}).content)[0]
+        return token
+
 def iLiveLink(mname,murl,thumb):
         main.GA("iLive","Watched")
+        stream_url=False
         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Opening Stream,3000)")
         link=main.OPENURL(murl)
         ok=True
-        try:
+        if link:
                 playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
                 playlist.clear()
                 link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
@@ -110,6 +115,7 @@ def iLiveLink(mname,murl,thumb):
                     pageUrl='http://www.ilive.to/embedplayer.php?width='+wid+'&height='+hei+'&channel='+fid+'&autoplay=true'
                 link=main.OPENURL(pageUrl)
                 playpath=re.compile('file: "(.+?).flv"').findall(link)
+                token=getToken(pageUrl)
                 if len(playpath)==0:
                         playpath=re.compile('http://snapshots.ilive.to/snapshots/(.+?)_snapshot.jpg').findall(thumb)      
                 for playPath in playpath:
@@ -124,7 +130,4 @@ def iLiveLink(mname,murl,thumb):
                 if selfAddon.getSetting("whistory") == "true":
                     wh.add_item(mname+' '+'[COLOR green]iLive[/COLOR]', sys.argv[0]+sys.argv[2], infolabels='', img=thumb, fanart='', is_folder=False)
                 return ok
-        except Exception, e:
-                if stream_url != False:
-                    main.ErrorReport(e)
-                return ok
+

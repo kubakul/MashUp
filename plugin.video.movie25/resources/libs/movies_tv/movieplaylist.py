@@ -186,8 +186,8 @@ def resolve_videto(url,referer):
                 post_data['usr_login'] = ''
                 post_data['referer'] = referer
                 addon.show_countdown(7, 'Please Wait', 'Resolving')
-                print "post data "+str(post_data)
-                html = net(user_agent).http_POST(url,post_data).content
+                headers={'Referer':referer}
+                html = net(user_agent).http_POST(url,post_data,headers).content
                 r = re.findall(r'(eval\(function\(p,a,c,k,e,d\)\{while.+?flvplayer.+?)</script>'
                                ,html,re.M|re.DOTALL)
                 if r:
@@ -211,7 +211,8 @@ def resolve_mightyupload(url,referer):
         for name, value in r:
             post_data[name] = value
         post_data['referer'] = referer
-        html = net().http_POST(url, post_data).content
+        headers={'Referer':referer}
+        html = net().http_POST(url, post_data,headers).content
         r = re.findall(r'id=\'flvplayer\'\>\<\/span\>.+?javascript\'\>(eval\(function\(p\,a\,c\,k\,e\,d\).+?)\<\/script\>', html, re.DOTALL)
         if r:
             unpacked = jsunpack.unpack(r[0])
