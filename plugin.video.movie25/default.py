@@ -103,6 +103,7 @@ def MAIN():
         main.addDirHome('Adventure','http://www.movie25.so/',63,art+'/adv2.png')
         main.addDirHome('Kids Zone','http://www.movie25.so/',76,art+'/kidzone2.png')
         main.addDirHome('Documentaries','http://www.movie25.so/',85,art+'/docsec2.png')
+        main.addPlayc('Addon Settings','http://www.movie25.so/',1999,art+'/ASettings.png','','','','','')
         main.addPlayc('Resolver Settings','http://www.movie25.so/',99,art+'/resset.png','','','','','')
         main.addDirHome('Fixes','http://www.movie25.so/',784,art+'/fixes.png')
         main.addPlayc('Need Help?','http://www.movie25.so/',100,art+'/xbmchub.png','','','','','')
@@ -3033,7 +3034,8 @@ elif mode == 1051:
     
     
     
-    
+elif mode == 1999:
+    selfAddon.openSettings()   
 
 elif mode == 2000:
     xbmc.executebuiltin("XBMC.Container.Update(path,replace)")
