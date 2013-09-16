@@ -53,6 +53,42 @@
 			<setting id="movie25iwatchOrder" type="enum" label="   Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="0" visible="!eq(-1,false)"/>
 		<setting id="watchHistory" type="bool" label="[B]Watch History[/B]" default="true"/>
 			<setting id="watchHistoryOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="1" visible="!eq(-1,false)"/>
+		<setting id="HD" type="bool" label="[B]HD Movies[/B]" default="true"/>
+			<setting id="HDOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="2" visible="!eq(-1,false)"/>
+		<setting id="3D" type="bool" label="[B]3D Movies[/B]" default="true"/>
+			<setting id="3DOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="3" visible="!eq(-1,false)"/>
+		<setting id="international" type="bool" label="[B]International[/B]" default="true"/>
+			<setting id="internationalOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="4" visible="!eq(-1,false)"/>
+		<setting id="tvlatest" type="bool" label="[B]TV Latest[/B]" default="true"/>
+			<setting id="tvlatestOrder" type="enum" label="   Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="5" visible="!eq(-1,false)"/>
+		<setting id="live" type="bool" label="[B]Live Section[/B]" default="true"/>
+			<setting id="liveOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="6" visible="!eq(-1,false)"/>
+		<setting id="builtin" type="bool" label="[B]Built-in Plugins[/B]" default="true"/>
+			<setting id="builtinOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="7" visible="!eq(-1,false)"/>
+		<setting id="viplaylist" type="bool" label="[B]VIPlaylist[/B]" default="true"/>
+			<setting id="viplaylistOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="8" visible="!eq(-1,false)"/>
+		<setting id="sports" type="bool" label="[B]Sports Section[/B]" default="true"/>
+			<setting id="sportsOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="9" visible="!eq(-1,false)"/>
+		<setting id="adventure" type="bool" label="[B]Adventure[/B]" default="true"/>
+			<setting id="adventureOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="10" visible="!eq(-1,false)"/>
+		<setting id="kidszone" type="bool" label="[B]Kids Zone[/B]" default="true"/>
+			<setting id="kidszoneOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="11" visible="!eq(-1,false)"/>
+		<setting id="documentaries" type="bool" label="[B]Documentaries[/B]" default="true"/>
+			<setting id="documentariesOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="12" visible="!eq(-1,false)"/>
+		<setting id="howtovideos" type="bool" label="[B]How to Videos[/B]" default="true"/>
+			<setting id="howtovideosOrder" type="enum" label="   Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="13" visible="!eq(-1,false)"/>
+		<setting id="fixit" type="bool" label="[B]FixIt Section[/B]" default="true"/>
+			<setting id="fixitOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="14" visible="!eq(-1,false)"/>
+		<setting id="hackermil" type="bool" label="[B]HackerMils Stash[/B]" default="false"/>
+			<setting id="hackermilOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="15" visible="!eq(-1,false)"/>
+		<setting id="tnpb" type="bool" label="[B]The New Pirate Bay[/B]" default="false"/>
+			<setting id="tnpbOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="16" visible="!eq(-1,false)"/>
+		<setting id="morepower" type="bool" label="[B]More Power[/B]" default="false"/>
+			<setting id="morepowerOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="17" visible="!eq(-1,false)"/>
+		<setting id="staael" type="bool" label="[B]Staael 1982[/B]" default="false"/>
+			<setting id="staaelOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="18" visible="!eq(-1,false)"/>
+		<setting id="xmlchannel" type="bool" label="[B]Custom XML Channels[/B]" default="false"/>
+			<setting id="xmlchannelOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="19" visible="!eq(-1,false)"/>
    </category>
    <category label="Custom Channels">
 		<setting id="customchannel" type="bool" label="Custom Channels" default="true"/>

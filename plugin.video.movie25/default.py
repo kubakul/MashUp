@@ -53,7 +53,43 @@ def MAIN():
             d[str(selfAddon.getSetting("movie25iwatchOrder"))]="Movie25/iWatchonline"
         if selfAddon.getSetting("watchHistory")== "true":
             d[str(selfAddon.getSetting("watchHistoryOrder"))]="Watch History"
-        for c in sorted(d):
+        if selfAddon.getSetting("HD")== "true":
+            d[str(selfAddon.getSetting("HDOrder"))]="HD Movies"
+        if selfAddon.getSetting("3D")== "true":
+            d[str(selfAddon.getSetting("3DOrder"))]="3D Movies"
+        if selfAddon.getSetting("international")== "true":
+            d[str(selfAddon.getSetting("internationalOrder"))]="International"
+        if selfAddon.getSetting("tvlatest")== "true":
+            d[str(selfAddon.getSetting("tvlatestOrder"))]="TV Latest"
+        if selfAddon.getSetting("live")== "true":
+            d[str(selfAddon.getSetting("liveOrder"))]="Live Section"
+        if selfAddon.getSetting("builtin")== "true":
+            d[str(selfAddon.getSetting("builtinOrder"))]="Built-in Plugins"
+        if selfAddon.getSetting("viplaylist")== "true":
+            d[str(selfAddon.getSetting("viplaylistOrder"))]="VIPlaylist"
+        if selfAddon.getSetting("sports")== "true":
+            d[str(selfAddon.getSetting("sportsOrder"))]="Sports Section"
+        if selfAddon.getSetting("adventure")== "true":
+            d[str(selfAddon.getSetting("adventureOrder"))]="Adventure"
+        if selfAddon.getSetting("kidszone")== "true":
+            d[str(selfAddon.getSetting("kidszoneOrder"))]="Kids Zone"
+        if selfAddon.getSetting("documentaries")== "true":
+            d[str(selfAddon.getSetting("documentariesOrder"))]="Documentaries"
+        if selfAddon.getSetting("howtovideos")== "true":
+            d[str(selfAddon.getSetting("howtovideosOrder"))]="How to Videos"
+        if selfAddon.getSetting("fixit")== "true":
+            d[str(selfAddon.getSetting("fixitOrder"))]="FixIt Section"
+        if selfAddon.getSetting("hackermil")== "true":
+            d[str(selfAddon.getSetting("hackermilOrder"))]="HackerMils Stash"
+        if selfAddon.getSetting("tnpb")== "true":
+            d[str(selfAddon.getSetting("tnpbOrder"))]="The New Pirate Bay"
+        if selfAddon.getSetting("morepower")== "true":
+            d[str(selfAddon.getSetting("morepowerOrder"))]="More Power"
+        if selfAddon.getSetting("staael")== "true":
+            d[str(selfAddon.getSetting("staaelOrder"))]="Staael 1982"
+        if selfAddon.getSetting("xmlchannel")== "true":
+            d[str(selfAddon.getSetting("xmlchannelOrder"))]="XML Channel"
+        for c in sorted(d, key=lambda item: (int(item.partition(' ')[0]))):
             if d[c]=="Movie25/iWatchonline":
                 if selfAddon.getSetting("switchup") == "false":
                     main.addDirHome('Search','http://www.movie25.so/',420,art+'/search2.png')
@@ -83,30 +119,48 @@ def MAIN():
                 main.addDirHome('Watch History','history',222,art+'/whistory.png')
             if d[c]=="HD Movies":
                 main.addDirHome('HD Movies','http://oneclickwatch.org/category/movies/',33,art+'/hd2.png')
-        main.addDirHome('3D Movies','3D',223,art+'/3d.png')
-        main.addDirHome('International','http://www.movie25.so/',36,art+'/intl.png')
-        main.addDirHome('TV Latest','http://www.movie25.so/',27,art+'/tv2.png')
-        main.addDirHome('Live Streams','http://www.movie25.so/',115,art+'/live.png')
-        main.addDirHome('Built in Plugins','http://www.movie25.so/',500,art+'/plugins.png')
-        main.addDirHome('[COLOR=FF67cc33]VIP[/COLOR]laylists','http://www.movie25.so/',234,art+'/moviepl.png')
-        main.addDirHome('Sports','http://www.movie25.so/',43,art+'/sportsec2.png')
-        main.addDirHome('Adventure','http://www.movie25.so/',63,art+'/adv2.png')
-        main.addDirHome('Kids Zone','http://www.movie25.so/',76,art+'/kidzone2.png')
-        main.addDirHome('Documentaries','http://www.movie25.so/',85,art+'/docsec2.png')
-        main.addPlayc('Addon Settings','http://www.movie25.so/',1999,art+'/ASettings.png','','','','','')
-        main.addPlayc('Resolver Settings','http://www.movie25.so/',99,art+'/resset.png','','','','','')
-        main.addDirHome('Fixes','http://www.movie25.so/',784,art+'/fixes.png')
+            if d[c]=="3D Movies":
+                main.addDirHome('3D Movies','3D',223,art+'/3d.png')
+            if d[c]=="International":
+                main.addDirHome('International','http://www.movie25.so/',36,art+'/intl.png')
+            if d[c]=="TV Latest":
+                main.addDirHome('TV Latest','http://www.movie25.so/',27,art+'/tv2.png')
+            if d[c]=="Live Section":
+                main.addDirHome('Live Streams','http://www.movie25.so/',115,art+'/live.png')
+            if d[c]=="Built-in Plugins":
+                main.addDirHome('Built in Plugins','http://www.movie25.so/',500,art+'/plugins.png')
+            if d[c]=="VIPlaylist":
+                main.addDirHome('[COLOR=FF67cc33]VIP[/COLOR]laylists','http://www.movie25.so/',234,art+'/moviepl.png')
+            if d[c]=="Sports Section":
+                main.addDirHome('Sports','http://www.movie25.so/',43,art+'/sportsec2.png')
+            if d[c]=="Adventure":
+                main.addDirHome('Adventure','http://www.movie25.so/',63,art+'/adv2.png')
+            if d[c]=="Kids Zone":
+                main.addDirHome('Kids Zone','http://www.movie25.so/',76,art+'/kidzone2.png')
+            if d[c]=="Documentaries":
+                main.addDirHome('Documentaries','http://www.movie25.so/',85,art+'/docsec2.png')
+            if d[c]=="How to Videos":
+                main.addDirHome("Mash Up How To's",'PLvNKtQkKaqg-PVXvlP7sYcfiEoaC56v3W',205,art+'/howto.png')
+            if d[c]=="FixIt Section":
+                main.addDirHome('Fixes','http://www.movie25.so/',784,art+'/fixes.png')
+            if d[c]=="HackerMils Stash":
+                main.addDirHome('HackerMils Stash','https://github.com/HackerMil/HackerMilsMovieStash/raw/master/Directory/HackerMil_Directory.xml',235,art+'/hackermil.png')
+            if d[c]=="The New Pirate Bay":
+                main.addDirHome('The New Pirate Bay','https://github.com/mash2k3/MashUpTNPB/raw/master/TNPB_Directory.xml',235,'http://s20.postimg.org/jvq2l8xel/TNPB.png')
+            if d[c]=="More Power":
+                main.addDirHome('MorePower','https://github.com/mash2k3/MashUpMorePower/raw/master/MorePower_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/morepower.png')
+            if d[c]=="Staael 1982":
+                main.addDirHome('Staael 1982','https://github.com/mash2k3/Staael1982/raw/master/Staael_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/staael.png')
+            if d[c]=="XML Channel":
+                main.addDir('My XML Channels','nills',238,art+'/xml.png')
         main.addPlayc('Need Help?','http://www.movie25.so/',100,art+'/xbmchub.png','','','','','')
+        main.addPlayc('Hub Maintenance','http://www.movie25.so/',156,art+'/hubmain.png','','','','','')
         main.addLink('mash2k3@yahoo.com','',art+'/paypalmash.png')
         main.addLink('@mashupxbmc','',art+'/twittermash.png')
-        main.addPlayc('Hub Maintenance','http://www.movie25.so/',156,art+'/hubmain.png','','','','','')
-        main.addDirHome("Mash Up How To's",'PLvNKtQkKaqg-PVXvlP7sYcfiEoaC56v3W',205,art+'/howto.png')
+        main.addPlayc('Addon Settings','http://www.movie25.so/',1999,art+'/ASettings.png','','','','','')
+        main.addPlayc('Resolver Settings','http://www.movie25.so/',99,art+'/resset.png','','','','','')
         
 
-"""        main.addDirHome('HackerMils Stash','https://github.com/HackerMil/HackerMilsMovieStash/raw/master/Directory/HackerMil_Directory.xml',235,art+'/hackermil.png')
-                main.addDirHome('The New Pirate Bay','https://github.com/mash2k3/MashUpTNPB/raw/master/TNPB_Directory.xml',235,'http://s20.postimg.org/jvq2l8xel/TNPB.png')
-                main.addDirHome('MorePower','https://github.com/mash2k3/MashUpMorePower/raw/master/MorePower_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/morepower.png')
-                main.addDirHome('Staael 1982','https://github.com/mash2k3/Staael1982/raw/master/Staael_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/staael.png')"""        
  
         
 def Announcements():
