@@ -14,24 +14,40 @@ art = main.art
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 def LISTSP2(murl):
-        if murl=='3D':
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,5000)")
+        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,20000)")
+        if murl.startswith('3D'):
                 main.addDir('Search Newmyvideolinks','movieNEW',102,art+'/search.png')
-                check=main.OPENURL('http://www.myvideolinks.eu/category/movies/3-d-movies/')
-                match=re.compile('<p><a href=".+?" >Next Page &raquo;</a></p>').findall(check)
-                if len(match)>0:
-                        urllist=main.OPENURL('http://www.myvideolinks.eu/category/movies/3-d-movies/')+main.OPENURL('http://www.myvideolinks.eu/category/movies/3-d-movies/page/2/')
-                else:
-                        urllist=main.OPENURL('http://www.myvideolinks.eu/category/movies/3-d-movies/')
-        elif murl=='TV':
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,10000)")
+                subpages = 2
+                category = "3-d-movies"
+        elif murl.startswith('TV'):
                 main.addDir('Search Newmyvideolinks','tvNEW',102,art+'/search.png')
-                urllist=main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/2/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/3/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/4/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/5/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/6/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/7/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/8/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/9/')+main.OPENURL('http://www.myvideolinks.eu/category/tv-shows/page/10/')
+                subpages = 10
+                category = "tv-shows"
         else:
-                xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,10000)")
                 main.addDir('Search Newmyvideolinks','movieNEW',102,art+'/search.png')
-                urllist=main.OPENURL('http://www.myvideolinks.eu/category/movies/bluray/')+main.OPENURL('http://www.myvideolinks.eu/category/movies/bluray/page/2/')+main.OPENURL('http://www.myvideolinks.eu/category/movies/bluray/page/3/')+main.OPENURL('http://www.myvideolinks.eu/category/movies/bluray/page/4/')+main.OPENURL('http://www.myvideolinks.eu/category/movies/bluray/page/5/')+main.OPENURL('http://www.myvideolinks.eu/category/movies/bluray/page/6/')+main.OPENURL('http://www.myvideolinks.eu/category/movies/bluray/page/7/')+main.OPENURL('http://www.myvideolinks.eu/category/movies/bluray/page/8/')
-        
+                subpages = 8
+                category = "bluray"
+        parts = murl.split('-', 1 );
+        try:
+            page = int(parts[1])
+            murl = parts[0]
+        except:
+            page = 0
+        page = page * subpages;
+        urllist = ""
+        for n in range(subpages):
+            try:
+                site = main.OPENURL('http://www.myvideolinks.eu/category/movies/'+category+'/page/'+str(page+n+1))
+                hasNextPage = re.compile('>&raquo;</a>').findall(site)
+                urllist += site
+                if not hasNextPage:
+                    page = None
+                    break
+            except:
+                if page == 0 and n == 0:
+                    pass
+                else:
+                    break
         if urllist:
                 urllist=main.unescapes(urllist)
                 #link=main.OPENURL(xurl)
@@ -58,9 +74,12 @@ def LISTSP2(murl):
                                 remaining_display = 'Movies/Episodes Cached :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
                                 dialogWait.update(percent,'[B]Will load instantly from now on[/B]',remaining_display)
                                 if (dialogWait.iscanceled()):
-                                    return False   
+                                    return False
+                if not page is None:
+                    main.addDir('Next Page ' + str(page/subpages+2),murl + "-" + str(page/subpages+1),34,art+'/next2.png')
  
         dialogWait.close()
+        main.CloseAllDialogs()
         del dialogWait
         main.GA("HD-3D-HDTV","Newmyvideolinks")
         main.VIEWS()

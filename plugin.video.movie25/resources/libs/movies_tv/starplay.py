@@ -28,11 +28,15 @@ def GetNewUrl():
 
 
 def LISTSP5(murl):
-        nrDomain = GetNewUrl();
-        murl=nrDomain+'/latest.php'
-        lurl=nrDomain+'/login2.php'
-        net().http_POST(lurl,{'email':user,'password':passw})
-        response = net().http_GET(murl)
+        try:
+            nrDomain = GetNewUrl();
+            murl=nrDomain+'/latest.php'
+            lurl=nrDomain+'/login2.php'
+            net().http_POST(lurl,{'email':user,'password':passw})
+            response = net().http_GET(murl)
+        except:
+            xbmc.executebuiltin("XBMC.Notification(Sorry!,Noobroom website is down,5000,"+smalllogo+")")
+            return
         link = response.content
         if response.get_url() != murl:
                 xbmc.executebuiltin("XBMC.Notification(Sorry!,Email or Password Incorrect,10000,"+smalllogo+")")
