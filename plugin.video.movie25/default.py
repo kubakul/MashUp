@@ -48,56 +48,46 @@ def AtoZ():
                 main.addDir(i,'http://www.movie25.so/movies/'+i.lower()+'/',1,art+'/'+i.lower()+'.png')
         main.GA("None","Movie25-A-Z")   
 def MAIN():
-        try:
-                link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Notifier.xml')
-                link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-
-        except:
-                link='nill'
-
-        r = re.findall(r'VIPLISTER ="(.+?)"',link)
-        if r:
-            viplister=int(r[0])
-        if selfAddon.getSetting("switchup") == "false":
-                main.addDirHome('Search','http://www.movie25.so/',420,art+'/search2.png')
-                main.addDirHome("All Fav's",'http://www.movie25.so/',639,art+'/favsu.png')
-                main.addDirHome('A-Z','http://www.movie25.so/',6,art+'/AZ2.png')
-                main.addDirHome('New Releases','http://www.movie25.so/movies/new-releases/',1,art+'/new2.png')
-                main.addDirHome('Latest Added','http://www.movie25.so/movies/latest-added/',1,art+'/latest2.png')
-                main.addDirHome('Featured Movies','http://www.movie25.so/movies/featured-movies/',1,art+'/feat2.png')
-                main.addDirHome('Most Viewed','http://www.movie25.so/movies/most-viewed/',1,art+'/view2.png')
-                main.addDirHome('Most Voted','http://www.movie25.so/movies/most-voted/',1,art+'/vote2.png')
-                main.addDirHome('HD Releases','http://www.movie25.so/movies/latest-hd-movies/',1,art+'/dvd2hd.png')
-                main.addDirHome('Genre','http://www.movie25.so/',2,art+'/genre2.png')
-                main.addDirHome('By Year','http://www.movie25.so/',7,art+'/year2.png')
-        else:
-                main.addDirHome('Search','http://www.iwatchonline.to',644,art+'/search+.png')
-                main.addDirHome("All Fav's",'http://www.movie25.so/',639,art+'/gfavsu.png')
-                main.addDirHome('A-Z','http://www.iwatchonline.to',595,art+'/AZ+.png')
-                main.addDirHome('Upcoming','http://www.iwatchonline.to/main/content_more/movies/?sort=upcoming&start=0',587,art+'/new+.png')
-                main.addDirHome('Latest Added','http://www.iwatchonline.to/main/content_more/movies/?sort=latest&start=0',587,art+'/latest+.png')
-                main.addDirHome('Featured Movies','http://www.iwatchonline.to/main/content_more/movies/?sort=featured&start=0',587,art+'/feat+.png')
-                main.addDirHome('Popular','http://www.iwatchonline.to/main/content_more/movies/?sort=popular&start=0',587,art+'/view+.png')
-                main.addDirHome('Latest DVD Movies','http://www.iwatchonline.to/main/content_more/movies/?quality=dvd&start=0',587,art+'/dvd+.png')
-                main.addDirHome('Latest HD Movies','http://www.iwatchonline.to/main/content_more/movies/?quality=hd&start=0',587,art+'/dvd2+.png')
-                main.addDirHome('Genre','http://www.iwatchonline.to',596,art+'/genre+.png')
-                main.addDirHome('By Year','year',652,art+'/year+.png')
-        main.addDirHome('Watch History','history',222,art+'/whistory.png')
-        main.addDirHome('HD Movies','http://oneclickwatch.org/category/movies/',33,art+'/hd2.png')
+        d={}
+        if selfAddon.getSetting("movie25iwatch")== "true":
+            d[str(selfAddon.getSetting("movie25iwatchOrder"))]="Movie25/iWatchonline"
+        if selfAddon.getSetting("watchHistory")== "true":
+            d[str(selfAddon.getSetting("watchHistoryOrder"))]="Watch History"
+        for c in sorted(d):
+            if d[c]=="Movie25/iWatchonline":
+                if selfAddon.getSetting("switchup") == "false":
+                    main.addDirHome('Search','http://www.movie25.so/',420,art+'/search2.png')
+                    main.addDirHome("All Fav's",'http://www.movie25.so/',639,art+'/favsu.png')
+                    main.addDirHome('A-Z','http://www.movie25.so/',6,art+'/AZ2.png')
+                    main.addDirHome('New Releases','http://www.movie25.so/movies/new-releases/',1,art+'/new2.png')
+                    main.addDirHome('Latest Added','http://www.movie25.so/movies/latest-added/',1,art+'/latest2.png')
+                    main.addDirHome('Featured Movies','http://www.movie25.so/movies/featured-movies/',1,art+'/feat2.png')
+                    main.addDirHome('Most Viewed','http://www.movie25.so/movies/most-viewed/',1,art+'/view2.png')
+                    main.addDirHome('Most Voted','http://www.movie25.so/movies/most-voted/',1,art+'/vote2.png')
+                    main.addDirHome('HD Releases','http://www.movie25.so/movies/latest-hd-movies/',1,art+'/dvd2hd.png')
+                    main.addDirHome('Genre','http://www.movie25.so/',2,art+'/genre2.png')
+                    main.addDirHome('By Year','http://www.movie25.so/',7,art+'/year2.png')
+                else:
+                    main.addDirHome('Search','http://www.iwatchonline.to',644,art+'/search+.png')
+                    main.addDirHome("All Fav's",'http://www.movie25.so/',639,art+'/gfavsu.png')
+                    main.addDirHome('A-Z','http://www.iwatchonline.to',595,art+'/AZ+.png')
+                    main.addDirHome('Upcoming','http://www.iwatchonline.to/main/content_more/movies/?sort=upcoming&start=0',587,art+'/new+.png')
+                    main.addDirHome('Latest Added','http://www.iwatchonline.to/main/content_more/movies/?sort=latest&start=0',587,art+'/latest+.png')
+                    main.addDirHome('Featured Movies','http://www.iwatchonline.to/main/content_more/movies/?sort=featured&start=0',587,art+'/feat+.png')
+                    main.addDirHome('Popular','http://www.iwatchonline.to/main/content_more/movies/?sort=popular&start=0',587,art+'/view+.png')
+                    main.addDirHome('Latest DVD Movies','http://www.iwatchonline.to/main/content_more/movies/?quality=dvd&start=0',587,art+'/dvd+.png')
+                    main.addDirHome('Latest HD Movies','http://www.iwatchonline.to/main/content_more/movies/?quality=hd&start=0',587,art+'/dvd2+.png')
+                    main.addDirHome('Genre','http://www.iwatchonline.to',596,art+'/genre+.png')
+                    main.addDirHome('By Year','year',652,art+'/year+.png')
+            if d[c]=="Watch History":
+                main.addDirHome('Watch History','history',222,art+'/whistory.png')
+            if d[c]=="HD Movies":
+                main.addDirHome('HD Movies','http://oneclickwatch.org/category/movies/',33,art+'/hd2.png')
         main.addDirHome('3D Movies','3D',223,art+'/3d.png')
         main.addDirHome('International','http://www.movie25.so/',36,art+'/intl.png')
         main.addDirHome('TV Latest','http://www.movie25.so/',27,art+'/tv2.png')
         main.addDirHome('Live Streams','http://www.movie25.so/',115,art+'/live.png')
         main.addDirHome('Built in Plugins','http://www.movie25.so/',500,art+'/plugins.png')
-        if viplister > 0:
-            if viplister ==1:
-                main.addDirHome('HackerMils Stash','https://github.com/HackerMil/HackerMilsMovieStash/raw/master/Directory/HackerMil_Directory.xml',235,art+'/hackermil.png')
-            elif viplister ==2:
-                main.addDirHome('The New Pirate Bay','https://github.com/mash2k3/MashUpTNPB/raw/master/TNPB_Directory.xml',235,'http://s20.postimg.org/jvq2l8xel/TNPB.png')
-            elif viplister ==3:
-                main.addDirHome('MorePower','https://github.com/mash2k3/MashUpMorePower/raw/master/MorePower_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/morepower.png')
-            elif viplister ==4:
-                main.addDirHome('Staael 1982','https://github.com/mash2k3/Staael1982/raw/master/Staael_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/staael.png')
         main.addDirHome('[COLOR=FF67cc33]VIP[/COLOR]laylists','http://www.movie25.so/',234,art+'/moviepl.png')
         main.addDirHome('Sports','http://www.movie25.so/',43,art+'/sportsec2.png')
         main.addDirHome('Adventure','http://www.movie25.so/',63,art+'/adv2.png')
@@ -113,7 +103,10 @@ def MAIN():
         main.addDirHome("Mash Up How To's",'PLvNKtQkKaqg-PVXvlP7sYcfiEoaC56v3W',205,art+'/howto.png')
         
 
-        
+"""        main.addDirHome('HackerMils Stash','https://github.com/HackerMil/HackerMilsMovieStash/raw/master/Directory/HackerMil_Directory.xml',235,art+'/hackermil.png')
+                main.addDirHome('The New Pirate Bay','https://github.com/mash2k3/MashUpTNPB/raw/master/TNPB_Directory.xml',235,'http://s20.postimg.org/jvq2l8xel/TNPB.png')
+                main.addDirHome('MorePower','https://github.com/mash2k3/MashUpMorePower/raw/master/MorePower_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/morepower.png')
+                main.addDirHome('Staael 1982','https://github.com/mash2k3/Staael1982/raw/master/Staael_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/staael.png')"""        
  
         
 def Announcements():

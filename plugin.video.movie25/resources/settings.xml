@@ -37,14 +37,23 @@
    </category>
    
    <category label="Log-ins">
+		<setting label="Noobroom Account" type="lsep" />
 		<setting id="username" type="text" label="Noobroom Email" default="" visible="true"/>
 		<setting id="password" type="text"label="Noobroom Password" default="" visible="true" option="hidden" />
+		<setting label="RLSMIX Account" type="lsep" />
 		<setting id="rlsusername" type="text" label="RlsMix Username" default="" visible="true"/>
 		<setting id="rlspassword" type="text"label="RlsMix Password" default="" visible="true" option="hidden" />
+		<setting label="HM VIP++ Account" type="lsep" />
 		<setting id="hmvusername" type="text" label="HM VIP++ Username" default="" visible="true"/>
 		<setting id="hmvpassword" type="text"label="HM VIP++ Password" default="" visible="true" option="hidden" />
    </category>
-   
+   <category label="Home Layout">
+		<setting label="Customize your Home screen" type="lsep" />
+		<setting id="movie25iwatch" type="bool" label="[B]Movie25/iWatchonline[/B]" default="true"/>
+			<setting id="movie25iwatchOrder" type="enum" label="   Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="0" visible="!eq(-1,false)"/>
+		<setting id="watchHistory" type="bool" label="[B]Watch History[/B]" default="true"/>
+			<setting id="watchHistoryOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="1" visible="!eq(-1,false)"/>
+   </category>
    <category label="Custom Channels">
 		<setting id="customchannel" type="bool" label="Custom Channels" default="true"/>
 		<setting id="hideinstruction" type="bool" label="Hide Instructions" default="false"/>
