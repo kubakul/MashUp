@@ -49,47 +49,48 @@
    </category>
    <category label="Home Layout">
 		<setting label="Customize your Home screen" type="lsep" />
-		<setting id="movie25iwatch" type="bool" label="[B]Movie25/iWatchonline[/B]" default="true"/>
-			<setting id="movie25iwatchOrder" type="enum" label="   Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="0" visible="!eq(-1,false)"/>
-		<setting id="watchHistory" type="bool" label="[B]Watch History[/B]" default="true"/>
-			<setting id="watchHistoryOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="1" visible="!eq(-1,false)"/>
-		<setting id="HD" type="bool" label="[B]HD Movies[/B]" default="true"/>
-			<setting id="HDOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="2" visible="!eq(-1,false)"/>
-		<setting id="3D" type="bool" label="[B]3D Movies[/B]" default="true"/>
-			<setting id="3DOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="3" visible="!eq(-1,false)"/>
-		<setting id="international" type="bool" label="[B]International[/B]" default="true"/>
-			<setting id="internationalOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="4" visible="!eq(-1,false)"/>
-		<setting id="tvlatest" type="bool" label="[B]TV Latest[/B]" default="true"/>
-			<setting id="tvlatestOrder" type="enum" label="   Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="5" visible="!eq(-1,false)"/>
-		<setting id="live" type="bool" label="[B]Live Section[/B]" default="true"/>
-			<setting id="liveOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="6" visible="!eq(-1,false)"/>
-		<setting id="builtin" type="bool" label="[B]Built-in Plugins[/B]" default="true"/>
-			<setting id="builtinOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="7" visible="!eq(-1,false)"/>
-		<setting id="viplaylist" type="bool" label="[B]VIPlaylist[/B]" default="true"/>
-			<setting id="viplaylistOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="8" visible="!eq(-1,false)"/>
-		<setting id="sports" type="bool" label="[B]Sports Section[/B]" default="true"/>
-			<setting id="sportsOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="9" visible="!eq(-1,false)"/>
-		<setting id="adventure" type="bool" label="[B]Adventure[/B]" default="true"/>
-			<setting id="adventureOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="10" visible="!eq(-1,false)"/>
-		<setting id="kidszone" type="bool" label="[B]Kids Zone[/B]" default="true"/>
-			<setting id="kidszoneOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="11" visible="!eq(-1,false)"/>
-		<setting id="documentaries" type="bool" label="[B]Documentaries[/B]" default="true"/>
-			<setting id="documentariesOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="12" visible="!eq(-1,false)"/>
-		<setting id="howtovideos" type="bool" label="[B]How to Videos[/B]" default="true"/>
-			<setting id="howtovideosOrder" type="enum" label="   Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="13" visible="!eq(-1,false)"/>
-		<setting id="fixit" type="bool" label="[B]FixIt Section[/B]" default="true"/>
-			<setting id="fixitOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="14" visible="!eq(-1,false)"/>
-		<setting id="hackermil" type="bool" label="[B]HackerMils Stash[/B]" default="false"/>
-			<setting id="hackermilOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="15" visible="!eq(-1,false)"/>
-		<setting id="tnpb" type="bool" label="[B]The New Pirate Bay[/B]" default="false"/>
-			<setting id="tnpbOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="16" visible="!eq(-1,false)"/>
-		<setting id="morepower" type="bool" label="[B]More Power[/B]" default="false"/>
-			<setting id="morepowerOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="17" visible="!eq(-1,false)"/>
-		<setting id="staael" type="bool" label="[B]Staael 1982[/B]" default="false"/>
-			<setting id="staaelOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="18" visible="!eq(-1,false)"/>
-		<setting id="xmlchannel" type="bool" label="[B]Custom XML Channels[/B]" default="false"/>
-			<setting id="xmlchannelOrder" type="enum" label="    Order" values="0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19" default="19" visible="!eq(-1,false)"/>
+		<setting id="home_item_1_enabled" type="bool" label="Home Item 1" default="true"/>
+		<setting id="home_item_1" type="enum" label="     Item" enable="!eq(-1,false)" default="0" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_2_enabled" type="bool" label="Home Item 2" default="true"/>
+		<setting id="home_item_2" type="enum" label="     Item" enable="!eq(-1,false)" default="1" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_3_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_3" type="enum" label="     Item" enable="!eq(-1,false)" default="2" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_4_enabled" type="bool" label="Home Item 4" default="true"/>
+		<setting id="home_item_4" type="enum" label="     Item" enable="!eq(-1,false)" default="3" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_5_enabled" type="bool" label="Home Item 5" default="true"/>
+		<setting id="home_item_5" type="enum" label="     Item" enable="!eq(-1,false)" default="4" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_6_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_6" type="enum" label="     Item" enable="!eq(-1,false)" default="5" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_7_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_7" type="enum" label="     Item" enable="!eq(-1,false)" default="6" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_8_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_8" type="enum" label="     Item" enable="!eq(-1,false)" default="7" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_9_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_9" type="enum" label="     Item" enable="!eq(-1,false)" default="8" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_10_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_10" type="enum" label="     Item" enable="!eq(-1,false)" default="9" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_11_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_11" type="enum" label="     Item" enable="!eq(-1,false)" default="10" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_12_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_12" type="enum" label="     Item" enable="!eq(-1,false)" default="11" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_13_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_13" type="enum" label="     Item" enable="!eq(-1,false)" default="12" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_14_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_14" type="enum" label="     Item" enable="!eq(-1,false)" default="13" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_15_enabled" type="bool" label="Home Item 3" default="true"/>
+		<setting id="home_item_15" type="enum" label="     Item" enable="!eq(-1,false)" default="14" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_16_enabled" type="bool" label="Home Item 3" default="false"/>
+		<setting id="home_item_16" type="enum" label="     Item" enable="!eq(-1,false)" default="15" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_17_enabled" type="bool" label="Home Item 3" default="false"/>
+		<setting id="home_item_17" type="enum" label="     Item" enable="!eq(-1,false)" default="16" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_18_enabled" type="bool" label="Home Item 3" default="false"/>
+		<setting id="home_item_18" type="enum" label="     Item" enable="!eq(-1,false)" default="17" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_19_enabled" type="bool" label="Home Item 3" default="false"/>
+		<setting id="home_item_19" type="enum" label="     Item" enable="!eq(-1,false)" default="18" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
+		<setting id="home_item_20_enabled" type="bool" label="Home Item 3" default="false"/>
+		<setting id="home_item_20" type="enum" label="     Item" enable="!eq(-1,false)" default="19" values="Movie25/iWatchOnline|Watch History|HD Movies|3D Movies|International|TV Latest|Live Section|Built-in Plugins|VIPlaylist|Sport Section|Adventure|Kids Zone|Documentaries|How to Videos|Fix-it Section|HackerMils Stash|The New Pirate Bay|More Power|Staael 1982|Custom XML Channels|K1M05|Mash Sports|iLive"/>
    </category>
+   
    <category label="Custom Channels">
 		<setting id="customchannel" type="bool" label="Custom Channels" default="true"/>
 		<setting id="hideinstruction" type="bool" label="Hide Instructions" default="false"/>

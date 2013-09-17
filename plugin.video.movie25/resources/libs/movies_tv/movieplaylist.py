@@ -1,4 +1,4 @@
-import urllib,urllib2,re,cookielib,sys,os,urlresolver,cookielib
+import urllib,urllib2,re,cookielib,sys,os,urlresolver
 import xbmc, xbmcgui, xbmcaddon, xbmcplugin
 from resources.libs import main, debridroutines
 from t0mm0.common.net import Net as net
@@ -239,7 +239,12 @@ def resolve_mightyupload(url,referer):
         return
 
 def MLink2(mname,murl,thumb):
-        match=re.compile('<referer>(.+?)</referer>').findall(murl)[0]
+        match=re.compile('<referer>(.+?)</referer>').findall(murl)
+        if match:
+                video=match[0]
+        else:
+                video=murl
+                
         main.GA(mname,"Watched")
         ok=True
         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Opening Link,5000)")
@@ -252,7 +257,7 @@ def MLink2(mname,murl,thumb):
         imdb_id=infoLabels['imdb_id']
         infolabels = { 'supports_meta' : 'true', 'video_type':video_type, 'name':str(infoLabels['title']), 'imdb_id':str(infoLabels['imdb_id']), 'season':str(season), 'episode':str(episode), 'year':str(infoLabels['year']) }
         try:
-            stream_url = refererResolver(match)
+            stream_url = refererResolver(video)
             if stream_url == False:
                   return                                                            
             infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre'], 'originaltitle': infoLabels['metaName']}

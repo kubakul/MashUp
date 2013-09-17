@@ -15,6 +15,7 @@ except Exception, e:
     xbmc.log('Mash Up ERROR - Importing Modules: '+str(e))
     sys.exit(0)
     
+    
 #Mash Up - by Mash2k3 2012.
 #jpushed
 
@@ -26,7 +27,6 @@ addon = Addon(addon_id)
 art = main.art
 from universal import watchhistory
 wh = watchhistory.WatchHistory('plugin.video.movie25')
-
 
 
 ################################################################################ Source Imports ##########################################################################################################
@@ -49,48 +49,51 @@ def AtoZ():
         main.GA("None","Movie25-A-Z")   
 def MAIN():
         d={}
-        if selfAddon.getSetting("movie25iwatch")== "true":
-            d[str(selfAddon.getSetting("movie25iwatchOrder"))]="Movie25/iWatchonline"
-        if selfAddon.getSetting("watchHistory")== "true":
-            d[str(selfAddon.getSetting("watchHistoryOrder"))]="Watch History"
-        if selfAddon.getSetting("HD")== "true":
-            d[str(selfAddon.getSetting("HDOrder"))]="HD Movies"
-        if selfAddon.getSetting("3D")== "true":
-            d[str(selfAddon.getSetting("3DOrder"))]="3D Movies"
-        if selfAddon.getSetting("international")== "true":
-            d[str(selfAddon.getSetting("internationalOrder"))]="International"
-        if selfAddon.getSetting("tvlatest")== "true":
-            d[str(selfAddon.getSetting("tvlatestOrder"))]="TV Latest"
-        if selfAddon.getSetting("live")== "true":
-            d[str(selfAddon.getSetting("liveOrder"))]="Live Section"
-        if selfAddon.getSetting("builtin")== "true":
-            d[str(selfAddon.getSetting("builtinOrder"))]="Built-in Plugins"
-        if selfAddon.getSetting("viplaylist")== "true":
-            d[str(selfAddon.getSetting("viplaylistOrder"))]="VIPlaylist"
-        if selfAddon.getSetting("sports")== "true":
-            d[str(selfAddon.getSetting("sportsOrder"))]="Sports Section"
-        if selfAddon.getSetting("adventure")== "true":
-            d[str(selfAddon.getSetting("adventureOrder"))]="Adventure"
-        if selfAddon.getSetting("kidszone")== "true":
-            d[str(selfAddon.getSetting("kidszoneOrder"))]="Kids Zone"
-        if selfAddon.getSetting("documentaries")== "true":
-            d[str(selfAddon.getSetting("documentariesOrder"))]="Documentaries"
-        if selfAddon.getSetting("howtovideos")== "true":
-            d[str(selfAddon.getSetting("howtovideosOrder"))]="How to Videos"
-        if selfAddon.getSetting("fixit")== "true":
-            d[str(selfAddon.getSetting("fixitOrder"))]="FixIt Section"
-        if selfAddon.getSetting("hackermil")== "true":
-            d[str(selfAddon.getSetting("hackermilOrder"))]="HackerMils Stash"
-        if selfAddon.getSetting("tnpb")== "true":
-            d[str(selfAddon.getSetting("tnpbOrder"))]="The New Pirate Bay"
-        if selfAddon.getSetting("morepower")== "true":
-            d[str(selfAddon.getSetting("morepowerOrder"))]="More Power"
-        if selfAddon.getSetting("staael")== "true":
-            d[str(selfAddon.getSetting("staaelOrder"))]="Staael 1982"
-        if selfAddon.getSetting("xmlchannel")== "true":
-            d[str(selfAddon.getSetting("xmlchannelOrder"))]="XML Channel"
+        if selfAddon.getSetting("home_item_1_enabled")== "true":
+            d['1']=str(selfAddon.getSetting("home_item_1"))
+        if selfAddon.getSetting("home_item_2_enabled")== "true":
+            d['2']=str(selfAddon.getSetting("home_item_2"))
+        if selfAddon.getSetting("home_item_3_enabled")== "true":
+            d['3']=str(selfAddon.getSetting("home_item_3"))
+        if selfAddon.getSetting("home_item_4_enabled")== "true":
+            d['4']=str(selfAddon.getSetting("home_item_4"))
+        if selfAddon.getSetting("home_item_5_enabled")== "true":
+            d['5']=str(selfAddon.getSetting("home_item_5"))
+        if selfAddon.getSetting("home_item_6_enabled")== "true":
+            d['6']=str(selfAddon.getSetting("home_item_6"))
+        if selfAddon.getSetting("home_item_7_enabled")== "true":
+            d['7']=str(selfAddon.getSetting("home_item_7"))
+        if selfAddon.getSetting("home_item_8_enabled")== "true":
+            d['8']=str(selfAddon.getSetting("home_item_8"))
+        if selfAddon.getSetting("home_item_9_enabled")== "true":
+            d['9']=str(selfAddon.getSetting("home_item_9"))
+        if selfAddon.getSetting("home_item_10_enabled")== "true":
+            d['10']=str(selfAddon.getSetting("home_item_10"))
+        if selfAddon.getSetting("home_item_12_enabled")== "true":
+            d['11']=str(selfAddon.getSetting("home_item_11"))
+        if selfAddon.getSetting("home_item_13_enabled")== "true":
+            d['12']=str(selfAddon.getSetting("home_item_12"))
+        if selfAddon.getSetting("home_item_14_enabled")== "true":
+            d['13']=str(selfAddon.getSetting("home_item_13"))
+        if selfAddon.getSetting("home_item_15_enabled")== "true":
+            d['14']=str(selfAddon.getSetting("home_item_14"))
+        if selfAddon.getSetting("home_item_16_enabled")== "true":
+            d['15']=str(selfAddon.getSetting("home_item_15"))
+        if selfAddon.getSetting("home_item_16_enabled")== "true":
+            d['16']=str(selfAddon.getSetting("home_item_16"))
+        if selfAddon.getSetting("home_item_17_enabled")== "true":
+            d['17']=str(selfAddon.getSetting("home_item_17"))
+        if selfAddon.getSetting("home_item_18_enabled")== "true":
+            d['18']=str(selfAddon.getSetting("home_item_18"))
+        if selfAddon.getSetting("home_item_19_enabled")== "true":
+            d['19']=str(selfAddon.getSetting("home_item_19"))
+        if selfAddon.getSetting("home_item_20_enabled")== "true":
+            d['20']=str(selfAddon.getSetting("home_item_20"))
+
+
+
         for c in sorted(d, key=lambda item: (int(item.partition(' ')[0]))):
-            if d[c]=="Movie25/iWatchonline":
+            if d[c]=="0":
                 if selfAddon.getSetting("switchup") == "false":
                     main.addDirHome('Search','http://www.movie25.so/',420,art+'/search2.png')
                     main.addDirHome("All Fav's",'http://www.movie25.so/',639,art+'/favsu.png')
@@ -115,47 +118,53 @@ def MAIN():
                     main.addDirHome('Latest HD Movies','http://www.iwatchonline.to/main/content_more/movies/?quality=hd&start=0',587,art+'/dvd2+.png')
                     main.addDirHome('Genre','http://www.iwatchonline.to',596,art+'/genre+.png')
                     main.addDirHome('By Year','year',652,art+'/year+.png')
-            if d[c]=="Watch History":
+            elif d[c]=="1":
                 main.addDirHome('Watch History','history',222,art+'/whistory.png')
-            if d[c]=="HD Movies":
+            elif d[c]=="2":
                 main.addDirHome('HD Movies','http://oneclickwatch.org/category/movies/',33,art+'/hd2.png')
-            if d[c]=="3D Movies":
+            elif d[c]=="3":
                 main.addDirHome('3D Movies','3D',223,art+'/3d.png')
-            if d[c]=="International":
+            elif d[c]=="4":
                 main.addDirHome('International','http://www.movie25.so/',36,art+'/intl.png')
-            if d[c]=="TV Latest":
+            elif d[c]=="5":
                 main.addDirHome('TV Latest','http://www.movie25.so/',27,art+'/tv2.png')
-            if d[c]=="Live Section":
+            elif d[c]=="6":
                 main.addDirHome('Live Streams','http://www.movie25.so/',115,art+'/live.png')
-            if d[c]=="Built-in Plugins":
+            elif d[c]=="7":
                 main.addDirHome('Built in Plugins','http://www.movie25.so/',500,art+'/plugins.png')
-            if d[c]=="VIPlaylist":
+            elif d[c]=="8":
                 main.addDirHome('[COLOR=FF67cc33]VIP[/COLOR]laylists','http://www.movie25.so/',234,art+'/moviepl.png')
-            if d[c]=="Sports Section":
+            elif d[c]=="9":
                 main.addDirHome('Sports','http://www.movie25.so/',43,art+'/sportsec2.png')
-            if d[c]=="Adventure":
+            elif d[c]=="10":
                 main.addDirHome('Adventure','http://www.movie25.so/',63,art+'/adv2.png')
-            if d[c]=="Kids Zone":
+            elif d[c]=="11":
                 main.addDirHome('Kids Zone','http://www.movie25.so/',76,art+'/kidzone2.png')
-            if d[c]=="Documentaries":
+            elif d[c]=="12":
                 main.addDirHome('Documentaries','http://www.movie25.so/',85,art+'/docsec2.png')
-            if d[c]=="How to Videos":
-                main.addDirHome("Mash Up How To's",'PLvNKtQkKaqg-PVXvlP7sYcfiEoaC56v3W',205,art+'/howto.png')
-            if d[c]=="FixIt Section":
+            elif d[c]=="13":
+                main.addDirHome("Mash Up How To's",'https://github.com/mash2k3/MashUpFixes/raw/master/HowToVid.xml',264,art+'/howto.png')
+            elif d[c]=="14":
                 main.addDirHome('Fixes','http://www.movie25.so/',784,art+'/fixes.png')
-            if d[c]=="HackerMils Stash":
+            elif d[c]=="15":
                 main.addDirHome('HackerMils Stash','https://github.com/HackerMil/HackerMilsMovieStash/raw/master/Directory/HackerMil_Directory.xml',235,art+'/hackermil.png')
-            if d[c]=="The New Pirate Bay":
+            elif d[c]=="16":
                 main.addDirHome('The New Pirate Bay','https://github.com/mash2k3/MashUpTNPB/raw/master/TNPB_Directory.xml',235,'http://s20.postimg.org/jvq2l8xel/TNPB.png')
-            if d[c]=="More Power":
+            elif d[c]=="17":
                 main.addDirHome('MorePower','https://github.com/mash2k3/MashUpMorePower/raw/master/MorePower_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/morepower.png')
-            if d[c]=="Staael 1982":
+            elif d[c]=="18":
                 main.addDirHome('Staael 1982','https://github.com/mash2k3/Staael1982/raw/master/Staael_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/staael.png')
-            if d[c]=="XML Channel":
+            elif d[c]=="19":
+                main.addDir('My XML Channels','nills',238,art+'/xml.png')
+            elif d[c]=="20":
+                main.addDir('My XML Channels','nills',238,art+'/xml.png')
+            elif d[c]=="21":
+                main.addDir('My XML Channels','nills',238,art+'/xml.png')
+            elif d[c]=="22":
                 main.addDir('My XML Channels','nills',238,art+'/xml.png')
         main.addPlayc('Need Help?','http://www.movie25.so/',100,art+'/xbmchub.png','','','','','')
         main.addPlayc('Hub Maintenance','http://www.movie25.so/',156,art+'/hubmain.png','','','','','')
-        main.addLink('mash2k3@yahoo.com','',art+'/paypalmash.png')
+        main.addPlayc('Click Me!!!','https://github.com/mash2k3/MashupArtwork/raw/master/art/donation.png',244,art+'/paypalmash2.png','','','','','')
         main.addLink('@mashupxbmc','',art+'/twittermash.png')
         main.addPlayc('Addon Settings','http://www.movie25.so/',1999,art+'/ASettings.png','','','','','')
         main.addPlayc('Resolver Settings','http://www.movie25.so/',99,art+'/resset.png','','','','','')
@@ -644,7 +653,14 @@ def FIXDOWN(name,filename,location,path):
     dialog = xbmcgui.Dialog()
     name  = name.split('[COLOR red]')[0]
     dialog.ok("Mash Up", "Thats It All Done", "[COLOR blue]Now "+name+" should be Fixed[/COLOR]")
-        
+    
+def HTVList(murl):
+        link=main.OPENURL(murl)
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<title>([^<]+)</title.+?link>(.+?)</link.+?thumbnail>([^<]+)</thumbnail>').findall(link)
+        for name,url,thumb in match:
+                main.addPlayc(name,url,259,thumb,'','','','','')
+        main.GA("None","How To Videos")        
 ################################################################################ XBMCHUB Repo & Hub Maintenance Installer ##########################################################################################################
 
 
@@ -2358,6 +2374,11 @@ elif mode==262:
 elif mode==263:
     from resources.libs.movies_tv import viplus
     viplus.MLink(name,url,iconimage)
+
+
+elif mode==264:
+    HTVList(url)
+    
 ######################################################################################################
         ######################################################################################
         ######################################################################################
