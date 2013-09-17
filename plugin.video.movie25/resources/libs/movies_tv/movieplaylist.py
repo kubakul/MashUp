@@ -85,7 +85,7 @@ def MList(mname,murl):
                 
                 if '</sublink>' in url:
                         main.addDown4(name+' [COLOR blue]'+vip+'[/COLOR]',url,249,thumb,'',fan,'','','')
-                if '</referer>' in url:
+                elif '</referer>' in url:
                         main.addDown4(name+' [COLOR blue]'+vip+'[/COLOR]',url,259,thumb,'',fan,'','','')
                         
                 else:        
