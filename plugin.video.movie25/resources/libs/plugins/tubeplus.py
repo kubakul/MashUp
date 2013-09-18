@@ -78,11 +78,12 @@ def TV_TOP10(url):
     for tname, url in r:
         r = re.findall(r'\d+/(.+?)/season_(\d+)/episode_(\d+)/', url)
         for name, season, episode in r:
+            if len(season) == 1: season = "0" + season
+            if len(episode) == 1: episode = "0" + episode
             name = name.replace('_', ' ')
-            name = name.strip()+' Season '+season.strip()+' Episode '+episode.strip()+' ('+season.strip()+'x'+episode.strip()+')'
         if ':' in name:
             name = re.findall('(.+?)\:', name)[0]
-            name = name.strip()+' Season '+season.strip()+' Episode '+episode.strip()+' ('+season.strip()+'x'+episode.strip()+')'
+        name = name.strip()+' S'+season+'E'+episode
         main.addDirTE(name.replace('.',''),url,1026,'','','','','','')
         loadedLinks = loadedLinks + 1
         percent = (loadedLinks * 100)/totalLinks
@@ -95,7 +96,6 @@ def TV_TOP10(url):
             
 def LAST_AIRED(url):
     html = main.OPENURL2(url)
-    html = html.decode('ISO-8859-1').encode('utf-8', 'ignore')
     if html == None:
         return
     r = re.findall(r'Last Aired TV Shows/Episodes</div>(.+?)&laquo;Browse all latest TV Episodes&raquo;',html, re.M|re.DOTALL)[0]
@@ -110,11 +110,13 @@ def LAST_AIRED(url):
     for url in r:
         r = re.findall(r'player/\d+/(.+?)/season_(\d+)/episode_(\d+)/.+?/',url)#.replace('_', ' ')
         for name, season, episode in r:
+            if len(season) == 1: season = "0" + season
+            if len(episode) == 1: episode = "0" + episode
             name = name.replace('_', ' ')
-            name = name.strip()+' Season '+season.strip()+' Episode '+episode.strip()+' ('+season.strip()+'x'+episode.strip()+')'
         if ':' in name:
             name = re.findall('(.+?)\:', name)[0]
-            name = name.strip()+' Season '+season.strip()+' Episode '+episode.strip()+' ('+season.strip()+'x'+episode.strip()+')'
+        name = name.strip()+' S'+season+'E'+episode
+        name = main.unescapes(name)
         main.addDirTE(name.replace('.',''),url,1026,'','','','','','')
         loadedLinks = loadedLinks + 1
         percent = (loadedLinks * 100)/totalLinks
@@ -141,11 +143,13 @@ def LATEST_TV(url):
     dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
     for name, url in r:
         r = re.findall(r'(.+?) - Season: (\d+) Episode: (\d+)  -', name)
-        for  name, season, episode in r:
-            name = name.strip()+' Season '+season.strip()+' Episode '+episode.strip()+' ('+season.strip()+'x'+episode.strip()+')'
+        for name, season, episode in r:
+            if len(season) == 1: season = "0" + season
+            if len(episode) == 1: episode = "0" + episode
+            name = name.replace('_', ' ')
         if ':' in name:
             name = re.findall('(.+?)\:', name)[0]
-            name = name.strip()+' Season '+season.strip()+' Episode '+episode.strip()+' ('+season.strip()+'x'+episode.strip()+')'
+        name = name.strip()+' S'+season+'E'+episode
         main.addDirTE(name.replace('.',''),url,1026,'','','','','','')
         loadedLinks = loadedLinks + 1
         percent = (loadedLinks * 100)/totalLinks
@@ -179,14 +183,26 @@ def EPISODES(mname,url,linkback):
     loadedLinks = 0
     remaining_display = 'Media loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
     dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
-    for url, epi in match:
-        epi=main.unescapes(epi)
-        epi = epi.replace('\\','').replace('xc2x92','')
+    season = re.search('Seas(on)?\.? (\d+)',mname,re.I)
+    for url, episode in match:
+        episode = main.unescapes(episode)
+        episode = episode.replace('\\','').replace('xc2x92','')
+        name = mname
+        epi= re.search('Ep(isode)?\.? (\d+)(.*)',episode, re.I)
+        if(epi):
+            e = str(epi.group(2))
+            if(len(e)==1): e = "0" + e
+            if(season):
+                s = season.group(2)
+                if(len(s)==1): s = "0" + s
+                name = re.sub(' ?Seas(on)?\.? (\d+)','',name,re.I)
+                name = name + " " + "S" + s + "E" + e
+                episode = epi.group(3).strip(" -")
+        main.addDirTE(name+' '+"[COLOR red]" + episode + '[/COLOR]',url,1026,'','','','','','')
         loadedLinks = loadedLinks + 1
         percent = (loadedLinks * 100)/totalLinks
         remaining_display = 'Media loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(percent,'[B]Will load instantly from now on[/B]',remaining_display)
-        main.addDirTE(mname+' '+epi,url,1026,'','','','','','')
         if (dialogWait.iscanceled()):
             return False
     dialogWait.close()
@@ -560,19 +576,19 @@ def LINK(mname,murl):
             host=hoster
             hoster = hoster.replace('www.','').replace('.in','').replace('.net','').replace('.com','').replace('.to','').replace('.org','').replace('.ch','').replace('.eu','')
             if int(percentage) in range(0,25):
-                title = '[COLOR blue]'+hoster.upper()+'[/COLOR][COLOR red]           '+status+' '+said+'[/COLOR]'
+                title = '[COLOR blue]'+hoster.upper()+'[/COLOR][COLOR red]  '+status+' '+said+'[/COLOR]'
             if int(percentage) in range(25,50):
-                title = '[COLOR blue]'+hoster.upper()+'           '+status+' '+said+'[/COLOR]'
+                title = '[COLOR blue]'+hoster.upper()+'  '+status+' '+said+'[/COLOR]'
             if int(percentage) in range(50,75):
-                title = '[COLOR blue]'+hoster.upper()+'[/COLOR][COLOR orange]           '+status+' '+said+'[/COLOR]'
+                title = '[COLOR blue]'+hoster.upper()+'[/COLOR][COLOR orange]  '+status+' '+said+'[/COLOR]'
             if int(percentage) in range(75,101):
-                title = '[COLOR blue]'+hoster.upper()+'[/COLOR][COLOR=FF67cc33]          '+status+' '+said+'[/COLOR]'
-            main.addDown2(mname+' '+title,'xoxv'+host+'xoxe'+url+'xoxc',1027,art+'/hosts/'+hoster.lower()+'.png',art+'/hosts/'+hoster.lower()+'.png')    
+                title = '[COLOR blue]'+hoster.upper()+'[/COLOR][COLOR=FF67cc33]  '+status+' '+said+'[/COLOR]'
+            main.addDown2(main.removeColoredText(mname).strip()+' '+title,'xoxv'+host+'xoxe'+url+'xoxc',1027,art+'/hosts/'+hoster.lower()+'.png',art+'/hosts/'+hoster.lower()+'.png')    
     
 def VIDEOLINKS(mname,url):
         ok=True
         hname=mname
-        hname=hname.split('          online')[0]
+        hname=hname.split('  online')[0]
         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Opening Link,3000)")
         r=re.findall('Season(.+?)Episode([^<]+)',mname)
         if r:

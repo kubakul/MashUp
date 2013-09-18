@@ -91,14 +91,14 @@ def LISTWATCHS(murl):
         remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
         for url, name in match:
-            name=re.sub('\((\d{1,2})x(\d{1,3})\)','',name,re.I)
-            episode = re.search('Seas(on)?\.? (\d{1,2}).*?Ep(isode)?\.? (\d{1,3})',name, re.I)
+            name=re.sub('\((\d+)x(\d+)\)','',name,re.I)
+            episode = re.search('Seas(on)?\.? (\d+).*?Ep(isode)?\.? (\d+)',name, re.I)
             if(episode):
                 e = str(episode.group(4))
                 if(len(e)==1): e = "0" + e
                 s = episode.group(2)
                 if(len(s)==1): s = "0" + s
-                name = re.sub('Seas(on)?\.? (\d{1,3}).*?Ep(isode)?\.? (\d{1,3})','',name,re.I)
+                name = re.sub('Seas(on)?\.? (\d+).*?Ep(isode)?\.? (\d+)','',name,re.I)
                 name = name.strip() + " " + "S" + s + "E" + e
             main.addDirTE(name,'http://watchseries.lt'+url,575,'','','','','','')
             loadedLinks = loadedLinks + 1
@@ -137,10 +137,10 @@ def LISTWATCHEPISODE(mname, murl):
         loadedLinks = 0
         remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
-        season = re.search('Seas(on)?\.? (\d{1,3})',main.removeColorTags(mname),re.I)
+        season = re.search('Seas(on)?\.? (\d+)',main.removeColorTags(mname),re.I)
         for url, episode in reversed(match):
             name = mname
-            epi= re.search('Ep(isode)?\.? (\d{1,3})(.*)',episode, re.I)
+            epi= re.search('Ep(isode)?\.? (\d+)(.*)',episode, re.I)
             if(epi):
                 e = str(epi.group(2))
                 if(len(e)==1): e = "0" + e
