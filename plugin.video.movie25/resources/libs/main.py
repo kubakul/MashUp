@@ -94,10 +94,10 @@ def unescapes(text):
             rep = {"%26":"&","&#38;":"&","&#044;": ",","&nbsp;": " ","\n": "","\t": "","\r": "","%5B": "[","%5D": "]","%3a": ":","%3A":":","%2f":"/","%2F":"/","%3f":"?","%3F":"?","%3d":"=","%3D":"=","%2C":",","%2c":",","%3C":"<","%20":" ","%22":'"',"%3D":"=","%3A":":","%2F":"/","%3E":">","%3B":",","%27":"'","%0D":"","%0A":"","%92":"'"}
             for s, r in rep.items():
                 text = text.replace(s, r)
-				
+
             # remove html comments
             text = re.sub(r"<!--.+?-->", "", text)    
-				
+
         except TypeError:
             pass
 
@@ -308,7 +308,7 @@ def GETMETAT(mname,genre,fan,thumb):
 def GETMETAEpiT(mname,thumb,desc):
         mname = removeColoredText(mname)
         originalName=mname
-        if selfAddon.getSetting("meta-view") == "true":
+        if selfAddon.getSetting("meta-view-tv") == "true":
                 mname = mname.replace('New Episode','').replace('Main Event','').replace('New Episodes','')
                 mname = mname.strip()
                 r = re.findall('(.+?)\ss(\d+)e(\d+)\s',mname + " ",re.I)
@@ -1085,13 +1085,13 @@ def addDirTE(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&genre="+urllib.quote_plus(genre)
         ok=True
         infoLabels =GETMETAEpiT(name,iconimage,'')
-        if selfAddon.getSetting("meta-view") == "true":
+        if selfAddon.getSetting("meta-view-tv") == "true":
                 xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
                 if infoLabels['overlay'] == 6:
                     watched_mark = 'Mark as Watched'
                 else:
                     watched_mark = 'Mark as Unwatched'
-        if selfAddon.getSetting("meta-view") != "true":
+        else:
             if fanart == '':
                 fanart=Dir+'fanart.jpg'
             if iconimage=='':
@@ -1106,7 +1106,7 @@ def addDirTE(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         name=name.replace(",",'')
         Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_directory(name, u, section_title='TV', section_addon_title="TV Episode Fav's", sub_section_title='Episodes', img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
             ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='TV', section_addon_title="TV Episode Fav's", sub_section_title='Episodes'))]
-        if selfAddon.getSetting("meta-view") == "true":
+        if selfAddon.getSetting("meta-view-tv") == "true":
                 video_type='episode'
                 cname=infoLabels['title']
                 cname=cname.decode('ascii', 'ignore')
@@ -1133,13 +1133,13 @@ def addPlayTE(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         if re.findall('sceper',url):
             mname=name.split('&')[0]
         infoLabels =GETMETAEpiT(mname,iconimage,plot)
-        if selfAddon.getSetting("meta-view") == "true":
+        if selfAddon.getSetting("meta-view-tv") == "true":
                 xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
                 if infoLabels['overlay'] == 6:
                     watched_mark = 'Mark as Watched'
                 else:
                     watched_mark = 'Mark as Unwatched'
-        if selfAddon.getSetting("meta-view") != "true":
+        else:
             if fanart == '':
                 fanart=Dir+'fanart.jpg'
             if iconimage=='':
@@ -1155,7 +1155,7 @@ def addPlayTE(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         name=name.replace(",",'')
         Commands=[("[B][COLOR blue]Add[/COLOR][/B] to My Fav's",fav.add_video_item(name, u, section_title='TV', section_addon_title="TV Episode Fav's", sub_section_title='Episodes', img=iconimage, fanart=fanart, infolabels={'item_mode':mode, 'item_url':url, 'plot':plot,'duration':dur,'genre':genre,'year':year})),
             ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title='TV', section_addon_title="TV Episode Fav's", sub_section_title='Episodes'))]
-        if selfAddon.getSetting("meta-view") == "true":
+        if selfAddon.getSetting("meta-view-tv") == "true":
                 video_type='episode'
                 cname=infoLabels['title']
                 cname=cname.decode('ascii', 'ignore')
@@ -1191,7 +1191,7 @@ def addDirM(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_RATING )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_GENRE )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_MPAA_RATING )
-        if selfAddon.getSetting("meta-view") != "true":
+        else:
             if fanart == '':
                 fanart=Dir+'fanart.jpg'
             if iconimage=='':
@@ -1242,8 +1242,7 @@ def addPlayM(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_RATING )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_GENRE )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_MPAA_RATING )
-        
-        if selfAddon.getSetting("meta-view") != "true":
+        else:
             if fanart == '':
                 fanart=Dir+'fanart.jpg'
             if iconimage=='':
@@ -1581,8 +1580,7 @@ def addDown3(name,url,mode,iconimage,fanart,id=False):#starplay only
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_RATING )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_GENRE )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_MPAA_RATING )
-                
-        if selfAddon.getSetting("meta-view") != "true":
+        else:
             if fanart == '':
                 fanart=Dir+'fanart.jpg'
             if iconimage=='':
@@ -1610,7 +1608,7 @@ def addDown3(name,url,mode,iconimage,fanart,id=False):#starplay only
         liz=xbmcgui.ListItem(name, iconImage=art+'/vidicon.png', thumbnailImage=infoLabels['cover_url'])
         liz.addContextMenuItems( Commands, replaceItems=True )
         if(id != False):
-        	infoLabels["count"] = id
+            infoLabels["count"] = id
         liz.setInfo( type="Video", infoLabels = infoLabels)
         liz.setProperty('fanart_image', infoLabels['backdrop_url'])
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz)
@@ -1623,17 +1621,7 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         st=""
         sst=""
         sat=""
-        if re.findall('(.+?)\ss(\d+)e(\d+)\s',name,re.I):
-            infoLabels =GETMETAEpiT(name,iconimage,plot)
-            video_type='episode'
-            sea=infoLabels['season']
-            epi=infoLabels['episode']
-            cname=infoLabels['metaName']
-            xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
-            st="TV"
-            sst="Episodes"
-            sat="TV Episode Fav's"
-        elif re.findall('Season(.+?)Episode([^<]+)',name,re.I):
+        if re.findall('(.+?)\ss(\d+)e(\d+)\s',name,re.I) or re.findall('Season(.+?)Episode([^<]+)',name,re.I):
             infoLabels =GETMETAEpiT(name,iconimage,plot)
             video_type='episode'
             sea=infoLabels['season']
@@ -1652,7 +1640,8 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             st="Movies"
             sst=""
             sat="Movie Fav's"
-        if selfAddon.getSetting("meta-view") == "true":
+        if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
+            (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
                 if infoLabels['overlay'] == 6:
                     watched_mark = 'Mark as Watched'
                 else:
@@ -1663,7 +1652,7 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_RATING )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_GENRE )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_MPAA_RATING )
-        if selfAddon.getSetting("meta-view") != "true":
+        else:
             if fanart == '':
                 fanart=Dir+'fanart.jpg'
             if iconimage=='':
@@ -1672,6 +1661,8 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 plot='Sorry description not available'
             xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_UNSORTED )
             xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_LABEL )
+        if(selfAddon.getSetting("meta-view-tv") != "true"):
+            xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
         sysurl = urllib.quote_plus(url)
         sysname= urllib.quote_plus(name)
         type='PLAY'
@@ -1686,10 +1677,10 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title=st, section_addon_title=sat, sub_section_title=sst)),
                   ('Direct Download', 'XBMC.RunPlugin(%s?mode=190&name=%s&url=%s)' % (sys.argv[0], sysname, sysurl)),
                   ('Download with jDownloader', 'XBMC.RunPlugin(%s?mode=776&name=%s&url=%s)' % (sys.argv[0], sysname, url))]
-        if selfAddon.getSetting("meta-view") == "true":
+        if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
+            (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
-                
                 Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
                 Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
                 Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
@@ -1759,7 +1750,7 @@ def addDirIWO(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_VIDEO_RATING )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_GENRE )
                 xbmcplugin.addSortMethod( handle=int( sys.argv[ 1 ] ), sortMethod=xbmcplugin.SORT_METHOD_MPAA_RATING )
-        if selfAddon.getSetting("meta-view") != "true":
+        else:
             if fanart == '':
                 fanart=Dir+'fanart.jpg'
             if iconimage=='':
@@ -1796,13 +1787,7 @@ def addDirIWO(name,url,mode,iconimage,plot,fanart,dur,genre,year):
 def addDLog(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         u=sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)+"&name="+urllib.quote_plus(name)+"&iconimage="+urllib.quote_plus(iconimage)+"&plot="+urllib.quote_plus(plot)+"&fanart="+urllib.quote_plus(fanart)+"&genre="+urllib.quote_plus(genre)
         ok=True
-        if re.findall('(.+?)\ss(\d+)e(\d+)\s',name,re.I):
-            infoLabels =GETMETAEpiT(name,iconimage,plot)
-            video_type='episode'
-            sea=infoLabels['season']
-            epi=infoLabels['episode']
-            cname=infoLabels['metaName']
-        elif re.findall('Season(.+?)Episode([^<]+)',name,re.I):
+        if re.findall('(.+?)\ss(\d+)e(\d+)\s',name,re.I) or re.findall('Season(.+?)Episode([^<]+)',name,re.I):
             infoLabels =GETMETAEpiT(name,iconimage,plot)
             video_type='episode'
             sea=infoLabels['season']
@@ -1813,13 +1798,14 @@ def addDLog(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             video_type='movie'
             tmdbid=infoLabels['tmdb_id']
             cname=infoLabels['metaName']
-        if selfAddon.getSetting("meta-view") == "true":
+        if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
+            (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
                 xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
                 if infoLabels['overlay'] == 6:
                     watched_mark = 'Mark as Watched'
                 else:
                     watched_mark = 'Mark as Unwatched'
-        if selfAddon.getSetting("meta-view") != "true":
+        else:
             if fanart == '':
                 fanart=Dir+'fanart.jpg'
             if iconimage=='':
@@ -1830,8 +1816,8 @@ def addDLog(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         plot=infoLabels['plot']
         img=infoLabels['cover_url']
         Commands=[("[B][COLOR red]Remove[/COLOR][/B]",'XBMC.RunPlugin(%s?mode=243&name=%s&url=%s)'% (sys.argv[0],name,url))]
-        if selfAddon.getSetting("meta-view") == "true":
-                
+        if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
+            (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
                 imdb=infoLabels['imdb_id']
                 Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
                 Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))

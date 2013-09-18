@@ -2,7 +2,8 @@
 <settings>
 
    <category label="General">
-		<setting id="meta-view" type="bool" label="[B]Metadata[/B]" default="true"/>
+		<setting id="meta-view" type="bool" label="[B]Metadata (Movies)[/B]" default="true"/>
+		<setting id="meta-view-tv" type="bool" label="[B]Metadata (TV Shows)[/B]" default="true"/>
 		<setting id="whistory" type="bool" label="[B]Watch History[/B]" default="true"/>
 		<setting id="switchup" type="bool" label="[B]SwitchUp[/B]" default="false"/>
 		<setting id="groupfavs" type="bool" label="[B]Group Favorites[/B]" default="false"/>
