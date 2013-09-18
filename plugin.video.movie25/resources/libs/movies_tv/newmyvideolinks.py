@@ -21,11 +21,11 @@ def LISTSP2(murl):
                 category = "3-d-movies"
         elif murl.startswith('TV'):
                 main.addDir('Search Newmyvideolinks','tvNEW',102,art+'/search.png')
-                subpages = 10
+                subpages = 3
                 category = "tv-shows"
         else:
                 main.addDir('Search Newmyvideolinks','movieNEW',102,art+'/search.png')
-                subpages = 8
+                subpages = 3
                 category = "bluray"
         parts = murl.split('-', 1 );
         try:

@@ -91,8 +91,15 @@ def LISTWATCHS(murl):
         remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
         for url, name in match:
-              
-            name=name.replace('Seas.','Season').replace('Ep.','Episode')
+            name=re.sub('\((\d{1,2})x(\d{1,3})\)','',name,re.I)
+            episode = re.search('Seas(on)?\.? (\d{1,2}).*?Ep(isode)?\.? (\d{1,3})',name, re.I)
+            if(episode):
+                e = str(episode.group(4))
+                if(len(e)==1): e = "0" + e
+                s = episode.group(2)
+                if(len(s)==1): s = "0" + s
+                name = re.sub('Seas(on)?\.? (\d{1,3}).*?Ep(isode)?\.? (\d{1,3})','',name,re.I)
+                name = name.strip() + " " + "S" + s + "E" + e
             main.addDirTE(name,'http://watchseries.lt'+url,575,'','','','','','')
             loadedLinks = loadedLinks + 1
             percent = (loadedLinks * 100)/totalLinks
@@ -117,7 +124,7 @@ def LISTWATCHSEASON(mname, murl):
         thumb=art+'/folder.png'
         match=re.compile('<a class="null" href="(.+?)">(.+?)</a>').findall(link)
         for url, name in reversed(match):
-            main.addDir(mname+'   [COLOR red]'+name+'[/COLOR]','http://watchseries.lt'+url,579,thumb)
+            main.addDir(mname+' [COLOR red]'+name+'[/COLOR]','http://watchseries.lt'+url,579,thumb)
 
 
 def LISTWATCHEPISODE(mname, murl):
@@ -130,9 +137,20 @@ def LISTWATCHEPISODE(mname, murl):
         loadedLinks = 0
         remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
         dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
-        for url, name in reversed(match):
-              
-            main.addDirTE(mname+' [COLOR red]'+name+'[/COLOR]','http://watchseries.lt'+url,575,'','','','','','')
+        season = re.search('Seas(on)?\.? (\d{1,3})',main.removeColorTags(mname),re.I)
+        for url, episode in reversed(match):
+            name = mname
+            epi= re.search('Ep(isode)?\.? (\d{1,3})(.*)',episode, re.I)
+            if(epi):
+                e = str(epi.group(2))
+                if(len(e)==1): e = "0" + e
+                if(season):
+                    s = season.group(2)
+                    if(len(s)==1): s = "0" + s
+                    name = main.removeColoredText(mname).strip()
+                    name = name + " " + "S" + s + "E" + e
+                    episode = epi.group(3).strip()
+            main.addDirTE(name + ' [COLOR red]'+str(episode)+'[/COLOR]','http://watchseries.lt'+url,575,'','','','','','')
             loadedLinks = loadedLinks + 1
             percent = (loadedLinks * 100)/totalLinks
             remaining_display = 'Episodes loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
