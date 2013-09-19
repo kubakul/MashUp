@@ -48,50 +48,15 @@ def AtoZ():
                 main.addDir(i,'http://www.movie25.so/movies/'+i.lower()+'/',1,art+'/'+i.lower()+'.png')
         main.GA("None","Movie25-A-Z")   
 def MAIN():
-        d={}
-        if selfAddon.getSetting("home_item_1_enabled")== "true":
-            d['1']=str(selfAddon.getSetting("home_item_1"))
-        if selfAddon.getSetting("home_item_2_enabled")== "true":
-            d['2']=str(selfAddon.getSetting("home_item_2"))
-        if selfAddon.getSetting("home_item_3_enabled")== "true":
-            d['3']=str(selfAddon.getSetting("home_item_3"))
-        if selfAddon.getSetting("home_item_4_enabled")== "true":
-            d['4']=str(selfAddon.getSetting("home_item_4"))
-        if selfAddon.getSetting("home_item_5_enabled")== "true":
-            d['5']=str(selfAddon.getSetting("home_item_5"))
-        if selfAddon.getSetting("home_item_6_enabled")== "true":
-            d['6']=str(selfAddon.getSetting("home_item_6"))
-        if selfAddon.getSetting("home_item_7_enabled")== "true":
-            d['7']=str(selfAddon.getSetting("home_item_7"))
-        if selfAddon.getSetting("home_item_8_enabled")== "true":
-            d['8']=str(selfAddon.getSetting("home_item_8"))
-        if selfAddon.getSetting("home_item_9_enabled")== "true":
-            d['9']=str(selfAddon.getSetting("home_item_9"))
-        if selfAddon.getSetting("home_item_10_enabled")== "true":
-            d['10']=str(selfAddon.getSetting("home_item_10"))
-        if selfAddon.getSetting("home_item_12_enabled")== "true":
-            d['11']=str(selfAddon.getSetting("home_item_12"))
-        if selfAddon.getSetting("home_item_13_enabled")== "true":
-            d['12']=str(selfAddon.getSetting("home_item_13"))
-        if selfAddon.getSetting("home_item_14_enabled")== "true":
-            d['13']=str(selfAddon.getSetting("home_item_14"))
-        if selfAddon.getSetting("home_item_15_enabled")== "true":
-            d['14']=str(selfAddon.getSetting("home_item_15"))
-        if selfAddon.getSetting("home_item_16_enabled")== "true":
-            d['15']=str(selfAddon.getSetting("home_item_16"))
-        if selfAddon.getSetting("home_item_17_enabled")== "true":
-            d['17']=str(selfAddon.getSetting("home_item_17"))
-        if selfAddon.getSetting("home_item_18_enabled")== "true":
-            d['18']=str(selfAddon.getSetting("home_item_18"))
-        if selfAddon.getSetting("home_item_19_enabled")== "true":
-            d['19']=str(selfAddon.getSetting("home_item_19"))
-        if selfAddon.getSetting("home_item_20_enabled")== "true":
-            d['20']=str(selfAddon.getSetting("home_item_20"))
-
-
-
-        for c in sorted(d, key=lambda item: (int(item.partition(' ')[0]))):
-            if d[c]=="0":
+        d=[]
+        for x in range(23): 
+            d.append(-1);
+            itemid = str(x + 1)
+            if selfAddon.getSetting("home_item_" +itemid+ "_enabled")== "true":
+                d[x]=int(selfAddon.getSetting("home_item_" + itemid))
+        
+        for c in range(len(d)):
+            if d[0]==c:
                 if selfAddon.getSetting("switchup") == "false":
                     main.addDirHome('Search','http://www.movie25.so/',420,art+'/search2.png')
                     main.addDirHome("All Fav's",'http://www.movie25.so/',639,art+'/favsu.png')
@@ -116,49 +81,49 @@ def MAIN():
                     main.addDirHome('Latest HD Movies','http://www.iwatchonline.to/main/content_more/movies/?quality=hd&start=0',587,art+'/dvd2+.png')
                     main.addDirHome('Genre','http://www.iwatchonline.to',596,art+'/genre+.png')
                     main.addDirHome('By Year','year',652,art+'/year+.png')
-            elif d[c]=="1":
+            if d[1]==c:
                 main.addDirHome('Watch History','history',222,art+'/whistory.png')
-            elif d[c]=="2":
+            if d[2]==c:
                 main.addDirHome('HD Movies','http://oneclickwatch.org/category/movies/',33,art+'/hd2.png')
-            elif d[c]=="3":
+            if d[3]==c:
                 main.addDirHome('3D Movies','3D',223,art+'/3d.png')
-            elif d[c]=="4":
+            if d[4]==c:
                 main.addDirHome('International','http://www.movie25.so/',36,art+'/intl.png')
-            elif d[c]=="5":
+            if d[5]==c:
                 main.addDirHome('TV Latest','http://www.movie25.so/',27,art+'/tv2.png')
-            elif d[c]=="6":
+            if d[6]==c:
                 main.addDirHome('Live Streams','http://www.movie25.so/',115,art+'/live.png')
-            elif d[c]=="7":
+            if d[7]==c:
                 main.addDirHome('Built in Plugins','http://www.movie25.so/',500,art+'/plugins.png')
-            elif d[c]=="8":
+            if d[8]==c:
                 main.addDirHome('[COLOR=FF67cc33]VIP[/COLOR]laylists','http://www.movie25.so/',234,art+'/moviepl.png')
-            elif d[c]=="9":
+            if d[9]==c:
                 main.addDirHome('Sports','http://www.movie25.so/',43,art+'/sportsec2.png')
-            elif d[c]=="10":
+            if d[10]==c:
                 main.addDirHome('Adventure','http://www.movie25.so/',63,art+'/adv2.png')
-            elif d[c]=="11":
+            if d[11]==c:
                 main.addDirHome('Kids Zone','http://www.movie25.so/',76,art+'/kidzone2.png')
-            elif d[c]=="12":
+            if d[12]==c:
                 main.addDirHome('Documentaries','http://www.movie25.so/',85,art+'/docsec2.png')
-            elif d[c]=="13":
+            if d[13]==c:
                 main.addDirHome("Mash Up How To's",'https://github.com/mash2k3/MashUpFixes/raw/master/HowToVid.xml',264,art+'/howto.png')
-            elif d[c]=="14":
+            if d[14]==c:
                 main.addDirHome('Fixes','http://www.movie25.so/',784,art+'/fixes.png')
-            elif d[c]=="15":
+            if d[15]==c:
                 main.addDirHome('HackerMils Stash','https://github.com/HackerMil/HackerMilsMovieStash/raw/master/Directory/HackerMil_Directory.xml',235,art+'/hackermil.png')
-            elif d[c]=="16":
+            if d[16]==c:
                 main.addDirHome('The New Pirate Bay','https://github.com/mash2k3/MashUpTNPB/raw/master/TNPB_Directory.xml',235,'http://s20.postimg.org/jvq2l8xel/TNPB.png')
-            elif d[c]=="17":
+            if d[17]==c:
                 main.addDirHome('MorePower','https://github.com/mash2k3/MashUpMorePower/raw/master/MorePower_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/morepower.png')
-            elif d[c]=="18":
+            if d[18]==c:
                 main.addDirHome('Staael 1982','https://github.com/mash2k3/Staael1982/raw/master/Staael_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/staael.png')
-            elif d[c]=="19":
+            if d[19]==c:
                 main.addDirHome('My XML Channels','nills',238,art+'/xml.png')
-            elif d[c]=="20":
+            if d[20]==c:
                 main.addDirHome("K1M05's Streams",'https://github.com/mash2k3/MashUpK1m05/raw/master/k1m05_mashupDirectory.xml',181,art+'/k1m05.png')
-            elif d[c]=="21":
+            if d[21]==c:
                 main.addDirHome('Mash Sports','https://github.com/mash2k3/MashSports/raw/master/Mashsprt.xml',182,art+'/mashsports.png')
-            elif d[c]=="22":
+            if d[22]==c:
                 main.addDirHome('iLive Streams','ilive',119,art+'/ilive.png')
         main.addPlayc('Need Help?','http://www.movie25.so/',100,art+'/xbmchub.png','','','','','')
         main.addPlayc('Hub Maintenance','http://www.movie25.so/',156,art+'/hubmain.png','','','','','')
@@ -166,9 +131,6 @@ def MAIN():
         main.addLink('@mashupxbmc','',art+'/twittermash.png')
         main.addPlayc('Addon Settings','http://www.movie25.so/',1999,art+'/ASettings.png','','','','','')
         main.addPlayc('Resolver Settings','http://www.movie25.so/',99,art+'/resset.png','','','','','')
-        
-
- 
         
 def Announcements():
         #Announcement Notifier from xml file
