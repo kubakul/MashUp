@@ -155,13 +155,13 @@ def MAIN():
             elif d[c]=="18":
                 main.addDirHome('Staael 1982','https://github.com/mash2k3/Staael1982/raw/master/Staael_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/staael.png')
             elif d[c]=="19":
-                main.addDir('My XML Channels','nills',238,art+'/xml.png')
+                main.addDirHome('My XML Channels','nills',238,art+'/xml.png')
             elif d[c]=="20":
-                main.addDir('My XML Channels','nills',238,art+'/xml.png')
+                main.addDirHome("K1M05's Streams",'https://github.com/mash2k3/MashUpK1m05/raw/master/k1m05_mashupDirectory.xml',181,art+'/k1m05.png')
             elif d[c]=="21":
-                main.addDir('My XML Channels','nills',238,art+'/xml.png')
+                main.addDirHome('Mash Sports','https://github.com/mash2k3/MashSports/raw/master/Mashsprt.xml',182,art+'/mashsports.png')
             elif d[c]=="22":
-                main.addDir('My XML Channels','nills',238,art+'/xml.png')
+                main.addDirHome('iLive Streams','ilive',119,art+'/ilive.png')
         main.addPlayc('Need Help?','http://www.movie25.so/',100,art+'/xbmchub.png','','','','','')
         main.addPlayc('Hub Maintenance','http://www.movie25.so/',156,art+'/hubmain.png','','','','','')
         main.addPlayc('Click Me!!!','https://github.com/mash2k3/MashupArtwork/raw/master/art/donation.png',244,art+'/paypalmash2.png','','','','','')

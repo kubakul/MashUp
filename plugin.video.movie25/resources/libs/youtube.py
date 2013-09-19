@@ -43,12 +43,21 @@ def YOUKIDS():
     main.VIEWSB()
 
 def YOUList(mname,durl):
-        murl='http://gdata.youtube.com/feeds/api/users/'+durl+'/uploads?start-index=1&max-results=50'
+        if 'gdata' in durl:
+                murl=durl
+        else:
+                murl='http://gdata.youtube.com/feeds/api/users/'+durl+'/uploads?start-index=1&max-results=50'
         link=main.OPENURL(murl)
         match=re.compile("http\://www.youtube.com/watch\?v\=([^\&]+)\&.+?<media\:descriptio[^>]+>([^<]+)</media\:description>.+?<media\:thumbnail url='([^']+)'.+?<media:title type='plain'>(.+?)/media:title>").findall(link)
         for url,desc,thumb,name in match:
                 name=name.replace('<','')
                 main.addPlayMs(name,url,48,thumb,desc,'','','','')
+        if len(match) >=49:   
+            paginate=re.compile('http://gdata.youtube.com/feeds/api/users/(.+?)/uploads.?start-index=(.+?)&max-results=50').findall(murl)
+            for id, page in paginate:
+                i=int(page)+50
+                purl='http://gdata.youtube.com/feeds/api/users/'+id+'/uploads?start-index='+str(i)+'&max-results=50'
+                main.addDir('[COLOR blue]Next[/COLOR]',purl,47,art+'/next2.png')
         main.GA(mname,"Youtube-List")
 
 def YOULink(mname,url,thumb):
