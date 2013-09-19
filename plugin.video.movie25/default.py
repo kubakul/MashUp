@@ -70,17 +70,15 @@ def MAIN():
         if selfAddon.getSetting("home_item_10_enabled")== "true":
             d['10']=str(selfAddon.getSetting("home_item_10"))
         if selfAddon.getSetting("home_item_12_enabled")== "true":
-            d['11']=str(selfAddon.getSetting("home_item_11"))
+            d['11']=str(selfAddon.getSetting("home_item_12"))
         if selfAddon.getSetting("home_item_13_enabled")== "true":
-            d['12']=str(selfAddon.getSetting("home_item_12"))
+            d['12']=str(selfAddon.getSetting("home_item_13"))
         if selfAddon.getSetting("home_item_14_enabled")== "true":
-            d['13']=str(selfAddon.getSetting("home_item_13"))
+            d['13']=str(selfAddon.getSetting("home_item_14"))
         if selfAddon.getSetting("home_item_15_enabled")== "true":
-            d['14']=str(selfAddon.getSetting("home_item_14"))
+            d['14']=str(selfAddon.getSetting("home_item_15"))
         if selfAddon.getSetting("home_item_16_enabled")== "true":
-            d['15']=str(selfAddon.getSetting("home_item_15"))
-        if selfAddon.getSetting("home_item_16_enabled")== "true":
-            d['16']=str(selfAddon.getSetting("home_item_16"))
+            d['15']=str(selfAddon.getSetting("home_item_16"))
         if selfAddon.getSetting("home_item_17_enabled")== "true":
             d['17']=str(selfAddon.getSetting("home_item_17"))
         if selfAddon.getSetting("home_item_18_enabled")== "true":
