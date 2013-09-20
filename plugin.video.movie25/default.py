@@ -53,7 +53,7 @@ def MAIN():
             d.append(None);
             itemid = str(x + 1)
             if selfAddon.getSetting("home_item_" +itemid+ "_enabled")== "true":
-                d[x]=selfAddon.getSetting("home_item_" + itemid)
+                d[x]=int(selfAddon.getSetting("home_item_" + itemid))
 
         for index, value in sorted(enumerate(d), key=lambda x:x[1]):
             if value==None: continue
