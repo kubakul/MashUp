@@ -50,13 +50,14 @@ def AtoZ():
 def MAIN():
         d=[]
         for x in range(23): 
-            d.append(-1);
+            d.append(None);
             itemid = str(x + 1)
             if selfAddon.getSetting("home_item_" +itemid+ "_enabled")== "true":
-                d[x]=int(selfAddon.getSetting("home_item_" + itemid))
-        
-        for c in range(len(d)):
-            if d[0]==c:
+                d[x]=selfAddon.getSetting("home_item_" + itemid)
+
+        for index, value in sorted(enumerate(d), key=lambda x:x[1]):
+            if value==None: continue
+            if index==0:
                 if selfAddon.getSetting("switchup") == "false":
                     main.addDirHome('Search','http://www.movie25.so/',420,art+'/search2.png')
                     main.addDirHome("All Fav's",'http://www.movie25.so/',639,art+'/favsu.png')
@@ -81,49 +82,49 @@ def MAIN():
                     main.addDirHome('Latest HD Movies','http://www.iwatchonline.to/main/content_more/movies/?quality=hd&start=0',587,art+'/dvd2+.png')
                     main.addDirHome('Genre','http://www.iwatchonline.to',596,art+'/genre+.png')
                     main.addDirHome('By Year','year',652,art+'/year+.png')
-            if d[1]==c:
+            elif index==1:
                 main.addDirHome('Watch History','history',222,art+'/whistory.png')
-            if d[2]==c:
+            elif index==2:
                 main.addDirHome('HD Movies','http://oneclickwatch.org/category/movies/',33,art+'/hd2.png')
-            if d[3]==c:
+            elif index==3:
                 main.addDirHome('3D Movies','3D',223,art+'/3d.png')
-            if d[4]==c:
+            elif index==4:
                 main.addDirHome('International','http://www.movie25.so/',36,art+'/intl.png')
-            if d[5]==c:
+            elif index==5:
                 main.addDirHome('TV Latest','http://www.movie25.so/',27,art+'/tv2.png')
-            if d[6]==c:
+            elif index==6:
                 main.addDirHome('Live Streams','http://www.movie25.so/',115,art+'/live.png')
-            if d[7]==c:
+            elif index==7:
                 main.addDirHome('Built in Plugins','http://www.movie25.so/',500,art+'/plugins.png')
-            if d[8]==c:
+            elif index==8:
                 main.addDirHome('[COLOR=FF67cc33]VIP[/COLOR]laylists','http://www.movie25.so/',234,art+'/moviepl.png')
-            if d[9]==c:
+            elif index==9:
                 main.addDirHome('Sports','http://www.movie25.so/',43,art+'/sportsec2.png')
-            if d[10]==c:
+            elif index==10:
                 main.addDirHome('Adventure','http://www.movie25.so/',63,art+'/adv2.png')
-            if d[11]==c:
+            elif index==11:
                 main.addDirHome('Kids Zone','http://www.movie25.so/',76,art+'/kidzone2.png')
-            if d[12]==c:
+            elif index==12:
                 main.addDirHome('Documentaries','http://www.movie25.so/',85,art+'/docsec2.png')
-            if d[13]==c:
+            elif index==13:
                 main.addDirHome("Mash Up How To's",'https://github.com/mash2k3/MashUpFixes/raw/master/HowToVid.xml',264,art+'/howto.png')
-            if d[14]==c:
+            elif index==14:
                 main.addDirHome('Fixes','http://www.movie25.so/',784,art+'/fixes.png')
-            if d[15]==c:
+            elif index==15:
                 main.addDirHome('HackerMils Stash','https://github.com/HackerMil/HackerMilsMovieStash/raw/master/Directory/HackerMil_Directory.xml',235,art+'/hackermil.png')
-            if d[16]==c:
+            elif index==16:
                 main.addDirHome('The New Pirate Bay','https://github.com/mash2k3/MashUpTNPB/raw/master/TNPB_Directory.xml',235,'http://s20.postimg.org/jvq2l8xel/TNPB.png')
-            if d[17]==c:
+            elif index==17:
                 main.addDirHome('MorePower','https://github.com/mash2k3/MashUpMorePower/raw/master/MorePower_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/morepower.png')
-            if d[18]==c:
+            elif index==18:
                 main.addDirHome('Staael 1982','https://github.com/mash2k3/Staael1982/raw/master/Staael_Directory.xml',235,'https://dl.dropboxusercontent.com/u/35068738/icons/staael.png')
-            if d[19]==c:
+            elif index==19:
                 main.addDirHome('My XML Channels','nills',238,art+'/xml.png')
-            if d[20]==c:
+            elif index==20:
                 main.addDirHome("K1M05's Streams",'https://github.com/mash2k3/MashUpK1m05/raw/master/k1m05_mashupDirectory.xml',181,art+'/k1m05.png')
-            if d[21]==c:
+            elif index==21:
                 main.addDirHome('Mash Sports','https://github.com/mash2k3/MashSports/raw/master/Mashsprt.xml',182,art+'/mashsports.png')
-            if d[22]==c:
+            elif index==22:
                 main.addDirHome('iLive Streams','ilive',119,art+'/ilive.png')
         main.addPlayc('Need Help?','http://www.movie25.so/',100,art+'/xbmchub.png','','','','','')
         main.addPlayc('Hub Maintenance','http://www.movie25.so/',156,art+'/hubmain.png','','','','','')
@@ -391,7 +392,7 @@ def TVAll():
             chlg = os.path.join(dir, 'metadata.txt')
             TextBoxes("[B][COLOR red]Important Announcement![/B][/COLOR]",chlg)
         #main.addDir('Watch-Free Series','TV',501,art+'/wfs/wsf.png')
-        main.addDir('Watchseries.it[COLOR red] DC[/COLOR]','TV',572,art+'/wfs/watchseries.png')
+        main.addDir('Watchseries.lt[COLOR red] DC[/COLOR]','TV',572,art+'/wfs/watchseries.png')
         main.addDir('tubePLUS[COLOR red] DC[/COLOR]','tp+',1020,art+'/tubeplus.png')
         main.addDir('BTV Guide','TV',551,art+'/wfs/btvguide.png')
         main.addDir('Series Gate','TV',601,art+'/wfs/sg.png')
@@ -417,7 +418,7 @@ def HD():
             TextBoxes("[B][COLOR red]Important Announcement![/B][/COLOR]",chlg)
             
         main.addDir('Latest HD Movies (Newmyvideolinks) True HD[COLOR red] DC[/COLOR]','http://newmyvideolinks.com',34,art+'/hd2.png')
-        main.addDir('Latest HD Movies (Dailyfix) True HD','HD',53,art+'/hd2.png')
+        main.addDir('Latest HD Movies (Dailyflix) True HD','HD',53,art+'/hd2.png')
         main.addDir('Latest HD Movies (Starplay/[COLOR=FF67cc33]Noobroom7[/COLOR]) Direct MP4 True HD[COLOR red] DC[/COLOR]','http://noobroom7.com/latest.php',57,art+'/hd2.png')
         main.addDir('Latest HD Movies (Pencurimovie) Direct MP4 True HD','http://www.pencurimovie.com/feeds/posts/default?max-results=1000',215,art+'/hd2.png')
         main.addDir('Latest HD Movies (Oneclickmovies)[COLOR red](Debrid Only)[/COLOR] True HD[COLOR red] DC[/COLOR]','www.scnsrc.me',55,art+'/hd2.png')
