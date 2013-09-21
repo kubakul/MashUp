@@ -588,7 +588,7 @@ def PLAY(name,murl):
         hname=name
         name  = name.split('[COLOR blue]')[0]
         name  = name.split('[COLOR red]')[0]
-        infoLabels = main.GETMETAB(name,'','','')
+        infoLabels = main.GETMETAT(name,'','','')
         link=main.OPENURL(murl)
         print link
         match=re.compile("Javascript:location.?href=.+?\\'(.+?)'").findall(link)
@@ -606,7 +606,7 @@ def PLAY(name,murl):
             xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
             stream_url = main.resolve_url(murl)
 
-            infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
+            infoL={'Title': infoLabels['metaName'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
             # play with bookmark
             player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type=video_type, title=str(infoLabels['title']),season=str(season), episode=str(episode), year=str(infoLabels['year']),img=img,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id=imdb_id)
             #WatchHistory
@@ -625,7 +625,7 @@ def PLAYB(name,murl):
         hname=name
         name  = name.split('[COLOR blue]')[0]
         name  = name.split('[COLOR red]')[0]
-        infoLabels = main.GETMETAB(name,'','','')
+        infoLabels = main.GETMETAT(name,'','','')
         video_type='movie'
         season=''
         episode=''
@@ -638,7 +638,7 @@ def PLAYB(name,murl):
             xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
             stream_url = main.resolve_url(murl)
 
-            infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
+            infoL={'Title': infoLabels['metaName'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
             # play with bookmark
             player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type=video_type, title=str(infoLabels['title']),season=str(season), episode=str(episode), year=str(infoLabels['year']),img=img,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id=imdb_id)
             #WatchHistory

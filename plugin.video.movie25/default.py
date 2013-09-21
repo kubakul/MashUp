@@ -105,7 +105,7 @@ def MAIN():
             elif index==11:
                 main.addDirHome('Kids Zone','http://www.movie25.so/',76,art+'/kidzone2.png')
             elif index==12:
-                main.addDirHome('Documentaries','http://www.movie25.so/',85,art+'/docsec2.png')
+                main.addDirHome('Documentaries','http://www.movie25.so/',85,art+'/docsec1.png')
             elif index==13:
                 main.addDirHome("Mash Up How To's",'https://github.com/mash2k3/MashUpFixes/raw/master/HowToVid.xml',264,art+'/howto.png')
             elif index==14:
@@ -345,14 +345,6 @@ def GlobalFav():
 
     
 def TV():
-        mashup='metadata'
-        runonce=os.path.join(main.datapath,'RunOnce')
-        notified=os.path.join(runonce,str(mashup))
-        if not os.path.exists(notified):
-            open(notified,'w').write('type="%s",'%mashup)
-            dir = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.movie25/resources/message', ''))
-            chlg = os.path.join(dir, 'metadata.txt')
-            TextBoxes("[B][COLOR red]Important Announcement![/B][/COLOR]",chlg)
         main.addDir('Latest Episodes (Newmyvideolinks) True HD[COLOR red] DC[/COLOR]','TV',34,art+'/tvb.png')
         main.addDir('Latest Episodes (Rlsmix)[COLOR red](Debrid Only)[/COLOR] True HD[COLOR red] DC[/COLOR]','TV',61,art+'/tvb.png')
         main.addDir('Latest Episodes (Sceper)[COLOR red](Debrid Only)[/COLOR] True HD','http://sceper.ws/home/category/tv-shows',545,art+'/tvb.png')
@@ -369,29 +361,19 @@ def TV():
 
 
 def ThreeDsec():
-        mashup='metadata'
-        runonce=os.path.join(main.datapath,'RunOnce')
-        notified=os.path.join(runonce,str(mashup))
-        if not os.path.exists(notified):
-            open(notified,'w').write('type="%s",'%mashup)
-            dir = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.movie25/resources/message', ''))
-            chlg = os.path.join(dir, 'metadata.txt')
-            TextBoxes("[B][COLOR red]Important Announcement![/B][/COLOR]",chlg)
         main.addDir('3D Movies (Newmyvideolinks) True HD[COLOR red] DC[/COLOR]','3D',34,art+'/3d.png')
-        main.addDir('3D Movies (TNPB by BigBallzBaby) True HD[COLOR red] DC[/COLOR]','https://github.com/mash2k3/MashUpTNPB/raw/master/3D%20Movies.xml',236,art+'/3d.png')
-        main.addDir('3D Movies (MkvMovies) True HD','http://mkvmovies.gamezonewap.info/search/label/3D',224,art+'/3d.png')
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Directories/3D_Directory.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><mode>(.+?)</mode>').findall(link)
+        for name,url,thumb,mode in match:
+                if re.findall('http',thumb):
+                    thumbs=thumb
+                else:
+                    thumbs=art+'/'+thumb+'.png'
+                main.addDir(name,url,int(mode),thumbs)
 
 
 def TVAll():
-        mashup='metadata'
-        runonce=os.path.join(main.datapath,'RunOnce')
-        notified=os.path.join(runonce,str(mashup))
-        if not os.path.exists(notified):
-            open(notified,'w').write('type="%s",'%mashup)
-            dir = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.movie25/resources/message', ''))
-            chlg = os.path.join(dir, 'metadata.txt')
-            TextBoxes("[B][COLOR red]Important Announcement![/B][/COLOR]",chlg)
-        #main.addDir('Watch-Free Series','TV',501,art+'/wfs/wsf.png')
         main.addDir('Watchseries.lt[COLOR red] DC[/COLOR]','TV',572,art+'/wfs/watchseries.png')
         main.addDir('tubePLUS[COLOR red] DC[/COLOR]','tp+',1020,art+'/tubeplus.png')
         main.addDir('BTV Guide','TV',551,art+'/wfs/btvguide.png')
@@ -408,39 +390,38 @@ def TVAll():
         main.GA("None","Plugin")
 
 def HD():
-        mashup='metadata'
-        runonce=os.path.join(main.datapath,'RunOnce')
-        notified=os.path.join(runonce,str(mashup))
-        if not os.path.exists(notified):
-            open(notified,'w').write('type="%s",'%mashup)
-            dir = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.movie25/resources/message', ''))
-            chlg = os.path.join(dir, 'metadata.txt')
-            TextBoxes("[B][COLOR red]Important Announcement![/B][/COLOR]",chlg)
-            
         main.addDir('Latest HD Movies (Newmyvideolinks) True HD[COLOR red] DC[/COLOR]','http://newmyvideolinks.com',34,art+'/hd2.png')
         main.addDir('Latest HD Movies (Dailyflix) True HD','HD',53,art+'/hd2.png')
         main.addDir('Latest HD Movies (Starplay/[COLOR=FF67cc33]Noobroom7[/COLOR]) Direct MP4 True HD[COLOR red] DC[/COLOR]','http://noobroom7.com/latest.php',57,art+'/hd2.png')
-        main.addDir('Latest HD Movies (Pencurimovie) Direct MP4 True HD','http://www.pencurimovie.com/feeds/posts/default?max-results=1000',215,art+'/hd2.png')
         main.addDir('Latest HD Movies (Oneclickmovies)[COLOR red](Debrid Only)[/COLOR] True HD[COLOR red] DC[/COLOR]','www.scnsrc.me',55,art+'/hd2.png')
         main.addDir('Latest HD Movies (Sceper)[COLOR red](Debrid Only)[/COLOR] True HD','http://sceper.ws/category/movies/movies-bluray-rip',541,art+'/hd2.png')
         main.addDir('Latest HD Movies (Oneclickwatch)','http://oneclickwatch.org/category/movies/',25,art+'/hd2.png')
-        #main.addLink('[COLOR red]Back Up Sources[/COLOR]','','')
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Directories/HD_Directory.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><mode>(.+?)</mode>').findall(link)
+        for name,url,thumb,mode in match:
+                if re.findall('http',thumb):
+                    thumbs=thumb
+                else:
+                    thumbs=art+'/'+thumb+'.png'
+                main.addDir(name,url,int(mode),thumbs)
         main.GA("None","HD")
 def INT():
-        mashup='metadata'
-        runonce=os.path.join(main.datapath,'RunOnce')
-        notified=os.path.join(runonce,str(mashup))
-        if not os.path.exists(notified):
-            open(notified,'w').write('type="%s",'%mashup)
-            dir = xbmc.translatePath(os.path.join('special://home/addons/plugin.video.movie25/resources/message', ''))
-            chlg = os.path.join(dir, 'metadata.txt')
-            TextBoxes("[B][COLOR red]Important Announcement![/B][/COLOR]",chlg)
         main.addDir('Latest Indian Subtitled Movies (einthusan)','http://www.einthusan.com',37,art+'/intl.png')
         main.addDir('Latest Hindi/Tamil/Telugu & more (sominaltv)','TV',619,art+'/intl.png')
         main.addDir('Latest Indian Movies (Movie1k)','movin',30,art+'/intl.png')
         main.addDir('Latest Indian Dubbed Movies (Movie1k)','movindub',30,art+'/intl.png')
         main.addDir('Latest Spanish Dubbed & Subtitled(ESP) Movies (cinevip)','http://www.cinevip.org/',66,art+'/intl.png')
         main.addDir("XcTech's Bollywood Playlist",'PLvNKtQkKaqg8IPssr3WG4-YkOEAe8TQ0j',205,art+'/intl.png')
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Directories/INT_Directory.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><mode>(.+?)</mode>').findall(link)
+        for name,url,thumb,mode in match:
+                if re.findall('http',thumb):
+                    thumbs=thumb
+                else:
+                    thumbs=art+'/'+thumb+'.png'
+                main.addDir(name,url,int(mode),thumbs)
         main.GA("None","INT")
 
 def SPORTS():
@@ -469,12 +450,30 @@ def MMA():
         main.addDir('UFC','ufc',59,art+'/ufc.png')
         main.addDir('Bellator','BellatorMMA',47,art+'/bellator.png')
         main.addDir('MMA Fighting.com','http://www.mmafighting.com/videos',113,art+'/mmafig.png')
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Directories/MMA_Directory.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><mode>(.+?)</mode>').findall(link)
+        for name,url,thumb,mode in match:
+                if re.findall('http',thumb):
+                    thumbs=thumb
+                else:
+                    thumbs=art+'/'+thumb+'.png'
+                main.addDir(name,url,int(mode),thumbs)
 
 def WorkoutMenu():
         main.addDir('Fitness Blender[COLOR red](Full Workouts)[/COLOR]','fb',198,art+'/fitnessblender.png')
         main.addDir('Insanity','http://watchseries.lt/serie/INSANITY_-_The_Asylum',578,art+'/insanity.png')
         main.addDir('P90X','http://watchseries.lt/serie/p90x',578,art+'/p90x.png')
         main.addDir('Body Building[COLOR red](Instructional Only)[/COLOR]','bb',195,art+'/bodybuilding.png')
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Directories/Workout_Directory.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><mode>(.+?)</mode>').findall(link)
+        for name,url,thumb,mode in match:
+                if re.findall('http',thumb):
+                    thumbs=thumb
+                else:
+                    thumbs=art+'/'+thumb+'.png'
+                main.addDir(name,url,int(mode),thumbs)
         
 
 def UFC():
@@ -499,6 +498,15 @@ def KIDZone(murl):
         main.addDir('National Geographic Kids','ngk',71,art+'/ngk.png')
         main.addDir('WB Kids','wbk',77,art+'/wb.png')
         main.addDir('Youtube Kids','wbk',84,art+'/youkids.png')
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Directories/Kids_Directory.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><mode>(.+?)</mode>').findall(link)
+        for name,url,thumb,mode in match:
+                if re.findall('http',thumb):
+                    thumbs=thumb
+                else:
+                    thumbs=art+'/'+thumb+'.png'
+                main.addDir(name,url,int(mode),thumbs)
         main.GA("None","KidZone")
         main.VIEWSB()
     
@@ -562,6 +570,15 @@ def DOCS():
         main.addDir('Documentary Wire','doc1',226,art+'/docwire.png')
         main.addDir('Top Documentary Films','doc2',86,art+'/topdoc.png')
         main.addDir('Documentary Log','doc3',86,art+'/doclog.png')
+        link=main.OPENURL('https://github.com/mash2k3/MashUpNotifications/raw/master/Directories/Documentary_Directory.xml')
+        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
+        match=re.compile('<name>(.+?)</name><link>(.+?)</link><thumbnail>(.+?)</thumbnail><mode>(.+?)</mode>').findall(link)
+        for name,url,thumb,mode in match:
+                if re.findall('http',thumb):
+                    thumbs=thumb
+                else:
+                    thumbs=art+'/'+thumb+'.png'
+                main.addDir(name,url,int(mode),thumbs)
         main.addDir('Documentaries (Movie25)','http://www.movie25.so/movies/documentary/',1,art+'/doc.png')
         main.GA("None","Documentary")
 
@@ -2108,18 +2125,6 @@ elif mode == 213 or mode == 214:
 
 
 
-elif mode==215:
-    from resources.libs.movies_tv import pencurimovie
-    print ""+url
-    pencurimovie.LIST(url)
-
-
-elif mode==216:
-    from resources.libs.movies_tv import pencurimovie
-    print ""+url
-    pencurimovie.LINK(name,url,iconimage)
-
-
 elif mode==217:
     from resources.libs.sports import golfchannel
     golfchannel.MAIN()
@@ -2153,16 +2158,6 @@ elif mode==222:
 elif mode==223:
         print ""+url
         ThreeDsec()
-
-elif mode==224:
-    from resources.libs.movies_tv import mkvmovies
-    print ""+url
-    mkvmovies.LIST(url)
-
-elif mode==225:
-    from resources.libs.movies_tv import mkvmovies
-    print ""+url
-    mkvmovies.LINK(name,url,iconimage)
 
 
 elif mode==226:
