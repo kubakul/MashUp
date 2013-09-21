@@ -569,7 +569,8 @@ def LINK(mname,murl):
         if 'http://www.tubeplus.me/' not in murl:
             murl=BASE_URL+murl
         html = main.OPENURL(murl)
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         r = re.compile(r'class="(o.+?)">.+?javascript:show\(\'(.+?)\'\,\'.+?\'\,\s\'(.+?)\'\)\;.+?<b>(.+?)said work',re.M|re.DOTALL).findall(html)
         for status, url, hoster, said in r:
             percentage = said.replace('%','')

@@ -63,7 +63,8 @@ def LISTTV4(durl):
 
 def LINKTV4(mname,url):
         ok=True
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         match=re.compile('"(.+?)"').findall(url)
         for url in match:
                 hname=re.compile("http.+?//(.+?)/.+?").findall(url)

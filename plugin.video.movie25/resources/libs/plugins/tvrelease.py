@@ -122,7 +122,8 @@ def INDEX(url):
 def LISTHOSTERS(name,url):
     html = GETHTML(url)
     if html == None: return
-    main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+    if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
     r = re.findall(r'class="td_cols"><a target=\'_blank\'.+?href=\'(.+?)\'>',html, re.M|re.DOTALL)
     try:
         t = re.findall(r'rel="nofollow">((?!.*\.rar).*)</a>', html, re.I)

@@ -227,7 +227,8 @@ def SEARCHWS(murl):
 def LISTHOST(name,murl):
         link=main.OPENURL(murl)
         link=link.replace('\r','').replace('\n','').replace('\t','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         putlocker=re.compile('<span>putlocker.com</span></td><td> <a target=".+?" href="(.+?)"').findall(link)
         if len(putlocker) > 0:
             for url in putlocker:

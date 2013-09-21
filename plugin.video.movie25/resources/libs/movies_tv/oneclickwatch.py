@@ -14,7 +14,6 @@ wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 
 def LISTSP(murl):
-        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,10000)")
         urllist=main.OPENURL('http://oneclickwatch.org/category/movies/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/2/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/3/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/4/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/5/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/6/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/7/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/8/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/9/')+main.OPENURL('http://oneclickwatch.org/category/movies/page/10/')
         if urllist:
                 urllist=main.unescapes(urllist)

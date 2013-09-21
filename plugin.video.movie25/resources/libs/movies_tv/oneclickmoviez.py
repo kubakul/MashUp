@@ -13,7 +13,6 @@ art = main.art
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 def LISTSP4(murl):
-        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,7000)")
         urllist=main.OPENURL('http://oneclickmoviez.com/category/bluray/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/2/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/3/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/4/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/5/')
         if urllist:
                 match=re.compile('href="(.+?)" rel="bookmark" title=".+?">(.+?)</a></h2>\n</div>\n<div class="cover">\n<div class="entry">\n\t\t\t\t\t<p style="text-align: center;"><img class="alignnone" title="poster" src="(.+?)" ').findall(urllist)
@@ -47,7 +46,8 @@ def LINKSP4(mname,murl):
         link=main.OPENURL(murl)
         ok=True
         link= link.replace('href="http://oneclickmoviez.com/dws/MEGA','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         match=re.compile('<a href="(.+?)" target="_blank">(.+?)</a>.+?</p>').findall(link)
         for url, host in match:
                 thumb=host.lower()

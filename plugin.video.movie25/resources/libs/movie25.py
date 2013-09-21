@@ -425,7 +425,8 @@ def SOCKLINKS(name,url):
 def NOWLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         nowvideo=re.compile('<li class="link_name">nowvideo</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in nowvideo:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/nowvideo.png',art+'/hosts/nowvideo.png')
@@ -433,70 +434,80 @@ def NOWLINKS(name,url):
 def OELINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         oeupload=re.compile('<li class="link_name">oeupload</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in oeupload:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/180upload.png',art+'/hosts/180upload.png')
 def FNLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         filenuke=re.compile('<li class="link_name">filenuke</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in filenuke:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/filenuke.png',art+'/hosts/filenuke.png')
 def FLALINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         flashx=re.compile('<li class="link_name">flashx</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in flashx:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/flashx.png',art+'/hosts/flashx.png')
 def VIDLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         vidbux=re.compile('<li class="link_name">vidbux</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in vidbux:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/vidbux.png',art+'/hosts/vidbux.png')
 def NOVLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         novamov=re.compile('<li class="link_name">novamov</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in novamov:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/novamov.png',art+'/hosts/novamov.png')
 def UPLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         uploadc=re.compile('<li class="link_name">uploadc</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in uploadc:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/uploadc.png',art+'/hosts/uploadc.png')
 def XVLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         xvidstage=re.compile('<li class="link_name">xvidstage</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in xvidstage:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/xvidstage.png',art+'/hosts/xvidstage.png')
 def ZOOLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         zooupload=re.compile('<li class="link_name">zooupload</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in zooupload:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/zooupload.png',art+'/hosts/zooupload.png')
 def ZALINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         zalaa=re.compile('<li class="link_name">zalaa</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in zalaa:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/zalaa.png',art+'/hosts/zalaa.png')
 def VIDXLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         vidxden=re.compile('<li class="link_name">vidxden</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in vidxden:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/vidxden.png',art+'/hosts/vidxden.png')
@@ -504,7 +515,8 @@ def VIDXLINKS(name,url):
 def PLAYEDLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         played=re.compile('<li class="link_name">played</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in played:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/played.png',art+'/hosts/played.png')
@@ -512,70 +524,80 @@ def PLAYEDLINKS(name,url):
 def MOVSHLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         moveshare=re.compile('<li class="link_name">moveshare</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in moveshare:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/moveshare.png',art+'/hosts/moveshare.png')
 def DIVXSLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         divxstage=re.compile('<li class="link_name">divxstage</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in divxstage:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/divxstage.png',art+'/hosts/divxstage.png')
 def SSIXLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         sharesix=re.compile('<li class="link_name">sharesix</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in sharesix:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/sharesix.png',art+'/hosts/sharesix.png')
 def GORLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         gorillavid=re.compile('<li class="link_name">gorillavid</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in gorillavid:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/gorillavid.png',art+'/hosts/gorillavid.png')
 def MOVPLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         movpod=re.compile('<li class="link_name">movpod</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in movpod:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/movpod.png',art+'/hosts/movpod.png')
 def DACLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         daclips=re.compile('<li class="link_name">daclips</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in daclips:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/daclips.png',art+'/hosts/daclips.png')
 def VWEEDLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         videoweed=re.compile('<li class="link_name">videoweed</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in videoweed:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/Videoweed.png',art+'/hosts/Videoweed.png')
 def MOVDLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         movdivx=re.compile('<li class="link_name">movdivx</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in movdivx:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/movdivx.png',art+'/hosts/movdivx.png')
 def MOVRLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         movreel=re.compile('<li class="link_name">movreel</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in movreel:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/movreel.png',art+'/hosts/movreel.png')
 def BUPLOADSLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         billionuploads=re.compile('<li class="link_name">billionuploads</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in billionuploads:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/billionuploads.png',art+'/hosts/billionuploads.png')

@@ -14,7 +14,6 @@ art = main.art
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 def LISTSP2(murl):
-        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,20000)")
         if murl.startswith('3D'):
                 main.addDir('Search Newmyvideolinks','movieNEW',102,art+'/search.png')
                 subpages = 2
@@ -79,7 +78,6 @@ def LISTSP2(murl):
                     main.addDir('Next Page ' + str(page/subpages+2),murl + "-" + str(page/subpages+1),34,art+'/next2.png')
  
         dialogWait.close()
-        main.CloseAllDialogs()
         del dialogWait
         main.GA("HD-3D-HDTV","Newmyvideolinks")
         main.VIEWS()
@@ -227,7 +225,8 @@ def SEARCHNEW(mname,murl):
 def LINKSP2(mname,url):
         link=main.OPENURL(url)
         link=main.unescapes(link)
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         match0=re.compile('<h4>(.+?)</h4>(.+?)</ul>').findall(link)
         for mname, links in reversed(match0):
             match=re.compile('<li><a href="h(.+?)">(.+?)</a></li>').findall(links)

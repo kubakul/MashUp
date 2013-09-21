@@ -205,36 +205,6 @@ def VIEWSB2():
                         return
 ################################################################################ Movies Metahandler ##########################################################################################################
 
-def GETMETAB(mname,genre,year,thumb):
-        if selfAddon.getSetting("meta-view") == "true":
-                mname  = mname.split('[COLOR blue]')[0]
-                mname  = mname.split('[COLOR red]')[0]
-                print "master "+mname
-                try:
-                    name=mname.split('(')[0]
-                    mname=mname.split(')')[0]
-                    year=mname.split('(')[1]
-                    
-                except:
-                    name=mname
-                    year=''
-                
-                meta = grab.get_meta('movie',name,None,None,year,overlay=6)# first is Type/movie or tvshow, name of show,tvdb id,imdb id,string of year,unwatched = 6/watched  = 7
-                print "Movie mode: %s"%name
-                infoLabels = {'rating': meta['rating'],'duration': meta['duration'],'genre': meta['genre'],'mpaa':"rated %s"%meta['mpaa'],
-                  'plot': meta['plot'],'title': meta['title'],'writer': meta['writer'],'cover_url': meta['cover_url'],'overlay':meta['overlay'],
-                  'director': meta['director'],'cast': meta['cast'],'backdrop_url': meta['backdrop_url'],'tmdb_id': meta['tmdb_id'],'year': meta['year'], 'imdb_id' : meta['imdb_id']}
-                if infoLabels['genre']=='':
-                        infoLabels['genre']=genre
-                if infoLabels['cover_url']=='':
-                        infoLabels['cover_url']=thumb
-        else:
-                if thumb=='':
-                    thumb=art+'vidicon.png'
-                fan=Dir+'fanart.jpg'
-                infoLabels = {'title': mname,'cover_url': thumb,'backdrop_url': fan,'season': '','episode': '','year': year,'plot': '','genre': genre,'imdb_id': ''}
-        return infoLabels
-
 def formatCast(cast):
         roles = "\n\n"
         for role in cast:
