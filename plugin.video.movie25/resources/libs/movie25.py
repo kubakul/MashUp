@@ -26,7 +26,7 @@ def LISTMOVIES(murl):
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
         for url,thumb,name,genre,views,votes,rating in match:
                 votes=votes.replace('(','')
-                name=name.replace('-','').replace('&','').replace('acute;','')
+                name=name.replace('-','').replace('&','').replace('acute;','').strip()
                 main.addInfo(name+'[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'/5.00[/COLOR]',MainUrl+url,3,thumb,genre,'')
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks
@@ -70,7 +70,7 @@ def UFCMOVIE25():
                 remaining_display = 'Movies loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
                 dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
                 for url,thumb,name,genre,views,votes,rating in match:
-                        name=name.replace('-','').replace('&','').replace('acute;','')
+                        name=name.replace('-','').replace('&','').replace('acute;','').strip()
                         furl= 'http://movie25.com/'+url
                         main.addInfo(name+'('+year+')[COLOR blue] Views: '+views+'[/COLOR] [COLOR red]Votes: '+votes+'[/COLOR] [COLOR green]Rating: '+rating+'/5.00[/COLOR]',furl,3,thumb,genre,'')
                         loadedLinks = loadedLinks + 1

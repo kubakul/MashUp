@@ -264,6 +264,7 @@ def LINKSP2B(mname,murl):
                 stream_url = main.resolve_url(murl)
                 
                 infoL={'Title': infoLabels['title'], 'Plot': infoLabels['plot'], 'Genre': infoLabels['genre']}
+                if not video_type is 'episode': infoL['originalTitle']=main.removeColoredText(infoLabels['metaName']) 
                 # play with bookmark
                 player = playbackengine.PlayWithoutQueueSupport(resolved_url=stream_url, addon_id=addon_id, video_type=video_type, title=infoLabels['title'],season=season, episode=episode, year=str(infoLabels['year']),img=img,infolabels=infoL, watchedCallbackwithParams=main.WatchedCallbackwithParams,imdb_id=imdb_id)
                 #WatchHistory
