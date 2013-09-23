@@ -18,7 +18,7 @@ except Exception, e:
     
 #Mash Up - by Mash2k3 2012.
 #jpushed
-
+elogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/bigx.png')
 Mainurl ='http://www.movie25.so/movies/'
 addon_id = 'plugin.video.movie25'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -266,10 +266,10 @@ def CheckForAutoUpdate():
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,3000)")
                 else:
                     print "auto update - update install failed ("+str(gitver)+")"
-                    xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+elogo+")")
+                    xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000)")
             else:
                 print "auto update - cannot find downloaded update ("+str(gitver)+")"
-                xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+elogo+")")
+                xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000)")
         else:
             print "auto update - Mashup is up-to-date ("+str(locver)+")"
         return
