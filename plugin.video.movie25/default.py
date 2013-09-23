@@ -9,6 +9,7 @@ try:
     from metahandler import metahandlers
     import datetime,time
     from resources.libs import main
+    import threading
 except Exception, e:
     elogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/bigx.png')
     xbmc.executebuiltin("XBMC.Notification([COLOR=FF67cc33]Mash Up Error[/COLOR],[COLOR red]Failed To Import Needed Modules Check Log For Details[/COLOR],7000,"+elogo+")")
@@ -268,6 +269,9 @@ def CheckForAutoUpdate():
                     selfAddon.setSetting("localver",str(gitver))
                     print "auto update - update install successful ("+str(gitver)+")"
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,3000)")
+                    dialog = xbmcgui.Dialog()
+                    if dialog.yesno("MashUp has successfully updated", "Do you want to restart Mash up (recommended)"):
+                        xbmc.executebuiltin("XBMC.RunAddon("+addon_id+")")
                 else:
                     print "auto update - update install failed ("+str(gitver)+")"
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
@@ -1177,13 +1181,13 @@ print "Name: "+str(name)
 print "Thumb: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
-        CheckForAutoUpdate()
+        threading.Thread(target=CheckForAutoUpdate).start()
         print ""
-        Notify()
+        threading.Thread(target=Notify).start()
         MAIN()
         #CheckForUpdate()
         #main.CheckVersion()#Checks If Plugin Version is up to date
-        Announcements()
+        threading.Thread(target=Announcements).start()
         main.VIEWSB()        
        
 elif mode==1:
