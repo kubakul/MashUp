@@ -34,13 +34,12 @@ wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 
 ################################################################################ Directories ##########################################################################################################
-updatepath=os.path.join(main.datapath,'Update')
+UpdatePath=os.path.join(main.datapath,'Update')
 try:
-    os.makedirs(updatepath)
+    os.makedirs(UpdatePath)
 except:
     pass
-UpdateFile=os.path.join(updatepath,'updatetracker')
-
+UpdateFile=os.path.join(UpdatePath,'updatetracker')
 
 def AtoZ():
         main.addDir('0-9','http://www.movie25.so/movies/0-9/',1,art+'/09.png')
@@ -234,6 +233,46 @@ def CheckForUpdate():
                                 open(UpdateFile,'w').write('date="%s"'%(date))
                                 
                 return
+def CheckForAutoUpdate():
+        from resources.libs import autoupdate
+        try:
+            print "auto update - started"
+            html=main.OPENURL('https://github.com/mash2k3/MashUp?files=1', mobile=True)
+        except: html=''
+        m = re.search("View (\d+) commit",html,re.I)
+        if m: gitver = int(m.group(1))
+        else: gitver = 0
+        try: locver = int(selfAddon.getSetting("localver"))
+        except: locver = 0
+        if locver < gitver:
+            UpdateUrl = 'https://github.com/mash2k3/MashUp/archive/master.zip'
+            UpdateLocalName= 'mashup.zip'
+            UpdateDirName = 'MashUp-master'
+            UpdateLocalFile = xbmc.translatePath(os.path.join(UpdatePath, UpdateLocalName))
+            
+            print "auto update - new update available ("+str(gitver)+")"
+            xbmc.executebuiltin("XBMC.Notification(MashUp Update,New Update detected,3000)")
+            
+            try:os.remove(UpdateLocalFile)
+            except:pass
+            try: urllib.urlretrieve(UpdateUrl,UpdateLocalFile)
+            except Exception, e: pass
+            if os.path.isfile(UpdateLocalFile):
+                extractFolder = xbmc.translatePath('special://home/addons')
+                pluginsrc =  xbmc.translatePath(os.path.join(extractFolder,UpdateDirName))
+                if autoupdate.unzipAndMove(UpdateLocalFile,extractFolder,pluginsrc):
+                    selfAddon.setSetting("localver",str(gitver))
+                    print "auto update - update install successful ("+str(gitver)+")"
+                    xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,3000)")
+                else:
+                    print "auto update - update install failed ("+str(gitver)+")"
+                    xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+elogo+")")
+            else:
+                print "auto update - cannot find downloaded update ("+str(gitver)+")"
+                xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+elogo+")")
+        else:
+            print "auto update - Mashup is up-to-date ("+str(locver)+")"
+        return
 def Notify():
         mashup=137
         runonce=os.path.join(main.datapath,'RunOnce')
@@ -1134,11 +1173,12 @@ print "Name: "+str(name)
 print "Thumb: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
+        CheckForAutoUpdate()
         print ""
         Notify()
         MAIN()
-        CheckForUpdate()
-        main.CheckVersion()#Checks If Plugin Version is up to date
+        #CheckForUpdate()
+        #main.CheckVersion()#Checks If Plugin Version is up to date
         Announcements()
         main.VIEWSB()        
        
