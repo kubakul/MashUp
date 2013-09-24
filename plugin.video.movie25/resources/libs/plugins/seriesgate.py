@@ -25,20 +25,18 @@ def MAINSG():
         #main.addDir('Year','http://watch-freeseries.mu/',505,art+'/wfs/year.png')
         #main.addDir('Genre','http://watch-freeseries.mu/',502,art+'/wfs/genre.png')
 def HOMESG():
-        url='http://seriesgate.tv/'
+        url='http://seriesgate.tv/home1/'
         link=main.OPENURL(url)
 
         main.addLink('[COLOR red]Knee Slapping Comedies[/COLOR]','','')
-        match=re.compile('<a href = "(.+?)" target=".+?" style=".+?"><img src="(.+?)"  height=".+?" width=".+?" alt="(.+?)"  />').findall(link)
-        
+        match=re.compile('<a href = "(.+?)".+?<img src="(.+?)"  height=".+?" width=".+?" alt="(.+?)"  />').findall(link)
         for url,thumb,name in match[0:5]:
             main.addDirT(name,url,604,thumb,'','','','','')
         main.addLink('[COLOR red]Turmoil and Tears: Drama[/COLOR]','','')
-        match=re.compile('<a href = "(.+?)" target=".+?" style=".+?"><img src="(.+?)"  height=".+?" width=".+?" alt="(.+?)"  />').findall(link)
         for url,thumb,name in match[5:10]:
             main.addDirT(name,url,604,thumb,'','','','','')
         main.addLink('[COLOR red]Rumbling and Tumbling Action[/COLOR]','','')
-        match=re.compile('"wrapper_home"><a target=".+?" href = "(.+?)" style=".+?"><img src="(.+?)"  height=".+?" width=".+?" alt="(.+?)" />').findall(link)
+        match=re.compile('<a  href = "(.+?)".+?<img src="(.+?)"  height=".+?" width=".+?" alt="(.+?)" />').findall(link)                 
         for url,thumb,name in match:
             main.addDirT(name,url,604,thumb,'','','','','')
 
@@ -83,8 +81,8 @@ def LISTSeasonSG(mname,murl,thumb):
     link=main.OPENURL(murl)
     match=re.compile('<div class="season_page">\n\t\t\t\t\t\t<a href="(.+?)" >(.+?)</a>').findall(link)
     for url, seaname in match:
-        durl = murl+url
-        main.addDir(mname+' '+seaname,durl,605,str(thumb))
+        
+        main.addDir(mname+' '+seaname,url,605,str(thumb))
         main.GA("SeriesGate","Sea-list")
 def LISTEpilistSG(mname,murl):
     link=main.OPENURL(murl)

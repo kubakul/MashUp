@@ -40,7 +40,6 @@ try:
     os.makedirs(UpdatePath)
 except:
     pass
-UpdateFile=os.path.join(UpdatePath,'updatetracker')
 
 def AtoZ():
         main.addDir('0-9','http://www.movie25.so/movies/0-9/',1,art+'/09.png')
@@ -205,6 +204,7 @@ def Announcements():
                                 youtube.YOULink('Mash',video,'')
                         if old != ' ':
                                 notified=os.path.join(runonce,str(old))
+                                print notified
                                 if  os.path.exists(notified):
                                         os.remove(notified)
                 else:
@@ -213,74 +213,52 @@ def Announcements():
         else:
             print 'Github Link Down'
 
-def CheckForUpdate():
-        try:
-                link2=main.OPENURL('https://github.com/mash2k3/MashUpFixes/raw/master/AutoUpdate.xml')
-        except:
-                link2='nill'
-        link2=link2.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        match=re.compile('<date>(.+?)</date>').findall(link2)
-        if len(match)>0:
-                date=match[0]
-                date=date.replace('/','')
-                if not os.path.exists(UpdateFile):
-                    open(UpdateFile,'w').write('date="%s"'%(date))
-                else:
-                    update=re.compile('date="(.+?)"').findall(open(UpdateFile,'r').read())
-                    oldDate=update[0]
-                    if int(date)>int(oldDate):
-                        dialog = xbmcgui.Dialog()
-                        ret = dialog.yesno('Mash Up Update', 'There is a new fix update available.','Will you like to update now?', 'It is recommended that you update.','No', 'Yes')
-                        if ret==True:
-                                AutoFIXES()
-                                open(UpdateFile,'w').write('date="%s"'%(date))
-                        else:
-                                open(UpdateFile,'w').write('date="%s"'%(date))
-                                
-                return
+
 def CheckForAutoUpdate():
         from resources.libs import autoupdate
-        try:
-            print "auto update - started"
-            html=main.OPENURL('https://github.com/mash2k3/MashUp?files=1', mobile=True)
-        except: html=''
-        m = re.search("View (\d+) commit",html,re.I)
-        if m: gitver = int(m.group(1))
-        else: gitver = 0
-        try: locver = int(selfAddon.getSetting("localver"))
-        except: locver = 0
-        if locver < gitver:
-            UpdateUrl = 'https://github.com/mash2k3/MashUp/archive/master.zip'
-            UpdateLocalName= 'mashup.zip'
-            UpdateDirName = 'MashUp-master'
-            UpdateLocalFile = xbmc.translatePath(os.path.join(UpdatePath, UpdateLocalName))
+        verCheck=main.CheckVersion()#Checks If Plugin Version is up to date
+        if verCheck == True:
+            try:
+                print "Mashup auto update - started"
+                html=main.OPENURL('https://github.com/mash2k3/MashUp?files=1', mobile=True)
+            except: html=''
+            m = re.search("View (\d+) commit",html,re.I)
+            if m: gitver = int(m.group(1))
+            else: gitver = 0
+            try: locver = int(selfAddon.getSetting("localver"))
+            except: locver = 0
+            if locver < gitver:
+                UpdateUrl = 'https://github.com/mash2k3/MashUp/archive/master.zip'
+                UpdateLocalName= 'mashup.zip'
+                UpdateDirName = 'MashUp-master'
+                UpdateLocalFile = xbmc.translatePath(os.path.join(UpdatePath, UpdateLocalName))
             
-            print "auto update - new update available ("+str(gitver)+")"
-            xbmc.executebuiltin("XBMC.Notification(MashUp Update,New Update detected,3000)")
+                print "auto update - new update available ("+str(gitver)+")"
+                xbmc.executebuiltin("XBMC.Notification(MashUp Update,New Update detected,3000,"+main.slogo+")")
             
-            try:os.remove(UpdateLocalFile)
-            except:pass
-            try: urllib.urlretrieve(UpdateUrl,UpdateLocalFile)
-            except Exception, e: pass
-            if os.path.isfile(UpdateLocalFile):
-                extractFolder = xbmc.translatePath('special://home/addons')
-                pluginsrc =  xbmc.translatePath(os.path.join(extractFolder,UpdateDirName))
-                if autoupdate.unzipAndMove(UpdateLocalFile,extractFolder,pluginsrc):
-                    selfAddon.setSetting("localver",str(gitver))
-                    print "auto update - update install successful ("+str(gitver)+")"
-                    xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,3000)")
-                    #dialog = xbmcgui.Dialog()
-                    #if dialog.yesno("MashUp has successfully updated", "Do you want to restart Mash up (recommended)"):
-                    xbmc.executebuiltin("XBMC.Container.Refresh")
+                try:os.remove(UpdateLocalFile)
+                except:pass
+                try: urllib.urlretrieve(UpdateUrl,UpdateLocalFile)
+                except Exception, e: pass
+                if os.path.isfile(UpdateLocalFile):
+                    extractFolder = xbmc.translatePath('special://home/addons')
+                    pluginsrc =  xbmc.translatePath(os.path.join(extractFolder,UpdateDirName))
+                    if autoupdate.unzipAndMove(UpdateLocalFile,extractFolder,pluginsrc):
+                        selfAddon.setSetting("localver",str(gitver))
+                        print "Mashup auto update - update install successful ("+str(gitver)+")"
+                        xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,5000,"+main.slogo+")")
+                        #dialog = xbmcgui.Dialog()
+                        #if dialog.yesno("MashUp has successfully updated", "Do you want to restart Mash up (recommended)"):
+                        xbmc.executebuiltin("XBMC.Container.Refresh")
+                    else:
+                        print "Mashup auto update - update install failed ("+str(gitver)+")"
+                        xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
                 else:
-                    print "auto update - update install failed ("+str(gitver)+")"
+                    print "Mashup auto update - cannot find downloaded update ("+str(gitver)+")"
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
             else:
-                print "auto update - cannot find downloaded update ("+str(gitver)+")"
-                xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
-        else:
-            print "auto update - Mashup is up-to-date ("+str(locver)+")"
-        return
+                print "Mashup auto update - Mashup is up-to-date ("+str(locver)+")"
+            return
 def Notify():
         mashup=137
         runonce=os.path.join(main.datapath,'RunOnce')
@@ -298,38 +276,7 @@ def Notify():
             notified=os.path.join(runonce,str(mashup))
             if  os.path.exists(notified):
                 os.remove(notified)
-        files = 135
-        while files > 122:
-            delold=os.path.join(main.datapath,str(files))
-            if  os.path.exists(delold):
-                    os.remove(delold)
-                    files=files-1
-            else:
-                files=files-1
-        delold=os.path.join(main.datapath,'mess2')
-        if  os.path.exists(delold):
-                    os.remove(delold)
-        delold=os.path.join(main.datapath,'mess1')
-        if  os.path.exists(delold):
-                    os.remove(delold)
-        delold=os.path.join(main.datapath,'live1')
-        if  os.path.exists(delold):
-                    os.remove(delold)
-        delold=os.path.join(main.datapath,'live2')
-        if  os.path.exists(delold):
-                    os.remove(delold)
-        delold=os.path.join(main.datapath,'metadata')
-        if  os.path.exists(delold):
-                    os.remove(delold)
-        delold=os.path.join(main.datapath,'country2')
-        if  os.path.exists(delold):
-                    os.remove(delold)
-        delold=os.path.join(main.datapath,'country1')
-        if  os.path.exists(delold):
-                    os.remove(delold)
-        delold=os.path.join(main.datapath,'500')
-        if  os.path.exists(delold):
-                    os.remove(delold)
+
         
         
 def GENRE(url):
@@ -1182,11 +1129,8 @@ print "Thumb: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
         threading.Thread(target=CheckForAutoUpdate).start()
-        print ""
         threading.Thread(target=Notify).start()
         MAIN()
-        #CheckForUpdate()
-        #main.CheckVersion()#Checks If Plugin Version is up to date
         threading.Thread(target=Announcements).start()
         main.VIEWSB()        
        

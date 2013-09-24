@@ -47,8 +47,8 @@ sys.path.append( os.path.join( selfAddon.getAddonInfo('path'), 'resources', 'lib
 ################################################################################ Common Calls ##########################################################################################################
 
 art = 'https://github.com/mash2k3/MashupArtwork/raw/master/art'
-error_logo = art+'/bigx.png'
 elogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/bigx.png')
+slogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/smallicon.png')
 
 def OPENURL(url, mobile = False):
     UserAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
@@ -140,11 +140,15 @@ def CheckVersion():
         if VERSION != str(match[0]):
                 dialog = xbmcgui.Dialog()
                 ok=dialog.ok('[B]New Update Available![/B]', "Your version of Mash Up is outdated." ,'The current available version is '+str(match[0]),'To update goto addons under system settings')
+                print 'Mash Up v'+VERSION+' is Outdated'
+                return False
         else:
-            print 'Mash Up is Up to Date'
+            print 'Mash Up v'+VERSION+' is Up to Date'
+            return True
     
     else:
         print 'BitBucket Link Down'
+        return False
 
 ################################################################################ AutoView ##########################################################################################################
 

@@ -161,6 +161,7 @@ def refererResolver(url):
                 else:
                     stream_url=url
         return stream_url
+
 def resolve_videto(url,referer):
     user_agent='Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
     from resources.libs import jsunpack
@@ -204,34 +205,17 @@ def resolve_videto(url,referer):
 def resolve_mightyupload(url,referer):
     from resources.libs import jsunpack
     try:
-        html1 = net().http_GET(url).content
+        html = net().http_GET(url).content
         addon.log_error('Mash Up: Resolve MightyUpload - Requesting GET URL: '+url)
-        r = re.findall(r'\"hidden\" name=\"?(.+?)\" value=\"?(.+?)\"', html1, re.I)
+        r = re.findall(r'name="(.+?)" value="?(.+?)"', html, re.I|re.M)
         post_data = {}
         for name, value in r:
             post_data[name] = value
         post_data['referer'] = referer
         headers={'Referer':referer}
-        html = net().http_POST(url, post_data,headers).content
-        r = re.findall(r'id=\'flvplayer\'\>\<\/span\>.+?javascript\'\>(eval\(function\(p\,a\,c\,k\,e\,d\).+?)\<\/script\>', html, re.DOTALL)
-        if r:
-            unpacked = jsunpack.unpack(r[0])
-            unpacked=unpacked.replace('\\','')
-            x = re.findall("'file','(.+?)'",unpacked)
-        else:
-            
-            link = re.findall(r'<IFRAME SRC="(.+?)".+?></IFRAME>', html1, re.I)[0]
-            html = net().http_POST(link, post_data).content
-            r = re.findall(r'''id=\"player_code"><script type='.+?javascript\'\>(eval\(function\(p\,a\,c\,k\,e\,d\).+?)\<\/script\>''', html, re.DOTALL)
-            if r:
-                unpacked = jsunpack.unpack(r[0])
-                unpacked=unpacked.replace('\\','')
-                x = re.findall('<embed id="np_vid"type="video/divx"src="(.+?)"',unpacked)
-            else:
-                addon.log_error('Mash Up: Resolve MightyUpload - File Was Removed')
-                addon.show_small_popup('[B][COLOR green]Mash Up: MightyUpload Resolver[/COLOR][/B]','No Such File Or The File Has Been Removed',
-                                   5000, elogo)
-        return x[0]
+        html = net().http_POST(url, post_data).content
+        r = re.findall(r'<a href=\"(.+?)(?=\">Download the file</a>)', html)
+        return r[0]
     except Exception, e:
         print 'Mash Up: Resolve MightyUpload Error - '+str(e)
         addon.show_small_popup('[B][COLOR green]Mash Up: MightyUpload Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',

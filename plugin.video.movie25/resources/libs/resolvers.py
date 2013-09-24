@@ -658,33 +658,21 @@ def resolve_lemupload(url):
 def resolve_mightyupload(url):
     from resources.libs import jsunpack
     try:
-        html1 = net().http_GET(url).content
+        html = net().http_GET(url).content
         addon.log_error('Mash Up: Resolve MightyUpload - Requesting GET URL: '+url)
-        r = re.findall(r'\"hidden\" name=\"?(.+?)\" value=\"?(.+?)\"', html1, re.I)
-        post_data = {}
-        for name, value in r:
-            post_data[name] = value
-        post_data['referer'] = url
-        html = net().http_POST(url, post_data).content
-        r = re.findall(r'id=\'flvplayer\'\>\<\/span\>.+?javascript\'\>(eval\(function\(p\,a\,c\,k\,e\,d\).+?)\<\/script\>', html, re.DOTALL)
+        r = re.findall(r'name="(.+?)" value="?(.+?)"', html, re.I|re.M)
         if r:
-            unpacked = jsunpack.unpack(r[0])
-            unpacked=unpacked.replace('\\','')
-            x = re.findall("'file','(.+?)'",unpacked)
+            post_data = {}
+            for name, value in r:
+                post_data[name] = value
+            post_data['referer'] = url
+            html = net().http_POST(url, post_data).content
+            r = re.findall(r'<a href=\"(.+?)(?=\">Download the file</a>)', html)
+            return r[0]
         else:
-            
-            link = re.findall(r'<IFRAME SRC="(.+?)".+?></IFRAME>', html1, re.I)[0]
-            html = net().http_POST(link, post_data).content
-            r = re.findall(r'''id=\"player_code"><script type='.+?javascript\'\>(eval\(function\(p\,a\,c\,k\,e\,d\).+?)\<\/script\>''', html, re.DOTALL)
-            if r:
-                unpacked = jsunpack.unpack(r[0])
-                unpacked=unpacked.replace('\\','')
-                x = re.findall('<embed id="np_vid"type="video/divx"src="(.+?)"',unpacked)
-            else:
-                addon.log_error('Mash Up: Resolve MightyUpload - File Was Removed')
-                addon.show_small_popup('[B][COLOR green]Mash Up: MightyUpload Resolver[/COLOR][/B]','No Such File Or The File Has Been Removed',
-                                   5000, elogo)
-        return x[0]
+            print '***** MightyUpload - File not found'
+            xbmc.executebuiltin("XBMC.Notification(File Not Found,MightyUpload,2000,"+elogo+")")
+            return False
     except Exception, e:
         print 'Mash Up: Resolve MightyUpload Error - '+str(e)
         addon.show_small_popup('[B][COLOR green]Mash Up: MightyUpload Resolver[/COLOR][/B]','Error, Check XBMC.log for Details',
