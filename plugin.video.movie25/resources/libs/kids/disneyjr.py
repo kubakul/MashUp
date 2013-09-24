@@ -85,6 +85,8 @@ def DISJRLink(mname,murl,thumb):
         ok=True
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
+        if 'http' not in murl:
+                murl='http://disneyjunior.com'+murl
         link=main.OPENURL(murl)
         stream_url = 'rtmp://videodolimgfs.fplive.net/videodolimg'
         video = re.compile('{"bitrate":.+?,"format":"mp4","url":"mp4:(.+?)","id".+?}').findall(link)
