@@ -269,9 +269,9 @@ def CheckForAutoUpdate():
                     selfAddon.setSetting("localver",str(gitver))
                     print "auto update - update install successful ("+str(gitver)+")"
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,3000)")
-                    dialog = xbmcgui.Dialog()
-                    if dialog.yesno("MashUp has successfully updated", "Do you want to restart Mash up (recommended)"):
-                        xbmc.executebuiltin("XBMC.Container.Refresh")
+                    #dialog = xbmcgui.Dialog()
+                    #if dialog.yesno("MashUp has successfully updated", "Do you want to restart Mash up (recommended)"):
+                    xbmc.executebuiltin("XBMC.Container.Refresh")
                 else:
                     print "auto update - update install failed ("+str(gitver)+")"
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
