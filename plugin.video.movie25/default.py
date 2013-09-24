@@ -19,7 +19,9 @@ except Exception, e:
     
 #Mash Up - by Mash2k3 2012.
 #jpushed
-
+#################### Set Environment ######################
+ENV = "Dev"  # "Prod" or "Dev"
+############################################################
 Mainurl ='http://www.movie25.so/movies/'
 addon_id = 'plugin.video.movie25'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -215,22 +217,25 @@ def Announcements():
 
 
 def CheckForAutoUpdate():
+        GitHubRepo    = 'MashUp'
+        GitHubUser    = 'mash2k3'
+        GitHubBranch  = 'master'
         from resources.libs import autoupdate
         verCheck=main.CheckVersion()#Checks If Plugin Version is up to date
         if verCheck == True:
             try:
                 print "Mashup auto update - started"
-                html=main.OPENURL('https://github.com/mash2k3/MashUp?files=1', mobile=True)
+                html=main.OPENURL('https://github.com/'+GitHubUser+'/'+GitHubRepo+'?files=1', mobile=True)
             except: html=''
             m = re.search("View (\d+) commit",html,re.I)
             if m: gitver = int(m.group(1))
             else: gitver = 0
-            try: locver = int(selfAddon.getSetting("localver"))
+            try: locver = int(selfAddon.getSetting("updatever"))
             except: locver = 0
             if locver < gitver:
-                UpdateUrl = 'https://github.com/mash2k3/MashUp/archive/master.zip'
-                UpdateLocalName= 'mashup.zip'
-                UpdateDirName = 'MashUp-master'
+                UpdateUrl = 'https://github.com/'+GitHubUser+'/'+GitHubRepo+'/archive/'+GitHubBranch+'.zip'
+                UpdateLocalName= GitHubRepo+'.zip'
+                UpdateDirName = GitHubRepo+'-'+GitHubBranch
                 UpdateLocalFile = xbmc.translatePath(os.path.join(UpdatePath, UpdateLocalName))
             
                 print "auto update - new update available ("+str(gitver)+")"
@@ -244,11 +249,9 @@ def CheckForAutoUpdate():
                     extractFolder = xbmc.translatePath('special://home/addons')
                     pluginsrc =  xbmc.translatePath(os.path.join(extractFolder,UpdateDirName))
                     if autoupdate.unzipAndMove(UpdateLocalFile,extractFolder,pluginsrc):
-                        selfAddon.setSetting("localver",str(gitver))
+                        selfAddon.setSetting("updatever",str(gitver))
                         print "Mashup auto update - update install successful ("+str(gitver)+")"
                         xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,5000,"+main.slogo+")")
-                        #dialog = xbmcgui.Dialog()
-                        #if dialog.yesno("MashUp has successfully updated", "Do you want to restart Mash up (recommended)"):
                         xbmc.executebuiltin("XBMC.Container.Refresh")
                     else:
                         print "Mashup auto update - update install failed ("+str(gitver)+")"
@@ -259,6 +262,52 @@ def CheckForAutoUpdate():
             else:
                 print "Mashup auto update - Mashup is up-to-date ("+str(locver)+")"
             return
+        
+def CheckForAutoUpdateDev():
+        GitHubRepo    = 'MashUp'
+        GitHubUser    = 'mash2k3'
+        GitHubBranch  = 'master'
+        from resources.libs import autoupdate
+        try:
+            print "Mashup auto update - started"
+            html=main.OPENURL('https://github.com/'+GitHubUser+'/'+GitHubRepo+'?files=1', mobile=True)
+        except: html=''
+        m = re.search("View (\d+) commit",html,re.I)
+        if m: gitver = int(m.group(1))
+        else: gitver = 0
+        try: locver = int(selfAddon.getSetting("localver"))
+        except: locver = 0
+        if locver < gitver:
+            UpdateUrl = 'https://github.com/'+GitHubUser+'/'+GitHubRepo+'/archive/'+GitHubBranch+'.zip'
+            UpdateLocalName= GitHubRepo+'.zip'
+            UpdateDirName = GitHubRepo+'-'+GitHubBranch
+            UpdateLocalFile = xbmc.translatePath(os.path.join(UpdatePath, UpdateLocalName))
+        
+            print "auto update - new update available ("+str(gitver)+")"
+            xbmc.executebuiltin("XBMC.Notification(MashUp Update,New Update detected,3000,"+main.slogo+")")
+        
+            try:os.remove(UpdateLocalFile)
+            except:pass
+            try: urllib.urlretrieve(UpdateUrl,UpdateLocalFile)
+            except Exception, e: pass
+            if os.path.isfile(UpdateLocalFile):
+                extractFolder = xbmc.translatePath('special://home/addons')
+                pluginsrc =  xbmc.translatePath(os.path.join(extractFolder,UpdateDirName))
+                if autoupdate.unzipAndMove(UpdateLocalFile,extractFolder,pluginsrc):
+                    selfAddon.setSetting("localver",str(gitver))
+                    print "Mashup auto update - update install successful ("+str(gitver)+")"
+                    xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,5000,"+main.slogo+")")
+                    xbmc.executebuiltin("XBMC.Container.Refresh")
+                else:
+                    print "Mashup auto update - update install failed ("+str(gitver)+")"
+                    xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
+            else:
+                print "Mashup auto update - cannot find downloaded update ("+str(gitver)+")"
+                xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
+        else:
+            print "Mashup auto update - Mashup is up-to-date ("+str(locver)+")"
+        return
+    
 def Notify():
         mashup=137
         runonce=os.path.join(main.datapath,'RunOnce')
@@ -1128,7 +1177,10 @@ print "Name: "+str(name)
 print "Thumb: "+str(iconimage)
 
 if mode==None or url==None or len(url)<1:
-        threading.Thread(target=CheckForAutoUpdate).start()
+        if ENV is 'Prod':
+            threading.Thread(target=CheckForAutoUpdate).start()
+        else:
+            threading.Thread(target=CheckForAutoUpdateDev).start()
         threading.Thread(target=Notify).start()
         MAIN()
         threading.Thread(target=Announcements).start()
