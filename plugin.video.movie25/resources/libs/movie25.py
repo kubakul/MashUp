@@ -399,7 +399,8 @@ def VIDEOLINKS(name,url):
 def PUTLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         putlocker=re.compile('<li class="link_name">putlocker</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in putlocker:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/putlocker.png',art+'/hosts/putlocker.png')
@@ -412,7 +413,8 @@ def PUTLINKS(name,url):
 def SOCKLINKS(name,url):
         link=main.OPENURL(url)
         link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','').replace('\\','')
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         sockshare=re.compile('<li class="link_name">sockshare</li>.+?<li class=".+?"><span><a href="(.+?)" target=".+?">').findall(link)
         for url in sockshare:
                 main.addDown(name,MainUrl+url,5,art+'/hosts/sockshare.png',art+'/hosts/sockshare.png')

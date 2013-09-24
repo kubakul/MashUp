@@ -428,7 +428,8 @@ def iWatchLINK(mname,url):
         movie_content=movie_content.replace('\'','')  
         from universal import _common as univ_common
         link2 = univ_common.str_conv(addon.decode(movie_content))
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         match=re.compile('<a href="(.+?)".+?<img.+?> (.+?)</a>.+?<td>.+?<td>.+?<td>(.+?)</td>', re.DOTALL).findall(link2)
         
         
