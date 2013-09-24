@@ -271,7 +271,7 @@ def CheckForAutoUpdate():
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,3000)")
                     dialog = xbmcgui.Dialog()
                     if dialog.yesno("MashUp has successfully updated", "Do you want to restart Mash up (recommended)"):
-                        xbmc.executebuiltin("XBMC.RunAddon("+addon_id+")")
+                        xbmc.executebuiltin("XBMC.Container.Refresh")
                 else:
                     print "auto update - update install failed ("+str(gitver)+")"
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
