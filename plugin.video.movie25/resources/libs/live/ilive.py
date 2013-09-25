@@ -16,9 +16,14 @@ wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 
 def iLive():
+        
+        main.addDir('All','all',120,art+'/ilive.png')
+        main.addDir('All [English]','allenglish',120,art+'/ilive.png')
         main.addDir('General','general',120,art+'/ilive.png')
         main.addDir('Entertainment','entertainment',120,art+'/ilive.png')
+        main.addDir('Entertainment [English]','entertainmentenglish',120,art+'/ilive.png')
         main.addDir('Sports','sports',120,art+'/ilive.png')
+        main.addDir('Sports [English]','sportsenglish',120,art+'/ilive.png')
         main.addDir('News','news',120,art+'/ilive.png')
         main.addDir('Music','music',120,art+'/ilive.png')
         main.addDir('Animation','animation',120,art+'/ilive.png')
@@ -55,6 +60,26 @@ def iLiveList(murl):
                 urllist=['http://www.ilive.to/channels/Animation']
             except:
                 urllist=['http://www.ilive.to/channels/Animation']
+        if murl=='all':
+            try:
+                urllist=['http://www.ilive.to/channels','http://www.ilive.to/channels?p=2','http://www.ilive.to/channels?p=3','http://www.ilive.to/channels?p=4','http://www.ilive.to/channels?p=5','http://www.ilive.to/channels?p=6','http://www.ilive.to/channels?p=7','http://www.ilive.to/channels?p=8','http://www.ilive.to/channels?p=9','http://www.ilive.to/channels?p=10','http://www.ilive.to/channels?p=11','http://www.ilive.to/channels?p=12','http://www.ilive.to/channels?p=13','http://www.ilive.to/channels?p=14','http://www.ilive.to/channels?p=15','http://www.ilive.to/channels?p=16']
+            except:
+                urllist=['http://www.ilive.to/channels','http://www.ilive.to/channels?p=2','http://www.ilive.to/channels?p=3','http://www.ilive.to/channels?p=4','http://www.ilive.to/channels?p=5','http://www.ilive.to/channels?p=6','http://www.ilive.to/channels?p=7','http://www.ilive.to/channels?p=8','http://www.ilive.to/channels?p=9','http://www.ilive.to/channels?p=10']
+        if murl=='allenglish':
+            try:
+                urllist=['http://www.ilive.to/channels?lang=1','http://www.ilive.to/channels?lang=1&p=2','http://www.ilive.to/channels?lang=1&p=3','http://www.ilive.to/channels?lang=1&p=4','http://www.ilive.to/channels?lang=1&p=5','http://www.ilive.to/channels?lang=1&p=6','http://www.ilive.to/channels?lang=1&p=7','http://www.ilive.to/channels?lang=1&p=8','http://www.ilive.to/channels?lang=1&p=9','http://www.ilive.to/channels?lang=1&p=10']
+            except:
+                urllist=['http://www.ilive.to/channels?lang=1','http://www.ilive.to/channels?lang=1&p=2','http://www.ilive.to/channels?lang=1&p=3','http://www.ilive.to/channels?lang=1&p=4','http://www.ilive.to/channels?lang=1&p=5','http://www.ilive.to/channels?lang=1&p=6','http://www.ilive.to/channels?lang=1&p=7','http://www.ilive.to/channels?lang=1&p=8','http://www.ilive.to/channels?lang=1&p=9']
+        if murl=='entertainmentenglish':
+            try:
+                urllist=['http://www.ilive.to/channels/Entertainment?lang=1','http://www.ilive.to/channels/Entertainment?lang=1&p=2','http://www.ilive.to/channels/Entertainment?lang=1&p=3','http://www.ilive.to/channels/Entertainment?lang=1&p=4','http://www.ilive.to/channels/Entertainment?lang=1&p=5','http://www.ilive.to/channels/Entertainment?lang=1&p=6']
+            except:
+                urllist=['http://www.ilive.to/channels/Entertainment?lang=1','http://www.ilive.to/channels/Entertainment?lang=1&p=2','http://www.ilive.to/channels/Entertainment?lang=1&p=3','http://www.ilive.to/channels/Entertainment?lang=1&p=4','http://www.ilive.to/channels/Entertainment?lang=1&p=5']
+        if murl=='sportsenglish':
+            try:
+                urllist=['http://www.ilive.to/channels/Sport?lang=1','http://www.ilive.to/channels/Sport?lang=1&p=2']
+            except:
+                urllist=['http://www.ilive.to/channels/Sport?lang=1']
         dialogWait = xbmcgui.DialogProgress()
         ret = dialogWait.create('Please wait until channel list is loaded.')
         totalLinks = len(urllist)

@@ -206,7 +206,6 @@ def Announcements():
                                 youtube.YOULink('Mash',video,'')
                         if old != ' ':
                                 notified=os.path.join(runonce,str(old))
-                                print notified
                                 if  os.path.exists(notified):
                                         os.remove(notified)
                 else:
@@ -250,15 +249,18 @@ def CheckForAutoUpdate():
                     pluginsrc =  xbmc.translatePath(os.path.join(extractFolder,UpdateDirName))
                     if autoupdate.unzipAndMove(UpdateLocalFile,extractFolder,pluginsrc):
                         selfAddon.setSetting("updatever",str(gitver))
+                        main.GA("Autoupdate",str(gitver)+" Successful")
                         print "Mashup auto update - update install successful ("+str(gitver)+")"
                         xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,5000,"+main.slogo+")")
                         xbmc.executebuiltin("XBMC.Container.Refresh")
                     else:
                         print "Mashup auto update - update install failed ("+str(gitver)+")"
                         xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
+                        main.GA("Autoupdate",str(gitver)+" Failed")
                 else:
                     print "Mashup auto update - cannot find downloaded update ("+str(gitver)+")"
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
+                    main.GA("Autoupdate",str(gitver)+" Repo problem")
             else:
                 print "Mashup auto update - Mashup is up-to-date ("+str(locver)+")"
             return

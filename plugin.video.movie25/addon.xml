@@ -19,7 +19,8 @@
     </extension>
     <extension point="xbmc.addon.metadata">
     <summary lang="en">Browse Movie25 and many more sources</summary>
-    <description lang="en">Browse and play a wide selection of movies from the sites like Movie25.com, watchfreeseres, seriesgate, rlsmx, newmyvidelinks etc.</description>
+    <description lang="en">Browse and play a wide selection of movies from the sites like Movie25.com, watchfreeseres, seriesgate, rlsmx, newmyvidelinks etc.
+	[COLOR red]Mash Up plugin is coded with Google Analytics which can be disabled in addon settings under General Tab.[/COLOR]</description>
     <platform>all</platform>
   </extension>
 </addon>

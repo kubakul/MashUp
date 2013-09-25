@@ -575,7 +575,7 @@ def LINK(mname,murl):
         for status, url, hoster, said in r:
             percentage = said.replace('%','')
             host=hoster
-            hoster = hoster.replace('www.','').replace('.in','').replace('.net','').replace('.com','').replace('.to','').replace('.org','').replace('.ch','').replace('.eu','')
+            hoster = hoster.replace('www.','').replace('.in','').replace('.net','').replace('.com','').replace('.to','').replace('.org','').replace('.ch','').replace('.eu','').replace('.ES','')
             if int(percentage) in range(0,25):
                 title = '[COLOR blue]'+hoster.upper()+'[/COLOR][COLOR red]  '+status+' '+said+'[/COLOR]'
             if int(percentage) in range(25,50):

@@ -77,7 +77,7 @@ def XmlIns():
 
 def addPlaylist(folder):
     dialog = xbmcgui.Dialog()
-    ret = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Select a MashUp XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Select a MashUp XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter a MashUp XML URL[/COLOR][/B]','[B][COLOR yellow]Select a Livestreams XML Using Filemanager[/COLOR][/B]','[B][COLOR yellow]Select a Livestreams XML Using Set User Source[/COLOR][/B]','[B][COLOR yellow]Enter a Livestreams XML URL[/COLOR][/B]'])
+    ret = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Select a MashUp XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Select a MashUp XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter a MashUp XML URL[/COLOR][/B]','[B][COLOR blue]Select a Livestreams XML Using Filemanager[/COLOR][/B]','[B][COLOR blue]Select a Livestreams XML Using Set User Source[/COLOR][/B]','[B][COLOR blue]Enter a Livestreams XML URL[/COLOR][/B]'])
     if ret == -1:
         return
     else:
@@ -351,7 +351,7 @@ def editPlaylist(title,murl,folders):
                                     except: pass
                                 xbmc.executebuiltin("Container.Refresh")
         if ret == 1:
-            retb = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Select a MashUp XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Select a MashUp XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter a MashUp XML URL[/COLOR][/B]','[B][COLOR yellow]Select a Livestreams XML Using Filemanager[/COLOR][/B]','[B][COLOR yellow]Select a Livestreams XML Using Set User Source[/COLOR][/B]','[B][COLOR yellow]Enter a Livestreams XML URL[/COLOR][/B]'])
+            retb = dialog.select('[COLOR=FF67cc33][B]Choose Entry Type[/COLOR][/B]',['[B][COLOR=FF67cc33]Select a MashUp XML Using Filemanager[/COLOR][/B]','[B][COLOR=FF67cc33]Select a MashUp XML Using Set User Source[/COLOR][/B]','[B][COLOR=FF67cc33]Enter a MashUp XML URL[/COLOR][/B]','[B][COLOR blue]Select a Livestreams XML Using Filemanager[/COLOR][/B]','[B][COLOR blue]Select a Livestreams XML Using Set User Source[/COLOR][/B]','[B][COLOR blue]Enter a Livestreams XML URL[/COLOR][/B]'])
             if ret == -1:
                 return
             else:
