@@ -94,7 +94,7 @@ def Clearhistory(url):
 
 def unescapes(text):
         try:
-            rep = {"%26":"&","&#38;":"&","&#044;": ",","&nbsp;": " ","\n": "","\t": "","\r": "","%5B": "[","%5D": "]","%3a": ":","%3A":":","%2f":"/","%2F":"/","%3f":"?","%3F":"?","%3d":"=","%3D":"=","%2C":",","%2c":",","%3C":"<","%20":" ","%22":'"',"%3D":"=","%3A":":","%2F":"/","%3E":">","%3B":",","%27":"'","%0D":"","%0A":"","%92":"'"}
+            rep = {"%26":"&","&#38;":"&","&amp;":"&","&#044;": ",","&nbsp;": " ","\n": "","\t": "","\r": "","%5B": "[","%5D": "]","%3a": ":","%3A":":","%2f":"/","%2F":"/","%3f":"?","%3F":"?","%3d":"=","%3D":"=","%2C":",","%2c":",","%3C":"<","%20":" ","%22":'"',"%3D":"=","%3A":":","%2F":"/","%3E":">","%3B":",","%27":"'","%0D":"","%0A":"","%92":"'"}
             for s, r in rep.items():
                 text = text.replace(s, r)
 
@@ -402,7 +402,7 @@ def refresh_movie(vidtitle,imdb, year=''):
             new_tmdb_id = search_meta[index]['tmdb_id']
             year=search_meta[index]['year']
 
-            meta=grab.update_meta('movie', vidtitle, imdb, '',new_imdb_id,'',year)
+            meta=grab.update_meta('movie', vidtitle, imdb, '',new_imdb_id,new_tmdb_id,year)
             
 
 
@@ -1191,7 +1191,7 @@ def addDirM(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
-                cname=infoLabels['metaName']
+                cname=urllib.quote_plus(infoLabels['metaName'])
                 Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
                 Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
                 Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
@@ -1242,7 +1242,7 @@ def addPlayM(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
-                cname=infoLabels['metaName']
+                cname=urllib.quote_plus(infoLabels['metaName'])
                 Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
                 Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
                 Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
@@ -1581,7 +1581,7 @@ def addDown3(name,url,mode,iconimage,fanart,id=False):#starplay only
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
-                cname=infoLabels['metaName']
+                cname=urllib.quote_plus(infoLabels['metaName'])
                 Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
                 Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
                 Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
@@ -1606,7 +1606,7 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             video_type='episode'
             sea=infoLabels['season']
             epi=infoLabels['episode']
-            cname=infoLabels['metaName']
+            cname=urllib.quote_plus(infoLabels['metaName'])
             xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
             st="TV"
             sst="Episodes"
@@ -1615,7 +1615,7 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             infoLabels =GETMETAT(name,genre,fanart,iconimage)
             video_type='movie'
             tmdbid=infoLabels['tmdb_id']
-            cname=infoLabels['metaName']
+            cname=urllib.quote_plus(infoLabels['metaName'])
             xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
             st="Movies"
             sst=""
@@ -1702,7 +1702,7 @@ def addInfo(name,url,mode,iconimage,gen,year):
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
-                cname=infoLabels['metaName']
+                cname=urllib.quote_plus(infoLabels['metaName'])
                 Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
                 Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
                 Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
@@ -1751,7 +1751,7 @@ def addDirIWO(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         if selfAddon.getSetting("meta-view") == "true":
                 video_type='movie'
                 imdb=infoLabels['imdb_id']
-                cname=infoLabels['metaName']
+                cname=urllib.quote_plus(infoLabels['metaName'])
                 Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
                 Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
                 Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
@@ -1772,12 +1772,12 @@ def addDLog(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             video_type='episode'
             sea=infoLabels['season']
             epi=infoLabels['episode']
-            cname=infoLabels['metaName']
+            cname=urllib.quote_plus(infoLabels['metaName'])
         else:
             infoLabels =GETMETAT(name,genre,fanart,iconimage)
             video_type='movie'
             tmdbid=infoLabels['tmdb_id']
-            cname=infoLabels['metaName']
+            cname=urllib.quote_plus(infoLabels['metaName'])
         if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
             (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
                 xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
