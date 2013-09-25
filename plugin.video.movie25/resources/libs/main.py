@@ -264,8 +264,8 @@ def GETMETAT(mname,genre,fan,thumb):
                 if infoLabels['cover_url']=='':
                     thumb=art+'vidicon.png'
                     infoLabels['cover_url']=thumb
-                if int(year+'0'):
-                    infoLabels['year']=year 
+                #if int(year+'0'):
+                #    infoLabels['year']=year 
                 infoLabels['metaName']=infoLabels['title']
                 infoLabels['title']=originalName
 
@@ -386,7 +386,7 @@ def refresh_movie(vidtitle,imdb, year=''):
     #if not metaget:
     #    metaget=metahandlers.MetaData()
     vidtitle = vidtitle.decode("ascii", "ignore")
-    vidtitle = re.sub("\d+", "", vidtitle)
+    vidtitle = re.sub("(?<!^)\d+", "", vidtitle)
     vidtitle=vidtitle.replace('  ','')
     search_meta = grab.search_movies(vidtitle)
     
