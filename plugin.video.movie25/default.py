@@ -8,7 +8,7 @@ try:
     from t0mm0.common.net import Net as net
     from metahandler import metahandlers
     import datetime,time
-    from resources.libs import main
+    from resources.libs import main,settings
     import threading
 except Exception, e:
     elogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/bigx.png')
@@ -49,7 +49,7 @@ def AtoZ():
                 main.addDir(i,'http://www.movie25.so/movies/'+i.lower()+'/',1,art+'/'+i.lower()+'.png')
         main.GA("None","Movie25-A-Z")   
 def MAIN():
-        d = getHomeItems()
+        d = settings.getHomeItems()
 
         for index, value in sorted(enumerate(d), key=lambda x:x[1]):
             if value==None: continue
@@ -128,16 +128,7 @@ def MAIN():
         main.addLink('@mashupxbmc','',art+'/twittermash.png')
         main.addPlayc('Addon Settings','http://www.movie25.so/',1999,art+'/ASettings.png','','','','','')
         main.addPlayc('Resolver Settings','http://www.movie25.so/',99,art+'/resset.png','','','','','')
-        
-def getHomeItems():
-    d=[]
-    for x in range(23): 
-        d.append(None);
-        itemid = str(x + 1)
-        if selfAddon.getSetting("home_item_" +itemid+ "_enabled")== "true":
-            d[x]=int(selfAddon.getSetting("home_item_" + itemid))
-    return d
-       
+              
 def Announcements():
         #Announcement Notifier from xml file
         
@@ -3105,11 +3096,7 @@ elif mode == 1051:
     
     
 elif mode == 1999:
-    d = getHomeItems()
-    selfAddon.openSettings()
-    dnew = getHomeItems()
-    if d != dnew:
-        xbmc.executebuiltin("XBMC.Container.Refresh")  
+    settings.openSettings()
 
 elif mode == 2000:
     xbmc.executebuiltin("XBMC.Container.Update(path,replace)")
