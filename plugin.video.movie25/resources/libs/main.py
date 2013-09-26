@@ -1090,6 +1090,7 @@ def addDirTE(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 video_type='episode'
                 cname=infoLabels['title']
                 cname=cname.decode('ascii', 'ignore')
+                cname=urllib.quote_plus(cname)
                 sea=infoLabels['season']
                 epi=infoLabels['episode']
                 imdb_id=infoLabels['imdb_id']
@@ -1139,6 +1140,7 @@ def addPlayTE(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 video_type='episode'
                 cname=infoLabels['title']
                 cname=cname.decode('ascii', 'ignore')
+                cname=urllib.quote_plus(cname)
                 sea=infoLabels['season']
                 epi=infoLabels['episode']
                 imdb_id=infoLabels['imdb_id']
@@ -1606,7 +1608,7 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             video_type='episode'
             sea=infoLabels['season']
             epi=infoLabels['episode']
-            cname=urllib.quote_plus(infoLabels['metaName'])
+            cname=urllib.quote_plus(infoLabels['title'].decode("ascii", "ignore"))
             xbmcplugin.setContent(int(sys.argv[1]), 'episodes')
             st="TV"
             sst="Episodes"
@@ -1622,6 +1624,7 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             sat="Movie Fav's"
         if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
             (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
+                imdb_id=infoLabels['imdb_id']
                 if infoLabels['overlay'] == 6:
                     watched_mark = 'Mark as Watched'
                 else:
@@ -1657,13 +1660,14 @@ def addDown4(name,url,mode,iconimage,plot,fanart,dur,genre,year):
                 ("[B][COLOR red]Remove[/COLOR][/B] from My Fav's",fav.delete_item(name, section_title=st, section_addon_title=sat, sub_section_title=sst)),
                   ('Direct Download', 'XBMC.RunPlugin(%s?mode=190&name=%s&url=%s)' % (sys.argv[0], sysname, sysurl)),
                   ('Download with jDownloader', 'XBMC.RunPlugin(%s?mode=776&name=%s&url=%s)' % (sys.argv[0], sysname, url))]
-        if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
-            (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
-                video_type='movie'
-                imdb=infoLabels['imdb_id']
-                Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
-                Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
-                Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
+        if (selfAddon.getSetting("meta-view") == "true" and video_type == 'movie'):
+            Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb_id)))
+            Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb_id)))
+            Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb_id)))
+        elif (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode'):
+            if imdb_id != '':
+                Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=779&name=%s&url=%s&iconimage=%s&season=%s&episode=%s)' % (sys.argv[0], cname, video_type,imdb_id,sea,epi)))
+            Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=780&name=%s&url=%s&iconimage=%s&season=%s&episode=%s)' % (sys.argv[0], cname, video_type,imdb_id,sea,epi)))
         Commands.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         Commands.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz=xbmcgui.ListItem(name, iconImage=art+'/vidicon.png', thumbnailImage=infoLabels['cover_url'])
@@ -1772,7 +1776,7 @@ def addDLog(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             video_type='episode'
             sea=infoLabels['season']
             epi=infoLabels['episode']
-            cname=urllib.quote_plus(infoLabels['metaName'])
+            cname=urllib.quote_plus(infoLabels['title'].decode("ascii", "ignore"))
         else:
             infoLabels =GETMETAT(name,genre,fanart,iconimage)
             video_type='movie'
@@ -1780,6 +1784,7 @@ def addDLog(name,url,mode,iconimage,plot,fanart,dur,genre,year):
             cname=urllib.quote_plus(infoLabels['metaName'])
         if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
             (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
+                imdb_id=infoLabels['imdb_id']
                 xbmcplugin.setContent(int(sys.argv[1]), 'Movies')
                 if infoLabels['overlay'] == 6:
                     watched_mark = 'Mark as Watched'
@@ -1796,12 +1801,14 @@ def addDLog(name,url,mode,iconimage,plot,fanart,dur,genre,year):
         plot=infoLabels['plot']
         img=infoLabels['cover_url']
         Commands=[("[B][COLOR red]Remove[/COLOR][/B]",'XBMC.RunPlugin(%s?mode=243&name=%s&url=%s)'% (sys.argv[0],name,url))]
-        if ((selfAddon.getSetting("meta-view") == "true" and video_type == 'movie') or 
-            (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode')):
-                imdb=infoLabels['imdb_id']
-                Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
-                Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
-                Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
+        if (selfAddon.getSetting("meta-view") == "true" and video_type == 'movie'):
+            Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb_id)))
+            Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb_id)))
+            Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb_id)))
+        elif (selfAddon.getSetting("meta-view-tv") == "true" and video_type == 'episode'):
+            if imdb_id != '':
+                Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=779&name=%s&url=%s&iconimage=%s&season=%s&episode=%s)' % (sys.argv[0], cname, video_type,imdb_id,sea,epi)))
+            Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=780&name=%s&url=%s&iconimage=%s&season=%s&episode=%s)' % (sys.argv[0], cname, video_type,imdb_id,sea,epi)))
         Commands.append(('Watch History','XBMC.Container.Update(%s?name=None&mode=222&url=None&iconimage=None)'% (sys.argv[0])))
         Commands.append(("My Fav's",'XBMC.Container.Update(%s?name=None&mode=639&url=None&iconimage=None)'% (sys.argv[0])))
         liz=xbmcgui.ListItem(name, iconImage=art+'/vidicon.png', thumbnailImage=infoLabels['cover_url'])
