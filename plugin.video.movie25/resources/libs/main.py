@@ -386,7 +386,10 @@ def refresh_movie(vidtitle,imdb, year=''):
     #if not metaget:
     #    metaget=metahandlers.MetaData()
     vidtitle = vidtitle.decode("ascii", "ignore")
-    vidtitle = re.sub("(?<!^)\d+", "", vidtitle)
+    if re.search("^\d+", vidtitle):
+        m = re.search('^(\d+)(.*)', vidtitle)
+        vidtitle = m.group(1) + m.group(2) 
+    else: vidtitle = re.sub("\d+", "", vidtitle)
     vidtitle=vidtitle.replace('  ','')
     search_meta = grab.search_movies(vidtitle)
     
