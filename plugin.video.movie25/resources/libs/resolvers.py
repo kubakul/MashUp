@@ -297,7 +297,7 @@ def resolve_billionuploads(url):
                 dialog.update(50)
             
             data.update({'submit_btn':''})
-            data.update({'geekref':'yeahman'})
+            data.update({'parden':'yeahman'})
             
             print 'Mash Up BillionUploads - Requesting POST URL: %s' % url
             html = normal.open(url, urllib.urlencode(data)).read()

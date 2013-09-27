@@ -21,6 +21,8 @@ if user == '' and passw == '':
         dialog = xbmcgui.Dialog()
         dialog.ok("[COLOR=FF67cc33]MashUp[/COLOR]", "Please set your Rlsmix credentials", "in Addon settings under logins tab.", "For credentials register @ http://directdownload.tv/.")
         selfAddon.openSettings()
+        user = selfAddon.getSetting('rlsusername')
+        passw = selfAddon.getSetting('rlspassword')
 
 def LISTTV4(durl):
         log_in = net().http_POST('http://directdownload.tv',{'username':user,'password':passw,'Login':'Login'}).content
@@ -63,7 +65,8 @@ def LISTTV4(durl):
 
 def LINKTV4(mname,url):
         ok=True
-        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        if selfAddon.getSetting("hide-download-instructions") != "true":
+            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
         match=re.compile('{"url":"(.+?)","hostname":"(.+?)"}').findall(url)
         for url,host in match:
                 thumb=host.lower()
