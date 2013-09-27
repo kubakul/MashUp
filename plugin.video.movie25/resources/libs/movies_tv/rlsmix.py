@@ -63,13 +63,9 @@ def LISTTV4(durl):
 
 def LINKTV4(mname,url):
         ok=True
-        if selfAddon.getSetting("hide-download-instructions") != "true":
-            main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
-        match=re.compile('"(.+?)"').findall(url)
-        for url in match:
-                hname=re.compile("http.+?//(.+?)/.+?").findall(url)
-                for host in hname:
-                        host=host.replace('www.','').replace('.com','').replace('.es','').replace('.ws','').replace('.it','').replace('.net','').replace('.org','').replace('.info','')
+        main.addLink("[COLOR red]For Download Options, Bring up Context Menu Over Selected Link.[/COLOR]",'','')
+        match=re.compile('{"url":"(.+?)","hostname":"(.+?)"}').findall(url)
+        for url,host in match:
                 thumb=host.lower()
                 match2=re.compile('rar').findall(url)
                 if len(match2)==0:
