@@ -274,7 +274,8 @@ def CheckForAutoUpdateDev():
         
             print "auto update - new update available ("+str(gitver)+")"
             xbmc.executebuiltin("XBMC.Notification(MashUp Update,New Update detected,3000,"+main.slogo+")")
-            ret = dialog.yesno('Mash Up DEV Update', 'There is a new  update available.','Will you like to update now?','No', 'Yes')
+            dialog = xbmcgui.Dialog()
+            ret = dialog.yesno('Mash Up DEV Update', 'There is a new  update available.','Will you like to update now?','','No', 'Yes')
             if ret==True:
                 try:os.remove(UpdateLocalFile)
                 except:pass
