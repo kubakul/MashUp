@@ -18,10 +18,11 @@ except Exception, e:
     
     
 #Mash Up - by Mash2k3 2012.
-#jpushed
+
 #################### Set Environment ######################
 ENV = "Dev"  # "Prod" or "Dev"
 ############################################################
+
 Mainurl ='http://www.movie25.so/movies/'
 addon_id = 'plugin.video.movie25'
 selfAddon = xbmcaddon.Addon(id=addon_id)
@@ -30,11 +31,6 @@ addon = Addon(addon_id)
 art = main.art
 from universal import watchhistory
 wh = watchhistory.WatchHistory('plugin.video.movie25')
-
-
-################################################################################ Source Imports ##########################################################################################################
-
-
 
 ################################################################################ Directories ##########################################################################################################
 UpdatePath=os.path.join(main.datapath,'Update')
@@ -278,25 +274,28 @@ def CheckForAutoUpdateDev():
         
             print "auto update - new update available ("+str(gitver)+")"
             xbmc.executebuiltin("XBMC.Notification(MashUp Update,New Update detected,3000,"+main.slogo+")")
-        
-            try:os.remove(UpdateLocalFile)
-            except:pass
-            try: urllib.urlretrieve(UpdateUrl,UpdateLocalFile)
-            except Exception, e: pass
-            if os.path.isfile(UpdateLocalFile):
-                extractFolder = xbmc.translatePath('special://home/addons')
-                pluginsrc =  xbmc.translatePath(os.path.join(extractFolder,UpdateDirName))
-                if autoupdate.unzipAndMove(UpdateLocalFile,extractFolder,pluginsrc):
-                    selfAddon.setSetting("localver",str(gitver))
-                    print "Mashup auto update - update install successful ("+str(gitver)+")"
-                    xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,5000,"+main.slogo+")")
-                    xbmc.executebuiltin("XBMC.Container.Refresh")
+            ret = dialog.yesno('Mash Up DEV Update', 'There is a new  update available.','Will you like to update now?','No', 'Yes')
+            if ret==True:
+                try:os.remove(UpdateLocalFile)
+                except:pass
+                try: urllib.urlretrieve(UpdateUrl,UpdateLocalFile)
+                except Exception, e: pass
+                if os.path.isfile(UpdateLocalFile):
+                    extractFolder = xbmc.translatePath('special://home/addons')
+                    pluginsrc =  xbmc.translatePath(os.path.join(extractFolder,UpdateDirName))
+                    if autoupdate.unzipAndMove(UpdateLocalFile,extractFolder,pluginsrc):
+                        selfAddon.setSetting("localver",str(gitver))
+                        print "Mashup auto update - update install successful ("+str(gitver)+")"
+                        xbmc.executebuiltin("XBMC.Notification(MashUp Update,Successful,5000,"+main.slogo+")")
+                        xbmc.executebuiltin("XBMC.Container.Refresh")
+                    else:
+                        print "Mashup auto update - update install failed ("+str(gitver)+")"
+                        xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
                 else:
-                    print "Mashup auto update - update install failed ("+str(gitver)+")"
+                    print "Mashup auto update - cannot find downloaded update ("+str(gitver)+")"
                     xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
             else:
-                print "Mashup auto update - cannot find downloaded update ("+str(gitver)+")"
-                xbmc.executebuiltin("XBMC.Notification(MashUp Update,Failed,3000,"+main.elogo+")")
+                return
         else:
             print "Mashup auto update - Mashup is up-to-date ("+str(locver)+")"
         return
@@ -645,17 +644,6 @@ def FIXES():
         for name,filename,location,path,thumb in match:
                 main.addDirFIX(name,filename,785,art+'/'+thumb+'.png',location,path)
 
-def AutoFIXES():
-        dialog = xbmcgui.Dialog()
-        try:
-                link=main.OPENURL('https://github.com/mash2k3/MashUpFixes/raw/master/AutoUpdate.xml')
-        except:
-                xbmc.executebuiltin("XBMC.Notification(Sorry!,Repo is Down,5000,"")")
-        link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-        match=re.compile('<item><name>([^<]+)</name.+?filename>([^<]+)</filename.+?location>([^<]+)</location.+?path>([^<]+)</path.+?thumbnail>([^<]+)</thumbnail></item>').findall(link)
-        for name,filename,location,path,thumb in match:
-                FIXDOWN(name,filename,location,path)
-        dialog.ok("Mash Up", "Please Restart Mash Up", "If you are still experiencing problems", "Restart XBMC")
 
 def FIXDOWN(name,filename,location,path):
     main.GA("Fixes",name+"-Fix")

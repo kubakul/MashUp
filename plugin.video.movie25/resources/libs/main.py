@@ -871,7 +871,6 @@ def send_request_to_google_analytics(utm_url):
     return response
        
 def GA(group,name):
-    if selfAddon.getSetting("gastatus") == "true":
         try:
             try:
                 from hashlib import md5
@@ -926,8 +925,6 @@ def GA(group,name):
             
         except:
             print "================  CANNOT POST TO ANALYTICS  ================"
-    else:
-        print "MashUp Google Analytics disabled"
 
 def APP_LAUNCH():
         versionNumber = int(xbmc.getInfoLabel("System.BuildVersion" )[0:2])

@@ -27,9 +27,11 @@ def CastalbaList(murl):
         for durl in urllist:
                 link=main.OPENURL(durl)
                 link=link.replace('\r','').replace('\n','').replace('\t','').replace('&nbsp;','')
-                match=re.compile('<a href=".+?"><img src="..([^<]+)" alt="" />                                <span class=".+?">.+?</span>                                </a>                            <a href=".+?" class=".+?"><img src=".+?" alt="" /></a>                            </div>                        <div class=".+?"></div>                        <h4><a class=".+?"  href="..(.+?)">(.+?)</a></h4><p class=".+?" >In: <a href=".+?" class=".+?">(.+?)</a></p>').findall(link)
+                match=re.compile('<li><div class=".+?"><a href=".+?"><img src="(.+?)" alt=""/><.+?><a href=".+?class=".+?" href="(.+?)">(.+?)</a></h4>.+?<a href=".+?" class=".+?">(.+?)</a></p></li>').findall(link)
                 for thumb,url,name,section in match:
                     if name != 'Playboy TV':
+                        url=url.replace('..','')
+                        thumb=thumb.replace('..','')
                         main.addPlayL(name+'   [COLOR red]'+section+'[/COLOR]','http://castalba.tv'+url,123,'http://castalba.tv'+thumb,'','','','','')
                 loadedLinks = loadedLinks + 1
                 percent = (loadedLinks * 100)/totalLinks
