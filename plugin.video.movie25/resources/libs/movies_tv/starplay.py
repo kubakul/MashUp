@@ -40,6 +40,7 @@ def LISTSP5(murl):
             xbmc.executebuiltin("XBMC.Notification(Sorry!,Noobroom website is down,5000,"+smalllogo+")")
             return
         link = response.content
+        link = link.decode('iso-8859-1').encode('utf8')
         if response.get_url() != murl:
                 xbmc.executebuiltin("XBMC.Notification(Sorry!,Email or Password Incorrect,10000,"+smalllogo+")")
         if selfAddon.getSetting("hide-download-instructions") != "true":

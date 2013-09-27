@@ -4,7 +4,7 @@ import resolvers
 from t0mm0.common.addon import Addon
 from t0mm0.common.net import Net as net
 from metahandler import metahandlers
-import datetime,time
+import datetime,time,threading
 from xgoogle.search import GoogleSearch, SearchError
 
 #Mash Up - by Mash2k3 2012.
@@ -855,7 +855,7 @@ def checkGA():
         return
 
     selfAddon.setSetting('ga_time', str(now).split('.')[0])
-    APP_LAUNCH()    
+    threading.Thread(target=APP_LAUNCH).start()
     
                     
 def send_request_to_google_analytics(utm_url):
@@ -871,6 +871,9 @@ def send_request_to_google_analytics(utm_url):
     return response
        
 def GA(group,name):
+    threading.Thread(target=GAthread, args=(group,name)).start()
+    
+def GAthread(group,name):
         try:
             try:
                 from hashlib import md5
@@ -1587,6 +1590,7 @@ def addDown3(name,url,mode,iconimage,fanart,id=False):#starplay only
                 Commands.append(('Play Trailer','XBMC.RunPlugin(%s?mode=782&name=%s&url=%s&iconimage=%s)'% (sys.argv[0],cname,url,imdb)))
                 Commands.append((watched_mark, 'XBMC.RunPlugin(%s?mode=777&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
                 Commands.append(('Refresh Metadata', 'XBMC.RunPlugin(%s?mode=778&name=%s&url=%s&iconimage=%s)' % (sys.argv[0], cname, video_type,imdb)))
+        Commands.append(('[B][COLOR lime]Mash Up[/COLOR] Settings[/B]','XBMC.RunScript('+xbmc.translatePath(mashpath + '/resources/libs/settings.py')+')'))
         liz=xbmcgui.ListItem(name, iconImage=art+'/vidicon.png', thumbnailImage=infoLabels['cover_url'])
         liz.addContextMenuItems( Commands, replaceItems=True )
         if(id != False):
