@@ -22,6 +22,8 @@ def getRefreshRequiredSettings():
     s.append(selfAddon.getSetting("meta-view-tv"))
     s.append(selfAddon.getSetting("switchup"))
     s.append(selfAddon.getSetting("groupfavs"))
+    s.append(selfAddon.getSetting("con-view"))
+    s.append(selfAddon.getSetting("xpr-view"))
     return s
 
 def openSettings():

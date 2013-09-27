@@ -10,6 +10,10 @@
 		<setting id="whistory" type="bool" label="[B]Watch History[/B]" default="true"/>
 		<setting id="switchup" type="bool" label="[B]SwitchUp[/B]" default="false"/>
 		<setting id="groupfavs" type="bool" label="[B]Group Favorites[/B]" default="false"/>
+		<setting label="External Settings" type="lsep" />
+		<setting label="Resolver Settings" type="action" action="Addon.OpenSettings(script.module.urlresolver)" enable="System.HasAddon(script.module.urlresolver)"/>
+		<setting label="MetaHandler Settings" type="action" action="Addon.OpenSettings(script.module.metahandler)" enable ="eq(-7,true) || eq(-6,true)" />
+		<setting label="Universal Settings (Watch History)" type="action" action="Addon.OpenSettings(script.module.universal)" enable="eq(-6,true)"/>
    </category>
    
    <category label="Auto View">
@@ -25,33 +29,6 @@
 		<setting id="visitor_ga" type="text" label="GA visitor" default="" visible="false"/>		
    </category>
    
-   <category label="Video Quality">
-		<setting id="bit-disc"	type="enum" label="[B]Discovery Bitrate[/B]" values="3500k|1500k|600k" default="0"/>
-		<setting id="vice-qua"	type="enum" label="[B]Vice & MMA-F Bitrate[/B]" values="High|Medium|Low" default="0"/>
-		<setting id="tsn-qua"	type="enum" label="[B]TSN & FOX Bitrate[/B]" values="High|Medium|Low" default="0"/>
-		<setting id="wild-qua"	type="enum" label="[B]Wild Tv Bitrate[/B]" values="High|Low" default="0"/>
-		<setting id="disj-qua"	type="enum" label="[B]Disney Jr. Bitrate[/B]" values="High|Medium|Low" default="0"/>
-   </category>
-   
-   <category label="Downloads">
-		<setting id="download-folder" type="folder" label="[B]Download Folder[/B]" default=""/>
-		<setting id="delete-incomplete-downloads" type="bool" label="[B]Delete Incomplete Downloads[/B]" default="true"/>
-		<setting id="download-in-background" type="bool" label="[B]Download in Background[/B]" default="true" />
-		<setting id="notify-percent" enable="eq(-1,true)" label="[B]Notify Per[/B]" type="enum" values="2[B] %[/B]|5[B] %[/B]|10[B] %[/B]|20[B] %[/B]|25[B] %[/B]|50[B] %[/B]|100[B] %[/B]" default="2" />
-		<setting id="hide-download-instructions" type="bool" label="[B]Hide Download Instructions[/B]" default="false"/>
-   </category>
-   
-   <category label="Log-ins">
-		<setting label="Noobroom Account" type="lsep" />
-		<setting id="username" type="text" label="Noobroom Email" default="" visible="true"/>
-		<setting id="password" type="text"label="Noobroom Password" default="" visible="true" option="hidden" />
-		<setting label="RLSMIX Account" type="lsep" />
-		<setting id="rlsusername" type="text" label="RlsMix Username" default="" visible="true"/>
-		<setting id="rlspassword" type="text"label="RlsMix Password" default="" visible="true" option="hidden" />
-		<setting label="HM VIP++ Account" type="lsep" />
-		<setting id="hmvusername" type="text" label="HM VIP++ Username" default="" visible="true"/>
-		<setting id="hmvpassword" type="text"label="HM VIP++ Password" default="" visible="true" option="hidden" />
-   </category>
    <category label="Home Layout">
 		<setting label="Customize your Home screen" type="lsep" />
 		<setting id="home_item_1_enabled" type="bool" label="[B]Movie25/iWatchonline[/B]" default="true"/>
@@ -110,6 +87,33 @@
 		<setting id="playlistfanart" type="bool" label="Playlist Fanart" default="true"/>
 		<setting id="folderthumb" type="bool" label="Folder Thumbnail" default="true"/>
 		<setting id="folderfanart" type="bool" label="Folder Fanart" default="true"/>
+   </category>
+   
+   <category label="Log-ins">
+		<setting label="Noobroom Account" type="lsep" />
+		<setting id="username" type="text" label="Noobroom Email" default="" visible="true"/>
+		<setting id="password" type="text"label="Noobroom Password" default="" visible="true" option="hidden" />
+		<setting label="RLSMIX Account" type="lsep" />
+		<setting id="rlsusername" type="text" label="RlsMix Username" default="" visible="true"/>
+		<setting id="rlspassword" type="text"label="RlsMix Password" default="" visible="true" option="hidden" />
+		<setting label="HM VIP++ Account" type="lsep" />
+		<setting id="hmvusername" type="text" label="HM VIP++ Username" default="" visible="true"/>
+		<setting id="hmvpassword" type="text"label="HM VIP++ Password" default="" visible="true" option="hidden" />
+   </category>
+   <category label="Video Quality">
+		<setting id="bit-disc"	type="enum" label="[B]Discovery Bitrate[/B]" values="3500k|1500k|600k" default="0"/>
+		<setting id="vice-qua"	type="enum" label="[B]Vice & MMA-F Bitrate[/B]" values="High|Medium|Low" default="0"/>
+		<setting id="tsn-qua"	type="enum" label="[B]TSN & FOX Bitrate[/B]" values="High|Medium|Low" default="0"/>
+		<setting id="wild-qua"	type="enum" label="[B]Wild Tv Bitrate[/B]" values="High|Low" default="0"/>
+		<setting id="disj-qua"	type="enum" label="[B]Disney Jr. Bitrate[/B]" values="High|Medium|Low" default="0"/>
+   </category>
+   
+   <category label="Downloads">
+		<setting id="download-folder" type="folder" label="[B]Download Folder[/B]" default=""/>
+		<setting id="delete-incomplete-downloads" type="bool" label="[B]Delete Incomplete Downloads[/B]" default="true"/>
+		<setting id="download-in-background" type="bool" label="[B]Download in Background[/B]" default="true" />
+		<setting id="notify-percent" enable="eq(-1,true)" label="[B]Notify Per[/B]" type="enum" values="2[B] %[/B]|5[B] %[/B]|10[B] %[/B]|20[B] %[/B]|25[B] %[/B]|50[B] %[/B]|100[B] %[/B]" default="2" />
+		<setting id="hide-download-instructions" type="bool" label="[B]Hide Download Instructions[/B]" default="false"/>
    </category>
    
 </settings>
