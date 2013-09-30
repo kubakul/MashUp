@@ -44,8 +44,8 @@ def LISTSP(murl):
 
 
 def LISTTV3(murl):
-        xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting Source Data,4000)")
-        urllist=main.OPENURL('http://oneclickwatch.org/category/tv-shows/')+main.OPENURL('http://oneclickwatch.org/category/tv-shows/page/2/')+main.OPENURL('http://oneclickwatch.org/category/tv-shows/page/3/')+main.OPENURL('http://oneclickwatch.org/category/tv-shows/page/4/')+main.OPENURL('http://oneclickwatch.org/category/tv-shows/page/5/')
+        #urllist=main.OPENURL('http://oneclickwatch.org/category/tv-shows/')+main.OPENURL('http://oneclickwatch.org/category/tv-shows/page/2/')+main.OPENURL('http://oneclickwatch.org/category/tv-shows/page/3/')+main.OPENURL('http://oneclickwatch.org/category/tv-shows/page/4/')+main.OPENURL('http://oneclickwatch.org/category/tv-shows/page/5/')
+        urllist=main.batchOPENURL(('http://oneclickwatch.org/category/tv-shows/','http://oneclickwatch.org/category/tv-shows/page/2/','http://oneclickwatch.org/category/tv-shows/page/3/','http://oneclickwatch.org/category/tv-shows/page/4/','http://oneclickwatch.org/category/tv-shows/page/5/'))
         if urllist:
                 urllist=main.unescapes(urllist)
                 match=re.compile('title=".+?">([^<]+)</a></h2>.+?href=".+?<a href="(.+?)" .+?href=".+?>.+?src="(.+?)"').findall(urllist)
