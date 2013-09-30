@@ -70,6 +70,18 @@ def OPENURL(url, mobile = False):
         xbmc.executebuiltin("XBMC.Notification(Sorry!,Source Website is Down,3000,"+elogo+")")
         link ='website down'
         return link
+    
+def batchOPENURL(urls, mobile = False):
+    max = len(urls)
+    from multiprocessing.pool import ThreadPool
+    pool = ThreadPool(processes=max)
+    results = []
+    for url in urls: 
+        results.append(pool.apply_async(OPENURL, (url,)))
+    content = ''
+    for n in range(max):
+        content += results[n].get()
+    return content
 
 def OPENURL2(url):
     UserAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'

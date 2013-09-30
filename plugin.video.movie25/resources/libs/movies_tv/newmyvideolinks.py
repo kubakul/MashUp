@@ -24,29 +24,32 @@ def LISTSP2(murl):
                 category = "tv-shows"
         else:
                 main.addDir('Search Newmyvideolinks','movieNEW',102,art+'/search.png')
-                subpages = 3
+                subpages = 5
                 category = "bluray"
         parts = murl.split('-', 1 );
+        max = subpages
+        print murl
         try:
-            page = int(parts[1])
+            pages = parts[1].split(',', 1 );
+            page = int(pages[0])
+            max = int(pages[1])
             murl = parts[0]
         except:
             page = 0
+        print murl
         page = page * subpages;
-        urllist = ""
+        urllist = ''
+        urls = []
         for n in range(subpages):
-            try:
-                site = main.OPENURL('http://www.myvideolinks.eu/category/movies/'+category+'/page/'+str(page+n+1))
-                hasNextPage = re.compile('>&raquo;</a>').findall(site)
-                urllist += site
-                if not hasNextPage:
-                    page = None
-                    break
-            except:
-                if page == 0 and n == 0:
-                    pass
-                else:
-                    break
+            if page + n + 1 > max: break
+            urls.append('http://www.myvideolinks.eu/category/movies/'+category+'/page/'+str(page+n+1))
+        urllist = main.batchOPENURL(urls)            
+        hasNextPage = re.compile('>&raquo;</a>').findall(urllist)
+        if len(hasNextPage) < subpages:
+            page = None
+        hasMax = re.compile('Page \d+ of (\d+)').findall(urllist)
+        if hasMax:
+            max = hasMax[0]
         if urllist:
                 urllist=main.unescapes(urllist)
                 #link=main.OPENURL(xurl)
@@ -75,7 +78,7 @@ def LISTSP2(murl):
                                 if (dialogWait.iscanceled()):
                                     return False
                 if not page is None:
-                    main.addDir('Next Page ' + str(page/subpages+2),murl + "-" + str(page/subpages+1),34,art+'/next2.png')
+                    main.addDir('Page ' + str(page/subpages+1) + ', Next Page >>>',murl + "-" + str(page/subpages+1) + "," + max,34,art+'/next2.png')
  
         dialogWait.close()
         del dialogWait

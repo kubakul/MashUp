@@ -13,7 +13,8 @@ art = main.art
 wh = watchhistory.WatchHistory('plugin.video.movie25')
 
 def LISTSP4(murl):
-        urllist=main.OPENURL('http://oneclickmoviez.com/category/bluray/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/2/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/3/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/4/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/5/')
+        #urllist=main.OPENURL('http://oneclickmoviez.com/category/bluray/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/2/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/3/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/4/')+main.OPENURL('http://oneclickmoviez.com/category/bluray/page/5/')
+        urllist=main.batchOPENURL(('http://oneclickmoviez.com/category/bluray/','http://oneclickmoviez.com/category/bluray/page/2/','http://oneclickmoviez.com/category/bluray/page/3/','http://oneclickmoviez.com/category/bluray/page/4/','http://oneclickmoviez.com/category/bluray/page/5/'))
         if urllist:
                 match=re.compile('href="(.+?)" rel="bookmark" title=".+?">(.+?)</a></h2>\n</div>\n<div class="cover">\n<div class="entry">\n\t\t\t\t\t<p style="text-align: center;"><img class="alignnone" title="poster" src="(.+?)" ').findall(urllist)
                 dialogWait = xbmcgui.DialogProgress()

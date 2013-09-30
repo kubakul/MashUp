@@ -54,7 +54,7 @@ def LISTSP5(murl):
         dialogWait.update(0, '[B]Will load instantly from now on[/B]',remaining_display)
         id = 1;
         for year,url,name in match:
-                name=main.unescapes(name)
+                name=fix_title(main.unescapes(name))
                 if(year=='0'):
                         year='0000'  
                 url=nrDomain+url
@@ -70,6 +70,11 @@ def LISTSP5(murl):
         del dialogWait
         main.GA("HD","Starplay")
         main.VIEWS()
+        
+def fix_title(name):
+    if name == "+1":
+        name = "+1 (plus 1)"
+    return name
 
 def find_noobroom_video_url(page_url):
     import re

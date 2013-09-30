@@ -69,18 +69,19 @@ def INDEX(url):
     remaining_display = 'Media loaded :: [B]'+str(loadedLinks)+' / '+str(totalLinks)+'[/B].'
     dialogWait.update(0,'[B]Will load instantly from now on[/B]',remaining_display)
     for tag, url, name in r:
+        if re.findall('\d+p\s', name):
+            r = re.findall('(.+?)\s(\d+p)\s', name)
+            for name, quality in r:
+                tag = tag.replace('720p',quality)
+                pass
         if re.findall('\ss\d+e\d+\s', name, re.I|re.DOTALL):
             r = re.findall('(.+?)\ss(\d+)e(\d+)\s', name, re.I)
             for name, season, episode in r:
-                name = name+' Season '+season+' Episode '+episode+' ('+season+'x'+episode+')'
+                name = name+' S'+season+'E'+episode
         elif re.findall('\s\d{4}\s\d{2}\s\d{2}\s', name):
             r = re.findall('(.+?)\s(\d{4})\s(\d{2})\s(\d{2})\s',name)
             for name, year, month, day in r:
                 name = name+' '+year+' '+month+' '+day
-        elif re.findall('\d+p\s', name):
-            r = re.findall('(.+?)\s\d+p\s', name)
-            for name in r:
-                pass
         elif re.findall('\shdtv\sx', name, re.I):
             r = re.findall('(.+?)\shdtv\sx',name, re.I)
             for name in r:
@@ -326,7 +327,7 @@ def GETHTML(url):
             addon.show_ok_dialog(['[COLOR=FF67cc33][B]TV-Release is Down For Maintenance,[/COLOR][/B]',
                                   '[COLOR=FF67cc33][B]Please Try Again Later[/COLOR][/B]',''],'MashUP: TV-Release')
             return MAINMENU()
-        return h.encode("utf-8")
+        return h.encode("utf-8").replace('&#215;','x')
     except urllib2.URLError, e:
         addon.show_small_popup('MashUP: Tv-Release','TV-Release Web Site Failed To Respond, Check Log For Details', 9000, error_logo)
         addon.log_notice(str(e))

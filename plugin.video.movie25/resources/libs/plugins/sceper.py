@@ -202,7 +202,6 @@ def VIDEOLINKSSCEPER(mname,murl,thumb):
         xbmc.executebuiltin("XBMC.Notification(Please Wait!,Collecting hosts,3000)")
         match=re.compile('<a href="([^<]+)">htt').findall(link)
         for url in match:
-            print url
             vlink=re.compile('rar').findall(url)
             if len(vlink)==0:
                 match2=re.compile('http://(.+?)/.+?').findall(url)
@@ -221,10 +220,13 @@ def VIDEOLINKSSCEPER(mname,murl,thumb):
                     sources.append(hosted_media)
         if (len(sources)==0):
                 xbmc.executebuiltin("XBMC.Notification(Sorry!,Show doesn't have playable links,5000)")
-      
+                return
         else:
                 source = urlresolver.choose_source(sources)
         try:
+                if not source:
+                    main.CloseAllDialogs()
+                    return
                 xbmc.executebuiltin("XBMC.Notification(Please Wait!,Resolving Link,3000)")
                 stream_url = main.resolve_url(source.get_url())
                 if(stream_url == False):
