@@ -6,7 +6,10 @@ from t0mm0.common.net import Net as net
 from metahandler import metahandlers
 import datetime,time,threading
 from xgoogle.search import GoogleSearch, SearchError
-
+try:
+    import Queue as queue
+except ImportError:
+    import queue
 #Mash Up - by Mash2k3 2012.
 
 Mainurl ='http://www.movie25.com/movies/'
@@ -50,7 +53,7 @@ art = 'https://github.com/mash2k3/MashupArtwork/raw/master/art'
 elogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/bigx.png')
 slogo = xbmc.translatePath('special://home/addons/plugin.video.movie25/resources/art/smallicon.png')
 
-def OPENURL(url, mobile = False):
+def OPENURL(url, mobile = False, q = False):
     UserAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'
     try:
         print "MU-Openurl = " + url
@@ -65,6 +68,7 @@ def OPENURL(url, mobile = False):
         #link = net(UserAgent).http_GET(url).content
         link=link.replace('&#39;',"'").replace('&quot;','"').replace('&amp;',"&").replace("&#39;","'").replace('&lt;i&gt;','').replace("#8211;","-").replace('&lt;/i&gt;','').replace("&#8217;","'").replace('&amp;quot;','"').replace('&#215;','').replace('&#038;','&').replace('&#8216;','').replace('&#8211;','').replace('&#8220;','').replace('&#8221;','').replace('&#8212;','')
         link=link.replace('%3A',':').replace('%2F','/')
+        if q: q.put(link)
         return link
     except:
         xbmc.executebuiltin("XBMC.Notification(Sorry!,Source Website is Down,3000,"+elogo+")")
@@ -73,11 +77,11 @@ def OPENURL(url, mobile = False):
     
 def batchOPENURL(urls, mobile = False):
     max = len(urls)
-    from multiprocessing.pool import ThreadPool
-    pool = ThreadPool(processes=max)
     results = []
     for url in urls: 
-        results.append(pool.apply_async(OPENURL, (url,)))
+        q = queue.Queue()
+        threading.Thread(target=OPENURL, args=(url,mobile,q)).start()
+        results.append(q)
     content = ''
     for n in range(max):
         content += results[n].get()

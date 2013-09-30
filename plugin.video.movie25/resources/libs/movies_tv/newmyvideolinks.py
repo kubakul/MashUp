@@ -36,7 +36,6 @@ def LISTSP2(murl):
             murl = parts[0]
         except:
             page = 0
-        print murl
         page = page * subpages;
         urllist = ''
         urls = []
